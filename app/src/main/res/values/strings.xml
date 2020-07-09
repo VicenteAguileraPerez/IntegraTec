@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">IntegraTec</string>
+    <string name="logo">logo</string>
+    <string name="logo2">logo2</string>
+    <string name="sesion_asesor">Sesión Asesor</string>
+    <string name="asesores_disponibles">Asesores disponibles</string>
 </resources>
