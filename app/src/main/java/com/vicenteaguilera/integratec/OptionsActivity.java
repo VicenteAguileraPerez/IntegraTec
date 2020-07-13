@@ -35,11 +35,13 @@ public class OptionsActivity extends AppCompatActivity implements  View.OnClickL
         switch (id)
         {
             case R.id.button_Registrarse:
+                button_Registrarse.setTextColor(Color.YELLOW);
                 Toast.makeText(this, "Se dio clic en Registrarse", Toast.LENGTH_SHORT).show();
                 //Snackbar.make(Objects.requireNonNull(getCurrentFocus()), "Se dio clic en Registrarse.", Snackbar.LENGTH_SHORT).show();
                 break;
 
             case R.id.button_IniciarSesion:
+                button_IniciarSesion.setTextColor(Color.YELLOW);
                 Toast.makeText(this, "Se dio clic en Iniciar Sesión", Toast.LENGTH_SHORT).show();
                 //Snackbar.make(Objects.requireNonNull(getCurrentFocus()), "Se dio clic en Iniciar Sesión.", Snackbar.LENGTH_SHORT).show();
                 break;
