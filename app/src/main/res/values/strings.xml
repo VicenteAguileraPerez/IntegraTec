@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">IntegraTec</string>
+    <string name="SaludoAsesor">¡Bienvenido a IntegraTec Asesor!</string>
+    <string name="textButtonRegistrarse">Registrarse</string>
+    <string name="textButtonIniciarSesion">Iniciar Sesión</string>
+    <string name="descriptionImageOptions">Persona estudiando.</string>
 </resources>
