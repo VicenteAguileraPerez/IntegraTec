@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">IntegraTec</string>
+    <string name="nombre">Nombre</string>
+    <string name="email">Correo Electrónico</string>
+    <string name="queja">Queja</string>
+    <string name="sugerencia">Sugerencia</string>
+    <string name="mensaje">Mensaje</string>
+    <string name="enviar">Enviar</string>
+
 </resources>
