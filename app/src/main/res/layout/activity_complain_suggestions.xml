@@ -22,7 +22,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="15dp"
             app:cardCornerRadius="43dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -142,13 +142,13 @@
                     android:fontFamily="@font/noto_sans_bold"
                     android:gravity="start|top"
                     android:hint="@string/mensaje"
+                    android:importantForAutofill="no"
                     android:inputType="textMultiLine"
                     android:textColorHint="#FFFFFF"
                     app:layout_constraintBottom_toTopOf="@+id/guideline6"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/guideline5"
-                    android:importantForAutofill="no" />
+                    app:layout_constraintTop_toTopOf="@+id/guideline5" />
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline6"
