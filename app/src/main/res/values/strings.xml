@@ -3,4 +3,14 @@
     <string name="text_ItemAcercaDe">Acerca de</string>
     <string name="text_ItemQuejasSugerencias">Quejas y sugerencias</string>
     <string name="text_ItemCerrarSesion">Cerrar sesión</string>
+    <string name="text_nombre">Nombre</string>
+    <string name="text_buttonAPresencial">Asesoria Presencial</string>
+    <string name="text_editTextTimeInicio">Hora Inicio</string>
+    <string name="text_buttonAOnline">Asesoria Online</string>
+    <string name="text_switchEstado">Estado</string>
+    <string name="text_textViewEstado">Inactivo</string>
+    <string name="text_editTextURL">Introduce la url de la sesión</string>
+    <string name="text_textTimeFinalizacion">Hora Finalización</string>
+    <string name="text_textMultilineInfoExtra">Información extra</string>
+    <string name="text_imageViewAsesor">Foto de asesor par.</string>
 </resources>
