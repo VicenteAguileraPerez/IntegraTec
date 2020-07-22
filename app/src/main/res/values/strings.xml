@@ -14,4 +14,6 @@
     <string name="text_textMultilineInfoExtra">Información extra</string>
     <string name="text_imageViewAsesor">Foto de asesor par.</string>
     <string name="text_ButtonPublicar">Publicar</string>
+    <string name="hora_fin">Hora fin</string>
+    <string name="hora_inicio">Hora Inicio</string>
 </resources>
