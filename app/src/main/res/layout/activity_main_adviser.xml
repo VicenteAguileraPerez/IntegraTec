@@ -52,7 +52,7 @@
                             android:contentDescription="@string/text_imageViewAsesor"
                             app:layout_constraintBottom_toTopOf="@+id/guideline6"
                             app:layout_constraintEnd_toStartOf="@+id/guideline3"
-                            app:layout_constraintStart_toStartOf="@id/guideline20"
+
                             app:layout_constraintTop_toTopOf="@+id/guideline5"
                             app:layout_constraintVertical_bias="1.0"
                             app:srcCompat="@drawable/imagen" />
@@ -68,8 +68,6 @@
                         app:cardElevation="0dp"
                         app:cardBackgroundColor="@android:color/transparent"
                         app:layout_constraintBottom_toBottomOf="@id/guideline6"
-                        app:layout_constraintEnd_toEndOf="@id/guideline4"
-                        app:layout_constraintStart_toStartOf="@id/guideline2"
                         app:layout_constraintTop_toTopOf="@id/guideline5"
                         >
 

@@ -105,20 +105,20 @@ public class MainAdviserActivity extends AppCompatActivity implements View.OnCli
         int idView = view.getId();
         if(idView==R.id.editText_HoraInicio)
         {
-            if(picker!=null)
+            /*if(picker!=null)
             {
                 if (!picker.isShowing()) {
                     getHora(editText_HoraInicio);
                 }
             }
             else
-            {
+            {*/
                 getHora(editText_HoraInicio);
-            }
+            //}
         }
         else if(idView==R.id.editTextTime_Finalizacion)
         {
-            if(picker!=null)
+           /* if(picker!=null)
             {
                 if (!picker.isShowing())
                 {
@@ -126,9 +126,9 @@ public class MainAdviserActivity extends AppCompatActivity implements View.OnCli
                 }
             }
             else
-            {
+            {*/
                 getHora(editText_HoraFinalizacion);
-            }
+            //}
         }
 
     }
@@ -139,13 +139,13 @@ public class MainAdviserActivity extends AppCompatActivity implements View.OnCli
             public void onFocusChange(View view, boolean focus) {
                 if(focus)
                 {
-                    if (picker != null) {
+                   /* if (picker != null) {
                         if (focus && !picker.isShowing()) {
                             getHora(editText_HoraInicio);
                         }
-                    } else {
+                    } else {*/
                         getHora(editText_HoraInicio);
-                    }
+                    //}
                 }
             }
         });
@@ -155,14 +155,14 @@ public class MainAdviserActivity extends AppCompatActivity implements View.OnCli
 
                 if(focus)
                 {
-                    if (picker != null) {
+                    /*if (picker != null) {
                         if (!picker.isShowing()) {
 
                             getHora(editText_HoraFinalizacion);
                         }
-                    } else {
+                    } else {*/
                         getHora(editText_HoraFinalizacion);
-                    }
+                    //}
                 }
 
             }
