@@ -13,4 +13,5 @@
     <string name="text_textTimeFinalizacion">Hora Finalización</string>
     <string name="text_textMultilineInfoExtra">Información extra</string>
     <string name="text_imageViewAsesor">Foto de asesor par.</string>
+    <string name="text_ButtonPublicar">Publicar</string>
 </resources>
