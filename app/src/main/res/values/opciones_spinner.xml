@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="string_materias">
+        <item>Seleccione materia de asesoria...</item>
+        <item>Álgebra</item>
+        <item>Álgebra lineal</item>
+        <item>Cálculo diferencial</item>
+        <item>Cálculo integral</item>
+        <item>Cálculo vectorial</item>
+        <item>Ecuaciones diferenciales</item>
+        <item>Química</item>
+        <item>Física</item>
+    </string-array>
+
+    <string-array name="string_lugares">
+        <item>Seleccione lugar de asesoria...</item>
+        <item>Biblioteca</item>
+        <item>Edificio de Telemática</item>
+        <item>Edificio A</item>
+        <item>Edificio D</item>
+    </string-array>
+</resources>
