@@ -84,7 +84,7 @@
                         android:hint="@string/mensaje"
                         android:importantForAutofill="no"
                         android:inputType="textMultiLine"
-                        android:text="hola"
+                        android:text="@string/hola"
                         android:textColor="@color/cardview_light_background"
                         android:textColorHint="@color/cardview_light_background"
                         app:layout_constraintBottom_toTopOf="@+id/guideline2"
