@@ -23,7 +23,7 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="@+id/guideline"
-      app:srcCompat="@mipmap/ciencias" />
+      app:srcCompat="@mipmap/cienciasbasicas" />
 
   <androidx.constraintlayout.widget.Guideline
       android:id="@+id/guideline2"
