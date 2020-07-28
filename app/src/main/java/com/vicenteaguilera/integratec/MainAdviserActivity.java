@@ -42,7 +42,7 @@ public class MainAdviserActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_adviser);
+        setContentView(R.layout.activity_main_adviser_app);
         ActionBar toolbar = getSupportActionBar();
         Objects.requireNonNull(toolbar).setElevation(0);
         setTitle("Menú Asesor");
