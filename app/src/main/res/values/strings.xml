@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">IntegraTec</string>
+<!--   Complaints and suggestions-->
+    <string name="nombre">Nombre</string>
+    <string name="email">Correo Electrónico</string>
+    <string name="queja">Queja</string>
+    <string name="sugerencia">Sugerencia</string>
+    <string name="mensaje">Mensaje</string>
+    <string name="enviar">Enviar</string>
+    <string name="hola">hola</string>
+
     
   <!-- SplashScreen -->
     <string name="imagen">SplashScreen</string>
@@ -23,6 +32,5 @@
    
   <!--about -->
     <string name="acerca_de">Acerca de</string>
-
 
 </resources>
