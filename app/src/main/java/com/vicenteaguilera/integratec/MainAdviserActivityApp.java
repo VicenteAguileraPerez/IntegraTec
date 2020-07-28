@@ -21,7 +21,7 @@ import android.widget.Toast;
 import java.util.Calendar;
 import java.util.Objects;
 
-public class MainAdviserActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainAdviserActivityApp extends AppCompatActivity implements View.OnClickListener {
 
     private  TimePickerDialog picker=null;
     private Spinner spinner_materias;
@@ -236,12 +236,12 @@ public class MainAdviserActivity extends AppCompatActivity implements View.OnCli
             public void onTimeSet(TimePicker timePicker, int hrs, int min) {
                 String horas = hrs < 10 ? "0" + hrs : hrs + "";
                 String minutos = min < 10 ? "0" + min : min + "";
-                Toast.makeText(MainAdviserActivity.this, hrs + ":" + min, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainAdviserActivityApp.this, hrs + ":" + min, Toast.LENGTH_SHORT).show();
                 view.setText(horas + ":" + minutos);
             }
         };
         if (picker == null) {
-            picker = new TimePickerDialog(MainAdviserActivity.this, timePicker, hour, minutes, true);
+            picker = new TimePickerDialog(MainAdviserActivityApp.this, timePicker, hour, minutes, true);
         }
         picker.show();
     }

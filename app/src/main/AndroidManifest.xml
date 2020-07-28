@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".MainAdviserActivity"/>
+        <activity android:name=".MainAdviserActivityApp"/>
     </application>
 
 </manifest>
