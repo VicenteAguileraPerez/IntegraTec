@@ -12,9 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <activity android:name=".ListAdviserActivity"/>
         <activity android:name=".MainAppActivity"/>
-          
-
         <activity android:name=".ComplaintSuggestionsActivity"/>      
         <activity android:name=".SplashScreenActivity" />
         <activity android:name=".OptionsActivity" />
