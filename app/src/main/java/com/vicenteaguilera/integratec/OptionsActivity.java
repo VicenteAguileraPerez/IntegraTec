@@ -34,6 +34,7 @@ public class OptionsActivity extends AppCompatActivity implements  View.OnClickL
 
         switch (id)
         {
+
             case R.id.button_Registrarse:
                 Toast.makeText(this, "Se dio clic en Registrarse", Toast.LENGTH_SHORT).show();
                 //Snackbar.make(Objects.requireNonNull(getCurrentFocus()), "Se dio clic en Registrarse.", Snackbar.LENGTH_SHORT).show();
