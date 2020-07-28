@@ -31,7 +31,7 @@
                     android:orientation="vertical">
 
                     <EditText
-                        android:id="@+id/editTextTextPersonName"
+                        android:id="@+id/editText_Nombre"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="30dp"
@@ -40,11 +40,12 @@
                         android:layout_marginBottom="10dp"
                         android:backgroundTint="#000000"
                         android:ems="10"
-                        android:hint="Correo"
-                        android:inputType="textEmailAddress" />
+                        android:hint="@string/text_editTextEmail"
+                        android:inputType="textEmailAddress"
+                        android:importantForAutofill="no" />
 
                     <EditText
-                        android:id="@+id/editTextTextPassword"
+                        android:id="@+id/editText_Password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="30dp"
@@ -53,10 +54,12 @@
                         android:layout_marginBottom="50dp"
                         android:backgroundTint="#000000"
                         android:ems="10"
-                        android:hint="Contraseña"
-                        android:inputType="textPassword" />
+                        android:hint="@string/text_editTextPass"
+                        android:inputType="textPassword"
+                        android:importantForAutofill="no" />
 
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/cardView_ButtonIniciarSesion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="30dp"
@@ -72,13 +75,13 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/textView2"
+                                android:id="@+id/textView_ButtonInciarSesion"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
                                 android:layout_marginBottom="10dp"
                                 android:gravity="center"
-                                android:text="Iniciar Sesión"
+                                android:text="@string/text_ButtonIniciarSesion"
                                 android:textColor="#FFFFFF" />
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
