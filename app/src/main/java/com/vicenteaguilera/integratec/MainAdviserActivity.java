@@ -70,8 +70,6 @@ public class MainAdviserActivity extends AppCompatActivity implements View.OnCli
         editTextFocusListener();
         radioButtonListener();
 
-        /*ArrayAdapter<CharSequence> arrayAdapterLugares = ArrayAdapter.createFromResource(this, R.array.string_lugares, android.R.layout.simple_spinner_item);
-        ArrayAdapter<CharSequence> arrayAdapterMaterias = ArrayAdapter.createFromResource(this, R.array.string_materias, android.R.layout.simple_spinner_item);*/
 
         ArrayAdapter<String> arrayAdapterLugares = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, LUGARES);
         ArrayAdapter<String> arrayAdapterMaterias = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, MATERIAS);
