@@ -2,6 +2,7 @@ package com.vicenteaguilera.integratec;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -31,10 +32,13 @@ public class MainAdviserActivity extends AppCompatActivity implements View.OnCli
     private EditText editText_URL;
     private EditText editText_HoraInicio;
     private EditText editText_HoraFinalizacion;
+    private CardView cardView_ButtonPublicar;
     private EditText editTextTextMultiLine;
+    private TextView textView_Estado;
     private Switch switchEstado;
 
-
+    private final String [] MATERIAS  ={"Seleccione una materia...","Álgebra", "Álgebra lineal", "Cálculo diferencial", "Cálculo integral", "Cálculo vectorial", "Ecuaciones diferenciales", "Química", "Física"};
+    private final String [] LUGARES ={"Seleccione un lugar...","Biblioteca", "Telemática", "Edificio A", "Edificio F"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -49,25 +53,30 @@ public class MainAdviserActivity extends AppCompatActivity implements View.OnCli
         spinner_lugares = findViewById(R.id.spinner_Lugar);
         radioGroup = findViewById(R.id.radioGroup);
         editText_URL = findViewById(R.id.editView_URL);
+        editTextTextMultiLine = findViewById(R.id.editTextTextMultiLine);
+        switchEstado = findViewById(R.id.switch_Estado);
+        cardView_ButtonPublicar = findViewById(R.id.cardView_ButtonPublicar);
+        textView_Estado = findViewById(R.id.textView_Estado);
 
         editText_HoraInicio = findViewById(R.id.editText_HoraInicio);
         editText_HoraInicio.setInputType(InputType.TYPE_NULL);
-        editText_HoraFinalizacion = findViewById(R.id.editTextTime_Finalizacion);
+        editText_HoraFinalizacion = findViewById(R.id.editText_HoraFin);
         editText_HoraFinalizacion.setInputType(InputType.TYPE_NULL);
 
         editText_HoraInicio.setOnClickListener(this);
         editText_HoraFinalizacion.setOnClickListener(this);
+        cardView_ButtonPublicar.setOnClickListener(this);
+        switchEstado.setOnClickListener(this);
 
-        editTextTextMultiLine = findViewById(R.id.editTextTextMultiLine);
-        switchEstado = findViewById(R.id.switch_Estado);
         editText_URL.requestFocus();
         editTextFocusListener();
         radioButtonListener();
 
+        /*ArrayAdapter<CharSequence> arrayAdapterLugares = ArrayAdapter.createFromResource(this, R.array.string_lugares, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> arrayAdapterMaterias = ArrayAdapter.createFromResource(this, R.array.string_materias, android.R.layout.simple_spinner_item);*/
 
-
-        ArrayAdapter<CharSequence> arrayAdapterLugares = ArrayAdapter.createFromResource(this, R.array.string_lugares, android.R.layout.simple_spinner_item);
-        ArrayAdapter<CharSequence> arrayAdapterMaterias = ArrayAdapter.createFromResource(this, R.array.string_materias, android.R.layout.simple_spinner_item);
+        ArrayAdapter<String> arrayAdapterLugares = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, LUGARES);
+        ArrayAdapter<String> arrayAdapterMaterias = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, MATERIAS);
 
         spinner_lugares.setAdapter(arrayAdapterLugares);
         spinner_materias.setAdapter(arrayAdapterMaterias);
@@ -116,7 +125,7 @@ public class MainAdviserActivity extends AppCompatActivity implements View.OnCli
                 getHora(editText_HoraInicio);
             //}
         }
-        else if(idView==R.id.editTextTime_Finalizacion)
+        else if(idView==R.id.editText_HoraFin)
         {
            /* if(picker!=null)
             {
@@ -129,6 +138,21 @@ public class MainAdviserActivity extends AppCompatActivity implements View.OnCli
             {*/
                 getHora(editText_HoraFinalizacion);
             //}
+        }
+        else if(idView==R.id.cardView_ButtonPublicar)
+        {
+            Toast.makeText(this, "Publicando...", Toast.LENGTH_SHORT).show();
+        }
+        else if(idView==R.id.switch_Estado)
+        {
+            if(switchEstado.isChecked())
+            {
+                textView_Estado.setText("Activo");
+            }
+            else
+            {
+                textView_Estado.setText("Inactivo");
+            }
         }
 
     }
@@ -223,12 +247,5 @@ public class MainAdviserActivity extends AppCompatActivity implements View.OnCli
             picker = new TimePickerDialog(MainAdviserActivity.this, timePicker, hour, minutes, true);
         }
         picker.show();
-
-
-
-
-
-
-
     }
 }
