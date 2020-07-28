@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">IntegraTec</string>
+    
+  <!-- SplashScreen -->
+    <string name="imagen">SplashScreen</string>
   
   
    <!-- Options -->
@@ -20,5 +23,6 @@
    
   <!--about -->
     <string name="acerca_de">Acerca de</string>
+
 
 </resources>
