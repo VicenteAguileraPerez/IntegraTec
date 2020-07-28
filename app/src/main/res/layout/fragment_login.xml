@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="25dp"
-            app:cardCornerRadius="43dp"
+            app:cardCornerRadius="30dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,8 +41,8 @@
                         android:backgroundTint="#000000"
                         android:ems="10"
                         android:hint="@string/text_editTextEmail"
-                        android:inputType="textEmailAddress"
-                        android:importantForAutofill="no" />
+                        android:importantForAutofill="no"
+                        android:inputType="textEmailAddress" />
 
                     <EditText
                         android:id="@+id/editText_Password"
@@ -55,8 +55,8 @@
                         android:backgroundTint="#000000"
                         android:ems="10"
                         android:hint="@string/text_editTextPass"
-                        android:inputType="textPassword"
-                        android:importantForAutofill="no" />
+                        android:importantForAutofill="no"
+                        android:inputType="textPassword" />
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/cardView_ButtonIniciarSesion"

@@ -64,10 +64,10 @@ public class SingInTwoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_sing_in_two, container, false);
+        View view = inflater.inflate(R.layout.fragment_sign_in_two, container, false);
 
         spinner_Carreras = view.findViewById(R.id.spinner_Carreras);
-        ArrayAdapter<String> arrayAdapter= new ArrayAdapter<>(this.getContext(), android.R.layout.simple_list_item_1, CARRERAS);
+        ArrayAdapter<String> arrayAdapter= new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1, CARRERAS);
         spinner_Carreras.setAdapter(arrayAdapter);
 
         return  view;
