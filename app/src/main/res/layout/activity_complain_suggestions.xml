@@ -116,7 +116,6 @@
                         android:layout_margin="10dp"
                         android:backgroundTint="#FFFFFF"
                         android:ems="10"
-
                         android:hint="@string/nombre"
                         android:importantForAutofill="no"
                         android:inputType="textCapWords"
