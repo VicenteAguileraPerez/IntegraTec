@@ -32,6 +32,7 @@ public class MainAdviserActivity extends AppCompatActivity implements View.OnCli
     private EditText editText_HoraFinalizacion;
     private CardView cardView_ButtonPublicar;
     private EditText editTextTextMultiLine;
+
     private TextView textView_Estado;
     private Switch switchEstado;
 
