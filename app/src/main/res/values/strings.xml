@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">IntegraTec</string>
+<!--   Complaints and suggestions-->
     <string name="nombre">Nombre</string>
     <string name="email">Correo Electrónico</string>
     <string name="queja">Queja</string>
@@ -7,5 +8,29 @@
     <string name="mensaje">Mensaje</string>
     <string name="enviar">Enviar</string>
     <string name="hola">hola</string>
+
+    
+  <!-- SplashScreen -->
+    <string name="imagen">SplashScreen</string>
+  
+  
+   <!-- Options -->
+    <string name="SaludoAsesor">¡Bienvenido a IntegraTec Asesor!</string>
+    <string name="textButtonRegistrarse">Registrarse</string>
+    <string name="textButtonIniciarSesion">Iniciar Sesión</string>
+    <string name="descriptionImageOptions">Persona estudiando.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text_editTextEmail">Correo</string>
+    <string name="text_editTextPass">Contraseña</string>
+    <string name="text_ButtonIniciarSesion">Iniciar Sesión</string>
+    <string name="text_editTextNumber">Código de Ciencias Básicas</string>
+    <string name="text_ButtonSiguiente">Siguiente</string>
+    <string name="text_editTextNombre">Nombre</string>
+    <string name="text_editTextApellidos">Apellidos</string>
+    <string name="text_ButtonRegistrarse">Registrarse</string>
+   
+  <!--about -->
+    <string name="acerca_de">Acerca de</string>
 
 </resources>
