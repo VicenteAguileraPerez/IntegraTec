@@ -1,4 +1,4 @@
-package com.vicenteaguilera.integratec;
+package com.vicenteaguilera.integratec.mainapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.vicenteaguilera.integratec.R;
 
 import java.util.Objects;
 

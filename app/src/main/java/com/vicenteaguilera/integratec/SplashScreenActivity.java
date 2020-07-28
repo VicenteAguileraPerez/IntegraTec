@@ -8,6 +8,8 @@ import android.os.Handler;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.vicenteaguilera.integratec.mainapp.MainAppActivity;
+
 public class SplashScreenActivity extends AppCompatActivity {
     private TextView textView_IntegraTec;
     private ImageView imageView_Splash_Screen;
@@ -31,7 +33,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashScreenActivity.this, null);
+                Intent intent = new Intent(SplashScreenActivity.this, MainAppActivity.class);
                 startActivity(intent);
                 finish();
             }

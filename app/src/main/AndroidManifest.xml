@@ -14,16 +14,17 @@
 
         <activity android:name=".MainAdviserActivityApp"/>
         <activity android:name=".ListAdviserActivity"/>
-        <activity android:name=".MainAppActivity"/>
+        <activity android:name=".mainapp.MainAppActivity"/>
         <activity android:name=".ComplaintSuggestionsActivity"/>      
-        <activity android:name=".SplashScreenActivity" />
+        <activity android:name=".SplashScreenActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".OptionsActivity" />
          <activity android:name=".AboutActivity">
-              <intent-filter>
-                  <action android:name="android.intent.action.MAIN" />
 
-                  <category android:name="android.intent.category.LAUNCHER" />
-              </intent-filter>
           </activity>
     </application>
 </manifest>
