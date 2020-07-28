@@ -1,6 +1,7 @@
 package com.vicenteaguilera.integratec;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,7 +15,9 @@ import java.util.Objects;
 
 public class OptionsActivity extends AppCompatActivity implements  View.OnClickListener{
 
-    TextView button_Registrarse, button_IniciarSesion;
+    private TextView button_Registrarse, button_IniciarSesion;
+    private Fragment login;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,9 @@ public class OptionsActivity extends AppCompatActivity implements  View.OnClickL
                 break;
 
             case R.id.button_IniciarSesion:
+                login = new LoginFragment();
+                getSupportFragmentManager().beginTransaction().add(R.id.contenedor, login).commit();
+
                 button_IniciarSesion.setTextColor(Color.YELLOW);
                 Toast.makeText(this, "Se dio clic en Iniciar Sesión", Toast.LENGTH_SHORT).show();
                 //Snackbar.make(Objects.requireNonNull(getCurrentFocus()), "Se dio clic en Iniciar Sesión.", Snackbar.LENGTH_SHORT).show();
