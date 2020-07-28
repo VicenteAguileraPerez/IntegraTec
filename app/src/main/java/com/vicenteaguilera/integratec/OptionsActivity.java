@@ -8,9 +8,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
-
-import java.util.Objects;
 
 public class OptionsActivity extends AppCompatActivity implements  View.OnClickListener{
 
