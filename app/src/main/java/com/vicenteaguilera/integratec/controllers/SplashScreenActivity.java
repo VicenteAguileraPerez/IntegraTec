@@ -1,4 +1,4 @@
-package com.vicenteaguilera.integratec;
+package com.vicenteaguilera.integratec.controllers;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,7 +8,8 @@ import android.os.Handler;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.vicenteaguilera.integratec.mainapp.MainAppActivity;
+import com.vicenteaguilera.integratec.R;
+import com.vicenteaguilera.integratec.controllers.mainapp.MainAppActivity;
 
 public class SplashScreenActivity extends AppCompatActivity {
     private TextView textView_IntegraTec;
@@ -25,7 +26,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                textView_IntegraTec.setText("IntegraTec");
+                textView_IntegraTec.setText(R.string.app_name);
                 imageView_Splash_Screen.setImageResource(R.mipmap.colaboracion);
             }
         },timeSplash);

@@ -1,4 +1,4 @@
-package com.vicenteaguilera.integratec;
+package com.vicenteaguilera.integratec.controllers;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -9,6 +9,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.vicenteaguilera.integratec.R;
 
 public class ComplaintSuggestionsActivity extends AppCompatActivity implements View.OnClickListener {
     private CardView cardView_ButtonPublicar;

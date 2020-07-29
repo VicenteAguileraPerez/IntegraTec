@@ -1,4 +1,4 @@
-package com.vicenteaguilera.integratec;
+package com.vicenteaguilera.integratec.controllers;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.vicenteaguilera.integratec.R;
 
 
 public class OptionsActivity extends AppCompatActivity implements  View.OnClickListener{

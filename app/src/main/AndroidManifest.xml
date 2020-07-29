@@ -12,18 +12,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".MainAdviserActivityApp"/>
-        <activity android:name=".ListAdviserActivity"/>
-        <activity android:name=".mainapp.MainAppActivity"/>
-        <activity android:name=".ComplaintSuggestionsActivity"/>      
-        <activity android:name=".SplashScreenActivity" >
+        <activity android:name=".controllers.MainAdviserActivityApp"/>
+        <activity android:name=".controllers.ListAdviserActivity"/>
+        <activity android:name=".controllers.mainapp.MainAppActivity"/>
+        <activity android:name=".controllers.ComplaintSuggestionsActivity"/>
+        <activity android:name=".controllers.SplashScreenActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".OptionsActivity" />
-         <activity android:name=".AboutActivity">
+        <activity android:name=".controllers.OptionsActivity" />
+         <activity android:name=".controllers.AboutActivity">
 
           </activity>
     </application>

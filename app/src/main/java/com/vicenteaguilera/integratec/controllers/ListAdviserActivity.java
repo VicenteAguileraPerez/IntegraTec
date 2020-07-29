@@ -1,8 +1,10 @@
-package com.vicenteaguilera.integratec;
+package com.vicenteaguilera.integratec.controllers;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.vicenteaguilera.integratec.R;
 
 public class ListAdviserActivity extends AppCompatActivity {
 

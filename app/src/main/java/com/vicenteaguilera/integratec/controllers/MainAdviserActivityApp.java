@@ -1,4 +1,4 @@
-package com.vicenteaguilera.integratec;
+package com.vicenteaguilera.integratec.controllers;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,12 +18,15 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.vicenteaguilera.integratec.R;
+
 import java.util.Calendar;
 import java.util.Objects;
 
 public class MainAdviserActivityApp extends AppCompatActivity implements View.OnClickListener {
 
-    private  TimePickerDialog picker=null;
+    private TimePickerDialog picker=null;
     private Spinner spinner_materias;
     private Spinner spinner_lugares;
     private RadioGroup radioGroup;

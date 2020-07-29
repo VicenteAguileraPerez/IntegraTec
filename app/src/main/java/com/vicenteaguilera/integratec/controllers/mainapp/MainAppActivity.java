@@ -1,8 +1,7 @@
-package com.vicenteaguilera.integratec.mainapp;
+package com.vicenteaguilera.integratec.controllers.mainapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.lifecycle.ViewModelStoreOwner;
 
 import android.os.Bundle;
 import android.view.View;
@@ -14,7 +13,7 @@ import java.util.Objects;
 
 public class MainAppActivity extends AppCompatActivity implements View.OnClickListener {
 
-    CardView button_asesores_disponibles,button_sesion_asesor;
+    private CardView button_asesores_disponibles,button_sesion_asesor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

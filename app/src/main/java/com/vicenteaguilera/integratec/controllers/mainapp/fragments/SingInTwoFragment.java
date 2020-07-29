@@ -1,4 +1,4 @@
-package com.vicenteaguilera.integratec.mainapp.fragments;
+package com.vicenteaguilera.integratec.controllers.mainapp.fragments;
 
 import android.os.Bundle;
 
@@ -7,15 +7,17 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.vicenteaguilera.integratec.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link SignInFragment#newInstance} factory method to
+ * Use the {@link SingInTwoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SignInFragment extends Fragment {
+public class SingInTwoFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +28,10 @@ public class SignInFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public SignInFragment() {
+        private final String [] CARRERAS ={"Seleccione una carrera","Ingeniería en Sistemas Computacionales", "Ingeniería en Administración", "Ingeniería en Mecatrónica", "Ingeniería Industrial", "Ingeniería en Mecánica", "Ingeniería en Industrias Alimentarias", "Ingeniería Civil"};
+        private Spinner spinner_Carreras;
+
+    public SingInTwoFragment() {
         // Required empty public constructor
     }
 
@@ -36,11 +41,11 @@ public class SignInFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment SingInFragment.
+     * @return A new instance of fragment SingInTwoFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SignInFragment newInstance(String param1, String param2) {
-        SignInFragment fragment = new SignInFragment();
+    public static SingInTwoFragment newInstance(String param1, String param2) {
+        SingInTwoFragment fragment = new SingInTwoFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,6 +66,12 @@ public class SignInFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sign_in, container, false);
+        View view = inflater.inflate(R.layout.fragment_sign_in_two, container, false);
+
+        spinner_Carreras = view.findViewById(R.id.spinner_Carreras);
+        ArrayAdapter<String> arrayAdapter= new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1, CARRERAS);
+        spinner_Carreras.setAdapter(arrayAdapter);
+
+        return  view;
     }
 }
