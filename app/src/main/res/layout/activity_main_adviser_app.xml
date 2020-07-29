@@ -49,7 +49,7 @@
                             android:layout_width="100dp"
                             android:layout_height="100dp"
                             android:layout_gravity="center_horizontal"
-                            android:contentDescription="@string/text_imageViewAsesor"
+                            android:contentDescription="@string/imageViewAsesor"
                             app:layout_constraintBottom_toTopOf="@+id/guideline6"
                             app:layout_constraintEnd_toStartOf="@+id/guideline3"
 
@@ -76,7 +76,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="start|center"
-                            android:text="@string/text_nombre"
+                            android:text="@string/nombre"
                             android:maxLines="1"
                             android:ellipsize="end"
                             android:textColor="#FFFFFF"
@@ -101,7 +101,7 @@
                    android:layout_marginStart="10dp"
                    android:layout_marginEnd="10dp"
                    android:orientation="horizontal"
-                   android:text="@string/text_switchEstado"
+                   android:text="@string/switchEstado"
                    android:textAlignment="textEnd"
                    android:textColor="#343669"
                    android:textSize="16sp" />
@@ -111,7 +111,7 @@
                    android:layout_width="99dp"
                    android:layout_height="38dp"
                    android:gravity="center"
-                   android:text="@string/text_textViewEstado"
+                   android:text="@string/estado"
                    android:textColor="#343669"
                    android:textSize="16sp"
                    android:textStyle="bold" />
@@ -128,7 +128,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_weight="0.5"
                     android:buttonTint="@color/colorPrimaryDark"
-                    android:text="@string/text_buttonAPresencial"
+                    android:text="@string/asesoriaPresencial"
                     android:textSize="16sp" />
 
                 <RadioButton
@@ -138,7 +138,7 @@
                     android:layout_weight="0.5"
                     android:buttonTint="@color/colorPrimaryDark"
                     android:checked="true"
-                    android:text="@string/text_buttonAOnline"
+                    android:text="@string/asesoriaOnline"
                     android:textSize="16sp" />
             </RadioGroup>
             <LinearLayout
@@ -166,7 +166,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="10dp"
                         android:gravity="center_vertical"
-                        android:hint="@string/text_editTextURL"
+                        android:hint="@string/URL"
                         android:importantForAutofill="no"
                         android:inputType="textUri|text"
                         android:textSize="16sp"
@@ -241,7 +241,7 @@
                         android:layout_marginBottom="20dp"
                         android:ems="10"
                         android:gravity="start|top"
-                        android:hint="@string/text_textMultilineInfoExtra"
+                        android:hint="@string/infoExtra"
                         android:importantForAutofill="no"
                         android:inputType="textMultiLine"
                         android:textSize="16sp"
@@ -266,7 +266,7 @@
                         android:id="@+id/textView_ButtonPublicar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/text_ButtonPublicar"
+                        android:text="@string/publicar"
                         android:textColor="@android:color/background_light"
                         android:textSize="18sp"
                         android:textStyle="bold"

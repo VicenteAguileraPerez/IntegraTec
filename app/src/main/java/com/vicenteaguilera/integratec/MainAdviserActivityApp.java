@@ -91,15 +91,15 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         int id = item.getItemId();
         switch (id){
             case R.id.item_AcercaDe:
-                Toast.makeText(this, "Acerca de...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.acerca_de+"...", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.item_QuejasSugerencias:
-                Toast.makeText(this, "Quejas y sugerencias...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.quejasSugerencias+"...", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.item_CerrarSesion:
-                Toast.makeText(this, "Cerrar sesión...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.cerrarSesion+"...", Toast.LENGTH_SHORT).show();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -138,17 +138,17 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         }
         else if(idView==R.id.cardView_ButtonPublicar)
         {
-            Toast.makeText(this, "Publicando...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.publicando+"...", Toast.LENGTH_SHORT).show();
         }
         else if(idView==R.id.switch_Estado)
         {
             if(switchEstado.isChecked())
             {
-                textView_Estado.setText("Activo");
+                textView_Estado.setText(R.string.activo);
             }
             else
             {
-                textView_Estado.setText("Inactivo");
+                textView_Estado.setText(R.string.inactivo);
             }
         }
 
