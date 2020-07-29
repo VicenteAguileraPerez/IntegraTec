@@ -40,6 +40,7 @@
 
 
                     <RadioGroup
+                        android:id="@+id/radioGroup_topic"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
                         android:layout_margin="10dp"
@@ -84,7 +85,6 @@
                         android:hint="@string/mensaje"
                         android:importantForAutofill="no"
                         android:inputType="textMultiLine"
-                        android:text="@string/hola"
                         android:textColor="#FFFFFF"
                         android:textColorHint="#FFFFFF"
                         app:layout_constraintBottom_toTopOf="@+id/guideline2"
