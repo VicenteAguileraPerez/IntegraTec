@@ -1,4 +1,4 @@
-package com.vicenteaguilera.integratec.controllers;
+package com.vicenteaguilera.integratec;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,8 +8,10 @@ import android.os.Handler;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.vicenteaguilera.integratec.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.vicenteaguilera.integratec.controllers.mainapp.MainAppActivity;
+
+import java.util.Objects;
 
 public class SplashScreenActivity extends AppCompatActivity {
     private TextView textView_IntegraTec;
@@ -19,7 +21,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-
+        Objects.requireNonNull(getSupportActionBar()).hide();
         textView_IntegraTec = findViewById(R.id.textView_IntegraTec);
         imageView_Splash_Screen = findViewById(R.id.imageView_Splash_Screen);
 

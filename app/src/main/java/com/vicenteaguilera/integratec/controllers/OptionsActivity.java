@@ -1,54 +1,32 @@
 package com.vicenteaguilera.integratec.controllers;
 
+import android.os.Bundle;
+import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.Navigation;
 
-import android.graphics.Color;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.vicenteaguilera.integratec.R;
+import com.vicenteaguilera.integratec.controllers.fragments.LoginFragment;
+import com.vicenteaguilera.integratec.controllers.fragments.SignInFragment;
+
+import java.util.Objects;
 
 
-public class OptionsActivity extends AppCompatActivity implements  View.OnClickListener{
+public class OptionsActivity extends AppCompatActivity {
 
-    private TextView button_Registrarse, button_IniciarSesion;
-    private Fragment login;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_options);
+        Objects.requireNonNull(getSupportActionBar()).hide();
 
-        button_Registrarse = findViewById(R.id.button_Registrarse);
-        button_IniciarSesion = findViewById(R.id.button_IniciarSesion);
-
-        button_Registrarse.setOnClickListener(this);
-        button_IniciarSesion.setOnClickListener(this);
     }
 
-    @Override
-    public void onClick(View view) {
-        int id = view.getId();
-
-        switch (id)
-        {
-
-            case R.id.button_Registrarse:
-                Toast.makeText(this, "Se dio clic en Registrarse", Toast.LENGTH_SHORT).show();
-                //Snackbar.make(Objects.requireNonNull(getCurrentFocus()), "Se dio clic en Registrarse.", Snackbar.LENGTH_SHORT).show();
-                break;
-
-            case R.id.button_IniciarSesion:
-                //login = new LoginFragment();
-                //getSupportFragmentManager().beginTransaction().add(R.id.contenedor, login).commit();
-
-                Toast.makeText(this, "Se dio clic en Iniciar Sesión", Toast.LENGTH_SHORT).show();
-                //Snackbar.make(Objects.requireNonNull(getCurrentFocus()), "Se dio clic en Iniciar Sesión.", Snackbar.LENGTH_SHORT).show();
-                break;
-        }
-    }
 }

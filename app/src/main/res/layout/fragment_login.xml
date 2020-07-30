@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#343669"
-    tools:context=".controllers.OptionsActivity">
+    android:background="@android:color/transparent"
+    tools:context=".controllers.fragments.LoginFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -40,7 +40,7 @@
                         android:layout_marginBottom="10dp"
                         android:backgroundTint="#000000"
                         android:ems="10"
-                        android:hint="@string/text_editTextEmail"
+                        android:hint="@string/email"
                         android:importantForAutofill="no"
                         android:inputType="textEmailAddress" />
 
@@ -54,7 +54,7 @@
                         android:layout_marginBottom="50dp"
                         android:backgroundTint="#000000"
                         android:ems="10"
-                        android:hint="@string/text_editTextPass"
+                        android:hint="@string/password"
                         android:importantForAutofill="no"
                         android:inputType="textPassword" />
 
@@ -75,13 +75,41 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/textView_ButtonInciarSesion"
+                                android:id="@+id/textView_ButtonIniciarSesion"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
                                 android:layout_marginBottom="10dp"
                                 android:gravity="center"
-                                android:text="@string/text_ButtonIniciarSesion"
+                                android:text="@string/iniciarSesion"
+                                android:textColor="#FFFFFF" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardView_ButtonRegistrarse"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="30dp"
+                        android:layout_marginBottom="15dp"
+                        app:cardCornerRadius="100dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="#E94A47"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView_ButtonRegistrarse"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginBottom="10dp"
+                                android:gravity="center"
+                                android:text="@string/registrarse"
                                 android:textColor="#FFFFFF" />
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
@@ -91,4 +119,4 @@
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

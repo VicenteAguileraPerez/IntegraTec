@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">IntegraTec</string>
-<!-- MainAdviser -->
+    <!-- MainAdviser -->
     <string name="acercaDe">Acerca de</string>
     <string name="quejasSugerencias">Quejas y sugerencias</string>
     <string name="cerrarSesion">Cerrar sesión</string>
+    <string name="crearQR">Crear código QR</string>
+    <string name="leerQR">Leer código QR</string>
     <string name="asesoriaPresencial">Asesoria Presencial</string>
     <string name="timeInicio">Hora Inicio</string>
     <string name="asesoriaOnline">Asesoria Online</string>
@@ -19,14 +21,14 @@
     <string name="hora_inicio">Hora Inicio</string>
     <string name="activo">Activo</string>
     <string name="inactivo">Inactivo</string>
-  
-<!-- MainApp -->
+
+    <!-- MainApp -->
     <string name="logo">logo</string>
     <string name="logo2">logo2</string>
     <string name="sesion_asesor">Sesión Asesor</string>
     <string name="asesores_disponibles">Asesores disponibles</string>
 
-<!--   Complaints and suggestions-->
+    <!--   Complaints and suggestions-->
     <string name="nombre">Nombre</string>
     <string name="email">Correo Electrónico</string>
     <string name="queja">Queja</string>
@@ -36,12 +38,11 @@
     <string name="agradecimientos">¡Gracias, atenderemos pronto tu </string>
 
 
-    
-  <!-- SplashScreen -->
+    <!-- SplashScreen -->
     <string name="imagen">SplashScreen</string>
-  
-  
-   <!-- Options -->
+
+
+    <!-- Options -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="SaludoAsesor">¡Bienvenido a IntegraTec Asesor!</string>
     <string name="descriptionImageOptions">Persona estudiando.</string>
@@ -51,8 +52,8 @@
     <string name="siguiente">Siguiente</string>
     <string name="apellidos">Apellidos</string>
     <string name="registrarse">Registrarse</string>
-   
-  <!--about -->
+
+    <!--about -->
     <string name="acerca_de">Acerca de</string>
 
 </resources>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#343669"
-    tools:context=".controllers.SplashScreenActivity">
+    tools:context=".SplashScreenActivity">
 
   <androidx.constraintlayout.widget.Guideline
       android:id="@+id/guideline"
