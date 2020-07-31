@@ -13,8 +13,8 @@
         <action
             android:id="@+id/action_signInFragment_to_singInTwoFragment"
             app:destination="@id/singInTwoFragment"
-            app:enterAnim="@anim/slide_in"
-            app:exitAnim="@anim/slide_out" />
+            app:enterAnim="@android:anim/slide_in_left"
+            app:popEnterAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -24,8 +24,8 @@
         <action
             android:id="@+id/action_loginFragment_to_signInFragment"
             app:destination="@id/signInFragment"
-            app:enterAnim="@anim/slide_in"
-            app:exitAnim="@anim/slide_out" />
+            app:enterAnim="@android:anim/slide_in_left"
+            app:popEnterAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/singInTwoFragment"
