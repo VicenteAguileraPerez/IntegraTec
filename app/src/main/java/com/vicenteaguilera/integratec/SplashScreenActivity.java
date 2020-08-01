@@ -17,6 +17,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     private TextView textView_IntegraTec;
     private ImageView imageView_Splash_Screen;
     private final int timeSplash = 1500;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
