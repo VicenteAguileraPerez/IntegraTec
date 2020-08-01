@@ -97,19 +97,19 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         Intent intent;
         switch (id){
             case R.id.item_AcercaDe:
-                Toast.makeText(this, getResources().getText(R.string.acerca_de)+"...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainAdviserActivityApp.this, getResources().getText(R.string.acerca_de)+"...", Toast.LENGTH_SHORT).show();
                 intent = new Intent(this, AboutActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.item_QuejasSugerencias:
-                Toast.makeText(this,getResources().getText(R.string.quejasSugerencias)+"...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainAdviserActivityApp.this,getResources().getText(R.string.quejasSugerencias)+"...", Toast.LENGTH_SHORT).show();
                 intent = new Intent(this, ComplaintSuggestionsActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.item_CerrarSesion:
-                Toast.makeText(this, getResources().getText(R.string.cerrarSesion)+"...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainAdviserActivityApp.this, getResources().getText(R.string.cerrarSesion)+"...", Toast.LENGTH_SHORT).show();
                 intent = new Intent(this, MainAppActivity.class);
                 startActivity(intent);
                 finish();
