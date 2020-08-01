@@ -1,5 +1,6 @@
 package com.vicenteaguilera.integratec.controllers.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.vicenteaguilera.integratec.R;
+import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
 
 import static androidx.navigation.Navigation.findNavController;
 
@@ -23,6 +25,7 @@ import static androidx.navigation.Navigation.findNavController;
 public class LoginFragment extends Fragment {
 
     private CardView cardView_registrarse;
+    private CardView cardView_ButtonIniciarSesion;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -78,6 +81,16 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 findNavController(requireView()).navigate(R.id.action_loginFragment_to_signInFragment);
+            }
+        });
+
+        cardView_ButtonIniciarSesion = view.findViewById(R.id.cardView_ButtonIniciarSesion);
+        cardView_ButtonIniciarSesion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MainAdviserActivityApp.class);
+                startActivity(intent);
+                getActivity().finish();
             }
         });
     }

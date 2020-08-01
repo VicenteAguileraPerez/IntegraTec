@@ -4,6 +4,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.Menu;
@@ -20,6 +21,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.vicenteaguilera.integratec.R;
+import com.vicenteaguilera.integratec.controllers.mainapp.MainAppActivity;
 
 import java.util.Calendar;
 import java.util.Objects;
@@ -92,17 +94,25 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     public boolean onOptionsItemSelected(MenuItem item)
     {
         int id = item.getItemId();
+        Intent intent;
         switch (id){
             case R.id.item_AcercaDe:
-                Toast.makeText(this, R.string.acerca_de+"...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getText(R.string.acerca_de)+"...", Toast.LENGTH_SHORT).show();
+                intent = new Intent(this, AboutActivity.class);
+                startActivity(intent);
                 break;
 
             case R.id.item_QuejasSugerencias:
-                Toast.makeText(this, R.string.quejasSugerencias+"...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,getResources().getText(R.string.quejasSugerencias)+"...", Toast.LENGTH_SHORT).show();
+                intent = new Intent(this, ComplaintSuggestionsActivity.class);
+                startActivity(intent);
                 break;
 
             case R.id.item_CerrarSesion:
-                Toast.makeText(this, R.string.cerrarSesion+"...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getText(R.string.cerrarSesion)+"...", Toast.LENGTH_SHORT).show();
+                intent = new Intent(this, MainAppActivity.class);
+                startActivity(intent);
+                finish();
                 break;
         }
         return super.onOptionsItemSelected(item);

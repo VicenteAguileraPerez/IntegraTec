@@ -1,9 +1,11 @@
 package com.vicenteaguilera.integratec.controllers.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -12,8 +14,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.vicenteaguilera.integratec.R;
+import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
 
 import static androidx.navigation.Navigation.findNavController;
 
@@ -36,6 +40,7 @@ public class SignInTwoFragment extends Fragment  {
 
     private final String [] CARRERAS ={"Seleccione una carrera","Ingeniería en Sistemas Computacionales", "Ingeniería en Administración", "Ingeniería en Mecatrónica", "Ingeniería Industrial", "Ingeniería en Mecánica", "Ingeniería en Industrias Alimentarias", "Ingeniería Civil"};
     private Spinner spinner_Carreras;
+    private CardView cardView_ButtonRegistrarse;
 
     public SignInTwoFragment() {
         // Required empty public constructor
@@ -91,6 +96,16 @@ public class SignInTwoFragment extends Fragment  {
             {
                 SignInTwoFragment.super.getActivity().onBackPressed();
 
+            }
+        });
+
+        cardView_ButtonRegistrarse = view.findViewById(R.id.cardView_ButtonRegistrarse);
+        cardView_ButtonRegistrarse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MainAdviserActivityApp.class);
+                startActivity(intent);
+                getActivity().finish();
             }
         });
     }
