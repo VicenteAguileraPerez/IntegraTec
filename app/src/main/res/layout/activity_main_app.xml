@@ -85,8 +85,12 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/button_sesion_asesores"
-                android:layout_width="250dp"
-                android:layout_height="48dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginBottom="5dp"
                 app:cardCornerRadius="30dp"
                 app:layout_constraintBottom_toTopOf="@+id/guideline4"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -114,12 +118,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.749658" />
+                app:layout_constraintGuide_percent="0.72" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/button_asesores_disponibles"
-                android:layout_width="250dp"
-                android:layout_height="48dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginBottom="5dp"
                 app:cardCornerRadius="30dp"
                 app:layout_constraintBottom_toTopOf="@+id/guideline5"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -147,21 +155,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.94" />
+                app:layout_constraintGuide_percent="0.90" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.8235294" />
+                app:layout_constraintGuide_percent="0.80" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.86" />
+                app:layout_constraintGuide_percent="0.82" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
