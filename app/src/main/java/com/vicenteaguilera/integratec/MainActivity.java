@@ -60,15 +60,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void crearQR()
     {
-        if(editText_Nombre.getText().toString()!="")
+        if(!editText_Nombre.getText().toString().isEmpty())
         {
             if(spinner_Carrera.getSelectedItemPosition() != 0)
             {
                 if(spinner_Asignatura.getSelectedItemPosition() != 0)
                 {
-                    if(editText_Tema.getText().toString() != "")
+                    if(!editText_Tema.getText().toString().isEmpty())
                     {
-                        if(editText_Fecha.getText().toString() != "")
+                        if(!editText_Fecha.getText().toString().isEmpty())
                         {
 
                             String texto = editText_Nombre.getText().toString() + "_" + spinner_Carrera.getSelectedItem().toString() + "_"
@@ -79,25 +79,29 @@ public class MainActivity extends AppCompatActivity {
                             imageView.setImageBitmap(bitmap);
                             imageView.setVisibility(View.VISIBLE);
                         }
+                        else
+                        {
+                            Snackbar.make(findViewById(android.R.id.content), "Debes ingresar la fecha de asesoria.", Snackbar.LENGTH_SHORT).show();
+                        }
                     }
                     else
                     {
-
+                        Snackbar.make(findViewById(android.R.id.content), "Debes ingresar el tema de asesoria.", Snackbar.LENGTH_SHORT).show();
                     }
                 }
                 else
                 {
-
+                    Snackbar.make(findViewById(android.R.id.content), "Debes seleccionar una materia.", Snackbar.LENGTH_SHORT).show();
                 }
             }
             else
             {
-
+                Snackbar.make(findViewById(android.R.id.content), "Debes seleccionar una carrera.", Snackbar.LENGTH_SHORT).show();
             }
         }
         else
         {
-
+            Snackbar.make(findViewById(android.R.id.content), "Debes ingresar tú nombre.", Snackbar.LENGTH_SHORT).show();
         }
     }
 }
