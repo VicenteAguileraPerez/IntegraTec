@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else
         {
-            Snackbar.make(null, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
         }
     }
 }

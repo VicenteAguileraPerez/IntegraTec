@@ -80,7 +80,7 @@
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="250dp"
                 android:contentDescription="@string/imagen_de_codigo_qr"
                 tools:srcCompat="@tools:sample/avatars" />
 
