@@ -59,4 +59,8 @@ dependencies {
     //add the Firebase SDK for Firbase Firestore
     implementation 'com.google.firebase:firebase-firestore:21.5.0'
 
+    //implementacion lector qr
+    implementation 'com.journeyapps:zxing-android-embedded:3.2.0'
+    //implementacion del creador  qr
+    implementation 'com.github.kenglxn.QRGen:android:2.5.0'
 }

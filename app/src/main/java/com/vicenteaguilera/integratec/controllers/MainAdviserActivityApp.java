@@ -1,5 +1,6 @@
 package com.vicenteaguilera.integratec.controllers;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -7,6 +8,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,8 +22,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.controllers.mainapp.MainAppActivity;
+import com.vicenteaguilera.integratec.helpers.CaptureActivityPortrait;
 
 import java.util.Calendar;
 import java.util.Objects;
@@ -37,9 +42,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private EditText editText_HoraFinalizacion;
     private CardView cardView_ButtonPublicar;
     private EditText editTextTextMultiLine;
-
     private TextView textView_Estado;
     private Switch switchEstado;
+
+    private IntentResult result= null;
+
 
     private final String [] MATERIAS  ={"Seleccione una materia...","Álgebra", "Álgebra lineal", "Cálculo diferencial", "Cálculo integral", "Cálculo vectorial", "Ecuaciones diferenciales", "Química", "Física"};
     private final String [] LUGARES ={"Seleccione un lugar...","Biblioteca", "Telemática", "Edificio A", "Edificio F"};
@@ -113,6 +120,10 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 intent = new Intent(this, MainAppActivity.class);
                 startActivity(intent);
                 finish();
+                break;
+
+            case R.id.item_Leer_QR:
+                escanearQR();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -257,5 +268,35 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             picker = new TimePickerDialog(MainAdviserActivityApp.this, timePicker, hour, minutes, true);
         }
         picker.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
+        if(result!=null)
+        {
+            if(result.getContents() != null)
+            {
+                Toast.makeText(MainAdviserActivityApp.this,result.getContents(),Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                Toast.makeText(MainAdviserActivityApp.this,"Cancelaste escaneo.",Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void escanearQR()
+    {
+        IntentIntegrator intentIntegrator = new IntentIntegrator(MainAdviserActivityApp.this);
+        intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+        intentIntegrator.setPrompt("Escanea código QR");
+        intentIntegrator.setOrientationLocked(false);//orientacion
+        intentIntegrator.setCameraId(0);//camara
+        intentIntegrator.setBeepEnabled(false);
+        intentIntegrator.setCaptureActivity(CaptureActivityPortrait.class);
+        intentIntegrator.setBarcodeImageEnabled(false);
+        intentIntegrator.initiateScan();
     }
 }

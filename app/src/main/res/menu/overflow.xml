@@ -8,13 +8,13 @@
         android:id="@+id/item_QuejasSugerencias"
         android:title="@string/quejasSugerencias" />
     <item
-        android:id="@+id/item_CerrarSesion"
-        android:title="@string/cerrarSesion" />
-    <item
         android:id="@+id/item_Crear_QR"
         android:title="@string/crearQR" />
     <item
         android:id="@+id/item_Leer_QR"
         android:title="@string/leerQR" />
+    <item
+        android:id="@+id/item_CerrarSesion"
+        android:title="@string/cerrarSesion" />
 
 </menu>
