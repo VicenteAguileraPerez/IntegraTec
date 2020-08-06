@@ -6,4 +6,5 @@
     <string name="fecha">Fecha</string>
     <string name="imagen_de_codigo_qr">Imagen de codigo QR</string>
     <string name="guardar_qr">Guardar QR</string>
+    <string name="numero_de_control">Número de control</string>
 </resources>

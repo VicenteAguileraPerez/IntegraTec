@@ -16,11 +16,26 @@
             android:orientation="vertical" >
 
             <EditText
-                android:id="@+id/editText_Nombre"
+                android:id="@+id/editText_NumeroControl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="40dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="20dp"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:ems="10"
+                android:maxLength="8"
+                android:hint="@string/numero_de_control"
+                android:inputType="number"
+                android:importantForAutofill="no" />
+
+            <EditText
+                android:id="@+id/editText_Nombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="30dp"
                 android:layout_marginBottom="20dp"
                 android:backgroundTint="@color/colorPrimaryDark"
@@ -32,6 +47,7 @@
 
             <Spinner
                 android:id="@+id/spinner_Carrera"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
@@ -42,6 +58,7 @@
 
             <Spinner
                 android:id="@+id/spinner_Asignatura"
+                style="@android:style/Widget.Material.Spinner.Underlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
@@ -62,13 +79,14 @@
                 android:ems="10"
                 android:hint="@string/tema"
                 android:importantForAutofill="no"
-                android:inputType="textPersonName"
+                android:inputType="text"
                 android:textSize="18sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="30dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="30dp"
                 android:layout_marginBottom="20dp"
                 android:orientation="horizontal">
@@ -141,7 +159,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
                 android:layout_marginStart="30dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="30dp"
                 android:contentDescription="@string/imagen_de_codigo_qr"
                 tools:srcCompat="@tools:sample/avatars" />
