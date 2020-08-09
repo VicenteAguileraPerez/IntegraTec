@@ -128,38 +128,7 @@ public class FirestoreHelper
         });
 
     }
-     //realtime change asesor
-  /*  public static void updateDataRealtime(String document, final Context context)
-    {
-        Log.e("err","hola");
 
-        AsesoresCollection.document(document).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot snapshot,
-                                @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-
-                    return;
-                }
-
-                if (snapshot != null && snapshot.exists() && asesor!=null)
-                {
-                    Log.e("err",asesor.getEmail());
-                    asesor.setActivo((boolean)Objects.requireNonNull(snapshot.getData()).get("activo"));
-                    if((boolean)Objects.requireNonNull(snapshot.getData()).get("activo"))
-                    {
-                        status.status("Bienvenido "+asesor.getNombre()+" "+asesor.getApellidos());
-                        Intent intent = new Intent(context, MainAdviserActivityApp.class);
-                        context.startActivity(intent);
-                        ((Activity)context).finish();
-                    }
-                }
-                else {
-
-                }
-            }
-        });
-    }*/
     private void registerDataAsesoriaPublicaToFirestore(CollectionReference collectionReference, String document, final Status status, final ProgressDialog dialog, Map<String, Object> data, final Context context)
     {
         // Add a new document with a generated ID

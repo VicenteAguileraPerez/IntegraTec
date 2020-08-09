@@ -2,6 +2,10 @@ package com.vicenteaguilera.integratec.controllers;
 
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.Menu;
@@ -9,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -16,24 +21,34 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-
-
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
+import com.vicenteaguilera.integratec.helpers.utility.ImagesHelper;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.controllers.mainapp.MainAppActivity;
 import com.vicenteaguilera.integratec.helpers.CaptureActivityPortrait;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
-
+import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Objects;
+import id.zelory.compressor.Compressor;
 
 public class MainAdviserActivityApp extends AppCompatActivity implements View.OnClickListener {
+    private final static int GALLERY_INTENT = 1;
+    private File imagen=null;
 
     private TimePickerDialog picker=null;
     private Spinner spinner_materias;
@@ -46,6 +61,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private EditText editTextTextMultiLine;
     private TextView textView_Estado;
     private Switch switchEstado;
+    private ImageView imageView_perfil;
 
     private IntentResult result= null;
 
@@ -61,7 +77,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         ActionBar toolbar = getSupportActionBar();
         Objects.requireNonNull(toolbar).setElevation(0);
         setTitle("Menú Asesor");
-
+        imageView_perfil = findViewById(R.id.imageView_perfil);
         spinner_materias = findViewById(R.id.spinner_Materia);
         spinner_lugares = findViewById(R.id.spinner_Lugar);
         radioGroup = findViewById(R.id.radioGroup);
@@ -91,7 +107,31 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
         spinner_lugares.setAdapter(arrayAdapterLugares);
         spinner_materias.setAdapter(arrayAdapterMaterias);
+        imageView_perfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(Intent.createChooser(intent,"Selecciona una imagen"),GALLERY_INTENT);
+            }
+        });
+        Bitmap placeholder = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.imagen);
+        RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), placeholder);
+        circularBitmapDrawable.setCircular(true);
+        Glide.with(getApplicationContext())
+                .load("https://firebasestorage.googleapis.com/v0/b/integratec-itsu.appspot.com/o/practilablogo.png?alt=media&token=346b3247-ebf3-4aed-a907-f59d8a8eb5f6")
+                .placeholder(circularBitmapDrawable)
+
+                .fitCenter()
+                .centerCrop()
+                .apply(RequestOptions.circleCropTransform())
+                //.apply(RequestOptions.bitmapTransform(new RoundedCorners(16)))
+                .into(imageView_perfil);
+
     }
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -139,33 +179,20 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         int idView = view.getId();
         if(idView==R.id.editText_HoraInicio)
         {
-            /*if(picker!=null)
-            {
-                if (!picker.isShowing()) {
-                    getHora(editText_HoraInicio);
-                }
-            }
-            else
-            {*/
-                getHora(editText_HoraInicio);
-            //}
+            getHora(editText_HoraInicio);
         }
         else if(idView==R.id.editText_HoraFin)
         {
-           /* if(picker!=null)
-            {
-                if (!picker.isShowing())
-                {
-                    getHora(editText_HoraFinalizacion);
-                }
-            }
-            else
-            {*/
-                getHora(editText_HoraFinalizacion);
-            //}
+            getHora(editText_HoraFinalizacion);
         }
         else if(idView==R.id.cardView_ButtonPublicar)
         {
+
+            //evaluación de que las fechas esten !=null
+            //seleccionado si es presencial o virtual
+            ///si es presencial que este seleccionado el lugar y si es virtual que este seleccionado el url
+            // que la hora de asesoría sea de 8:00 am a 8:00pm
+            // materia seleccionada
             Toast.makeText(this, R.string.publicando+"...", Toast.LENGTH_SHORT).show();
         }
         else if(idView==R.id.switch_Estado)
@@ -188,13 +215,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             public void onFocusChange(View view, boolean focus) {
                 if(focus)
                 {
-                   /* if (picker != null) {
-                        if (focus && !picker.isShowing()) {
-                            getHora(editText_HoraInicio);
-                        }
-                    } else {*/
-                        getHora(editText_HoraInicio);
-                    //}
+                    getHora(editText_HoraInicio);
                 }
             }
         });
@@ -204,14 +225,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
                 if(focus)
                 {
-                    /*if (picker != null) {
-                        if (!picker.isShowing()) {
-
-                            getHora(editText_HoraFinalizacion);
-                        }
-                    } else {*/
-                        getHora(editText_HoraFinalizacion);
-                    //}
+                    getHora(editText_HoraFinalizacion);
                 }
 
             }
@@ -277,17 +291,44 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
-        if(result!=null)
+        if(requestCode==GALLERY_INTENT)
         {
-            if(result.getContents() != null)
+            try
             {
-                Toast.makeText(MainAdviserActivityApp.this,result.getContents(),Toast.LENGTH_SHORT).show();
+                Uri uri = Objects.requireNonNull(data).getData();
+                imagen = ImagesHelper.from(getApplicationContext(),uri);
+                imagen= new Compressor(getApplicationContext()).compressToFile(imagen);
+
+                Glide.with(getApplicationContext())
+                        .load(imagen)
+                        .fitCenter()
+                        .centerCrop()
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(imageView_perfil);
+
+                //storageFirebase.EliminarFoto(FirebaseConexionFirestore.getValue("NumeroControl").toString(), FirebaseConexionFirestore.PERSONA,getView());
+                //storageFirebase.agregarFoto(FirebaseConexionFirestore.getValue("NumeroControl").toString(),Uri.fromFile(imagen) , FirebaseConexionFirestore.PERSONA,getView(), 1);
+
+
+
+            } catch (IOException | NullPointerException e) {
+                e.printStackTrace();
             }
-            else
+        }
+        else
+        {
+            result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
+            if(result!=null)
             {
-                Toast.makeText(MainAdviserActivityApp.this,"Cancelaste escaneo.",Toast.LENGTH_SHORT).show();
-            }
+                if(result.getContents() != null)
+                {
+                    Toast.makeText(MainAdviserActivityApp.this,result.getContents(),Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(MainAdviserActivityApp.this,"Cancelaste escaneo.",Toast.LENGTH_SHORT).show();
+                }
+        }
         }
     }
 

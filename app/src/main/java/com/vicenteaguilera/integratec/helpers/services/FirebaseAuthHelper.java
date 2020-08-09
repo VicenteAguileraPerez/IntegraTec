@@ -11,11 +11,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
 import com.vicenteaguilera.integratec.controllers.mainapp.MainAppActivity;
 import com.vicenteaguilera.integratec.helpers.utility.Status;
 import com.vicenteaguilera.integratec.helpers.utility.StringHelper;
-import com.vicenteaguilera.integratec.models.User;
+
 import java.util.Objects;
 
 public class FirebaseAuthHelper
