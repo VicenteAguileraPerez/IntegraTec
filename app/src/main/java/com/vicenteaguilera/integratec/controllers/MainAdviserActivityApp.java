@@ -121,7 +121,6 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         Glide.with(getApplicationContext())
                 .load("https://firebasestorage.googleapis.com/v0/b/integratec-itsu.appspot.com/o/practilablogo.png?alt=media&token=346b3247-ebf3-4aed-a907-f59d8a8eb5f6")
                 .placeholder(circularBitmapDrawable)
-
                 .fitCenter()
                 .centerCrop()
                 .apply(RequestOptions.circleCropTransform())
