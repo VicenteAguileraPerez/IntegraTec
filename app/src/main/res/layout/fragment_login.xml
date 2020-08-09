@@ -23,7 +23,7 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/editText_Nombre"
+                android:id="@+id/editText_nombre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
@@ -33,11 +33,11 @@
                 android:backgroundTint="@android:color/black"
                 android:ems="10"
                 android:hint="@string/email"
-                android:importantForAutofill="no"
+                android:autofillHints=""
                 android:inputType="textEmailAddress" />
 
             <EditText
-                android:id="@+id/editText_Password"
+                android:id="@+id/editText_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"

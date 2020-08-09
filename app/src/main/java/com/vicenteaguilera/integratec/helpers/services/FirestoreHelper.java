@@ -1,41 +1,42 @@
 package com.vicenteaguilera.integratec.helpers.services;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.core.FirestoreClient;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.vicenteaguilera.integratec.SplashScreenActivity;
 import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
+import com.vicenteaguilera.integratec.controllers.OptionsActivity;
+import com.vicenteaguilera.integratec.controllers.mainapp.MainAppActivity;
 import com.vicenteaguilera.integratec.helpers.utility.Status;
 import com.vicenteaguilera.integratec.models.Asesor;
-import com.vicenteaguilera.integratec.models.User;
+
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class FirestoreHelper
 {
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final CollectionReference UserCollection = db.collection("asesores");
+    private static FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static final CollectionReference AsesoresCollection = db.collection("asesores");
     private final CollectionReference AsesoriaPublicaCollection = db.collection("asesoria_publica");
-    private Status status;
+    private static Status status;
     private ProgressDialog dialog;
-    void addData(Status status, ProgressDialog dialog, Context context, String[] param)
+    public static Asesor asesor=null;
+    public void addData(Status status, ProgressDialog dialog, Context context, String uid, String email, String password, String[] param)
    {
-
        if(param.length==3)
        {
            //asesor
@@ -43,11 +44,12 @@ public class FirestoreHelper
            asesor.put("nombre", param[0]);
            asesor.put("apellido", param[1]);
            asesor.put("carrera", param[2]);
-           asesor.put("email", FirebaseAuthHelper.getUser().getEmail());
-           asesor.put("password", FirebaseAuthHelper.getUser().getPassword());
+           asesor.put("email", email);
+           asesor.put("password", password);
            asesor.put("uri_image", "");
+           asesor.put("activo",false);
            Log.e("lista",  asesor.values().toArray().length+"");
-           registerDataUserToFirestore(UserCollection,FirebaseAuthHelper.getUser().getUid(),status,dialog, asesor,context);
+           registerDataUserToFirestore(AsesoresCollection,uid,status,dialog, asesor,context);
 
        }
        else if(param.length==2)
@@ -65,23 +67,99 @@ public class FirestoreHelper
                        {
                            if(task.isSuccessful())
                            {
-                               status.status("Ingresando al sistema...");
-                               dialog.dismiss();
-                               User user = new Asesor(document,data.get("nombre").toString(),data.get("apellido").toString(),data.get("email").toString(),data.get("password").toString(),data.get("carrera").toString(),data.get("uri_image").toString());
-                               FirebaseAuthHelper.setUser(user);
-                               Intent intent = new Intent(context, MainAdviserActivityApp.class);
+                               status.status("Registrado comuníquese con el administrador para habilitar su cuenta...");
+                               Intent intent = new Intent(context, OptionsActivity.class);
                                context.startActivity(intent);
                            }
                            else
                            {
-                               dialog.dismiss();
                                status.status("Error del registro de los datos. Inténtelo de nuevo");
-                               FirebaseAuthHelper.getCurrentUser().delete();
-                               FirebaseAuthHelper.setUser(null);
                            }
+                           dialog.dismiss();
                        }
                });
    }
+   //getAsesor
+    public void getData(String document, final ProgressDialog dialog, final Status status,final Context context)
+    {
+        dialog.show();
+        AsesoresCollection.document(document).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (Objects.requireNonNull(document).exists())
+                    {
+                        Map<String,Object>data=document.getData();
+                        asesor = new Asesor(document.getId(),String.valueOf(data.get("nombre")),String.valueOf(data.get("apellido")),String.valueOf(data.get("email")),String.valueOf(data.get("password")),String.valueOf(data.get("carrera")),String.valueOf(data.get("uri_image")),(boolean)data.get("activo"));
+                        if((boolean)document.get("activo"))
+                        {
+                            status.status("Bienvenido "+asesor.getNombre()+" "+asesor.getApellidos());
+                            Intent intent = new Intent(context, MainAdviserActivityApp.class);
+                            context.startActivity(intent);
+                            ((Activity)context).finish();
+                        }
+                        else
+                        {
+                            if(!(((Activity)context) instanceof OptionsActivity))
+                            {
+
+                                status.status("Usted se ha registrado, comuníquese con el administrador para habilitar su cuenta...");
+                                Intent intent = new Intent(context, OptionsActivity.class);
+                                context.startActivity(intent);
+                                ((Activity) context).finish();
+                            }
+                            else{
+                                status.status("Usted se ha registrado, comuníquese con el administrador para habilitar su cuenta...");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        status.status("No existe esa cuenta");
+                    }
+                }
+                else
+                {
+                    status.status("Error, verifique su conexión a Internet, si los problemas continuan contacte al administrado");
+                }
+                dialog.dismiss();
+            }
+        });
+
+    }
+     //realtime change asesor
+  /*  public static void updateDataRealtime(String document, final Context context)
+    {
+        Log.e("err","hola");
+
+        AsesoresCollection.document(document).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+
+                    return;
+                }
+
+                if (snapshot != null && snapshot.exists() && asesor!=null)
+                {
+                    Log.e("err",asesor.getEmail());
+                    asesor.setActivo((boolean)Objects.requireNonNull(snapshot.getData()).get("activo"));
+                    if((boolean)Objects.requireNonNull(snapshot.getData()).get("activo"))
+                    {
+                        status.status("Bienvenido "+asesor.getNombre()+" "+asesor.getApellidos());
+                        Intent intent = new Intent(context, MainAdviserActivityApp.class);
+                        context.startActivity(intent);
+                        ((Activity)context).finish();
+                    }
+                }
+                else {
+
+                }
+            }
+        });
+    }*/
     private void registerDataAsesoriaPublicaToFirestore(CollectionReference collectionReference, String document, final Status status, final ProgressDialog dialog, Map<String, Object> data, final Context context)
     {
         // Add a new document with a generated ID

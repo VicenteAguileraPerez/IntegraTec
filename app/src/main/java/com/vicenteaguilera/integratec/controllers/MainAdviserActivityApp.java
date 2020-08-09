@@ -1,14 +1,9 @@
 package com.vicenteaguilera.integratec.controllers;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,11 +17,18 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+
+
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.controllers.mainapp.MainAppActivity;
 import com.vicenteaguilera.integratec.helpers.CaptureActivityPortrait;
+import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
 
 import java.util.Calendar;
 import java.util.Objects;
@@ -95,6 +97,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.overflow, menu);
+        menu.removeItem(R.id.item_Crear_QR);
         return true;
     }
     @Override
@@ -120,6 +123,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 intent = new Intent(this, MainAppActivity.class);
                 startActivity(intent);
                 finish();
+                FirestoreHelper.asesor=null;
                 break;
 
             case R.id.item_Leer_QR:

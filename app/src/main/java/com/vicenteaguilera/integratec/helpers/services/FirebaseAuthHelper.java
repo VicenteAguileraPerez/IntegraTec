@@ -26,7 +26,6 @@ public class FirebaseAuthHelper
     private Context context;
     private final StringHelper stringHelper = new StringHelper();
     private final FirestoreHelper firestoreHelper = new FirestoreHelper();
-    private static User user;
     public void setContext(Context context)
     {
         this.context=context;
@@ -35,31 +34,8 @@ public class FirebaseAuthHelper
     {
         return mAuth.getCurrentUser();
     }
-    public static User getUser()
-    {
-        return user;
-    }
-    public static void setUser(User user1)
-    {
-        user=user1;
-    }
 
-    private static void createUser(FirebaseUser firebaseUser, String password,String...param)
-    {
 
-        if(firebaseUser!=null && !password.equals("") && param!=null)
-        {
-            user= new User(/*uid*/firebaseUser.getUid());
-            user.setNombre(param[0]);
-            user.setApellidos(param[1]);
-            user.setEmail(firebaseUser.getEmail());
-            user.setPassword(password);
-        }
-        else
-        {
-            user=null;
-        }
-    }
 
     //registrarse
     public void createUserEmailAndPassword(final String email, final String password, final ProgressDialog dialog, final String[]args)
@@ -71,14 +47,14 @@ public class FirebaseAuthHelper
                     .addOnCompleteListener((Activity) context, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
+                            if (task.isSuccessful())
+                            {
                                 // Sign in success, update UI with the signed-in user's information
                                 FirebaseUser user = mAuth.getCurrentUser();
 
-
                                 //llamar a la creacion del usuario
-                                createUser(user,password, args);
-                                firestoreHelper.addData(status,dialog, context, args);
+                                //createUser(user,password, args);
+                                firestoreHelper.addData(status,dialog, context, user.getUid(),email,password,args);
 
                             }
                             else
@@ -96,7 +72,7 @@ public class FirebaseAuthHelper
                                 {
                                     status.status("Error al registrarse");
                                 }
-                                createUser(null,"",null);
+                                //createUser(null,"",null);
                                 dialog.dismiss();
                             }
                         }
@@ -105,6 +81,7 @@ public class FirebaseAuthHelper
         }
         else
         {
+            dialog.dismiss();
             status.status("Error en el email o en el password");
         }
 
@@ -119,18 +96,17 @@ public class FirebaseAuthHelper
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                status.status("Ingresando al sistema...");
-                                dialog.dismiss();
-                                Intent intent = new Intent(context, MainAdviserActivityApp.class);
-                                context.startActivity(intent);
+
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                firestoreHelper.getData(Objects.requireNonNull(user).getUid(),dialog,status,context);
                             }
                             else
                             {
                                 String error = Objects.requireNonNull(task.getException()).getMessage();
-                                switch (error)
+                                switch (Objects.requireNonNull(error))
                                 {
                                     case "There is no user record corresponding to this identifier. The user may have been deleted.":
-                                        status.status("Esas credenciales no existen en la base de datos o el email es invalido");
+                                        status.status("Esas credenciales no existen en la base de datos o el email es inválido");
                                         break;
                                     case "The password is invalid or the user does not have a password.":
                                         status.status("La contraseña es incorrecta");
@@ -151,6 +127,7 @@ public class FirebaseAuthHelper
         else
         {
             status.status("Error en el email o en el password");
+            dialog.dismiss();
         }
     }
     ///salir

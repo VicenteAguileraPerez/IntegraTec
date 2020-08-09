@@ -33,10 +33,11 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
                     android:background="#FFFFFF"
+                    android:contentDescription="@string/iconoregreso"
                     android:src="@drawable/ic_baseline_arrow_back_24" />
 
                 <EditText
-                    android:id="@+id/editText_Nombre"
+                    android:id="@+id/editText_nombre"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
@@ -47,10 +48,10 @@
                     android:ems="10"
                     android:hint="@string/nombre"
                     android:importantForAutofill="no"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="textCapWords" />
 
                 <EditText
-                    android:id="@+id/editText_Apellidos"
+                    android:id="@+id/editText_apellidos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
@@ -61,10 +62,10 @@
                     android:ems="10"
                     android:hint="@string/apellidos"
                     android:importantForAutofill="no"
-                    android:inputType="textPassword" />
+                    android:inputType="textCapWords" />
 
                 <Spinner
-                    android:id="@+id/spinner_Carreras"
+                    android:id="@+id/spinner_carreras"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"

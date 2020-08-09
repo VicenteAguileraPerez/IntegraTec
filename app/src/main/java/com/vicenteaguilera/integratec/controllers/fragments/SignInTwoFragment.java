@@ -1,6 +1,6 @@
 package com.vicenteaguilera.integratec.controllers.fragments;
 
-import android.content.Intent;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,65 +12,40 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.vicenteaguilera.integratec.R;
-import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
+import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
+import com.vicenteaguilera.integratec.helpers.utility.Status;
 
 import static androidx.navigation.Navigation.findNavController;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SignInTwoFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class SignInTwoFragment extends Fragment  {
+public class SignInTwoFragment extends Fragment implements Status {
 
     private ImageButton imageButton;
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private final String [] CARRERAS ={"Seleccione una carrera","Ingeniería en Sistemas Computacionales", "Ingeniería en Administración", "Ingeniería en Mecatrónica", "Ingeniería Industrial", "Ingeniería en Mecánica", "Ingeniería en Industrias Alimentarias", "Ingeniería Civil"};
     private Spinner spinner_Carreras;
     private CardView cardView_ButtonRegistrarse;
+    private EditText editText_nombre,editText_apellidos;
+    private  String email, password;
+    private FirebaseAuthHelper firebaseAuthHelper = new FirebaseAuthHelper();
 
-    public SignInTwoFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SingInTwoFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SignInTwoFragment newInstance(String param1, String param2) {
-        SignInTwoFragment fragment = new SignInTwoFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        Status status = this;
+        firebaseAuthHelper.setOnStatusListener(status);
+        firebaseAuthHelper.setContext(getContext());
+        Bundle bundle = getArguments();
+        email = bundle.getString("email");
+        password = bundle.getString("password");
+
     }
 
     @Override
@@ -79,7 +54,7 @@ public class SignInTwoFragment extends Fragment  {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_sign_in_two, container, false);
 
-        spinner_Carreras = view.findViewById(R.id.spinner_Carreras);
+        spinner_Carreras = view.findViewById(R.id.spinner_carreras);
         ArrayAdapter<String> arrayAdapter= new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1, CARRERAS);
         spinner_Carreras.setAdapter(arrayAdapter);
 
@@ -98,15 +73,40 @@ public class SignInTwoFragment extends Fragment  {
 
             }
         });
+        editText_nombre = view.findViewById(R.id.editText_nombre);
+        editText_apellidos = view.findViewById(R.id.editText_apellidos);
 
         cardView_ButtonRegistrarse = view.findViewById(R.id.cardView_ButtonRegistrarse);
         cardView_ButtonRegistrarse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MainAdviserActivityApp.class);
-                startActivity(intent);
-                getActivity().finish();
+                ProgressDialog dialog = ProgressDialog.show(getActivity(), "",
+                        "Registrándose...", true);
+                dialog.show();
+
+                String nombre= editText_nombre.getText().toString();
+                String apellidos = editText_apellidos.getText().toString();
+
+                //evaluaciones
+                //nombre y apellidos no sean ""
+                if(spinner_Carreras.getSelectedItemPosition()>0)
+                {
+                    String carrera = spinner_Carreras.getSelectedItem().toString();
+                    firebaseAuthHelper.createUserEmailAndPassword(email,password,dialog,new String[]{nombre,apellidos,carrera});
+                }
+                else{
+                    Snackbar.make(v,"Selecione una carrera",Snackbar.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
+
+
             }
         });
+    }
+
+    @Override
+    public void status(String message)
+    {
+        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
     }
 }

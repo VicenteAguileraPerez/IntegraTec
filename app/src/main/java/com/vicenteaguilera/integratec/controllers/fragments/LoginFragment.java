@@ -1,6 +1,6 @@
 package com.vicenteaguilera.integratec.controllers.fragments;
 
-import android.content.Intent;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,59 +11,31 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.vicenteaguilera.integratec.R;
-import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
+import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
+import com.vicenteaguilera.integratec.helpers.utility.Status;
 
 import static androidx.navigation.Navigation.findNavController;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link LoginFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class LoginFragment extends Fragment {
+
+public class LoginFragment extends Fragment  implements Status{
 
     private CardView cardView_registrarse;
     private CardView cardView_ButtonIniciarSesion;
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private EditText editText_email,editText_password;
+    private FirebaseAuthHelper firebaseAuthHelper = new FirebaseAuthHelper();
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public LoginFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment LoginFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static LoginFragment newInstance(String param1, String param2) {
-        LoginFragment fragment = new LoginFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        Status status = this;
+        firebaseAuthHelper.setOnStatusListener(status);
+        firebaseAuthHelper.setContext(getContext());
+
     }
 
     @Override
@@ -77,21 +49,34 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         cardView_registrarse = view.findViewById(R.id.cardView_ButtonRegistrarse);
+
         cardView_registrarse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 findNavController(requireView()).navigate(R.id.action_loginFragment_to_signInFragment);
             }
         });
-
+        editText_email= view.findViewById(R.id.editText_nombre);
+        editText_password = view.findViewById(R.id.editText_password);
         cardView_ButtonIniciarSesion = view.findViewById(R.id.cardView_ButtonIniciarSesion);
         cardView_ButtonIniciarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MainAdviserActivityApp.class);
-                startActivity(intent);
-                getActivity().finish();
+
+                //login evaluacion que email sea email y que pass != ""
+                String email = editText_email.getText().toString();
+                String password  = editText_password.getText().toString();
+                ProgressDialog dialog = ProgressDialog.show(getActivity(), "",
+                        "Ingresando...", true);
+                firebaseAuthHelper.signInWithEmailAndPassword(email, password, dialog);
+
+
             }
         });
+    }
+    @Override
+    public void status(String message)
+    {
+        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
     }
 }

@@ -56,6 +56,7 @@
     <!--about -->
     <string name="acerca_de">Acerca de</string>
     <string name="integraTec">IntegraTec</string>
+    <string name="iconoregreso">iconoRegreso</string>
 
 
 </resources>

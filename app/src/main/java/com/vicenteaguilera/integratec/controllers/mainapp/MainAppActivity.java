@@ -10,6 +10,7 @@ import android.view.View;
 import com.google.android.material.snackbar.Snackbar;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.controllers.OptionsActivity;
+import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 
 import java.util.Objects;
 

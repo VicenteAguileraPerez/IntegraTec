@@ -10,9 +10,12 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseUser;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.controllers.fragments.LoginFragment;
 import com.vicenteaguilera.integratec.controllers.fragments.SignInFragment;
+import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
+import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
 
 import java.util.Objects;
 

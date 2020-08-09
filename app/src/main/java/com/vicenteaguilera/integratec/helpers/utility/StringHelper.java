@@ -7,6 +7,18 @@ public class StringHelper
 
     private String[] parts;
 
+    public boolean  isEmpty(String string)
+    {
+        return string.isEmpty();
+    }
+    public boolean isEqual(String string1,String string2)
+    {
+        return string1.equals(string2);
+    }
+    public boolean isGreaterThanOrEqual(int lengthString,int number)
+    {
+        return lengthString>=number;
+    }
     public boolean isEmail(String email)
     {
         return hasArroba(email);
