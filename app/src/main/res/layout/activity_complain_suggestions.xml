@@ -93,7 +93,7 @@
                         app:layout_constraintTop_toTopOf="@+id/guideline5" />
 
                     <EditText
-                        android:id="@+id/editText_nombre"
+                        android:id="@+id/editText_email"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_margin="10dp"
@@ -110,7 +110,7 @@
                         app:layout_constraintTop_toTopOf="@+id/guideline4" />
 
                     <EditText
-                        android:id="@+id/editText_nombre"
+                        android:id="@+id/editText_email"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_margin="10dp"

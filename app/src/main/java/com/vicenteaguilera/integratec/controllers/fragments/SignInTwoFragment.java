@@ -73,33 +73,53 @@ public class SignInTwoFragment extends Fragment implements Status {
 
             }
         });
-        editText_nombre = view.findViewById(R.id.editText_nombre);
-        editText_apellidos = view.findViewById(R.id.editText_apellidos);
+        editText_nombre = view.findViewById(R.id.editText_email);
+        editText_apellidos = view.findViewById(R.id.editText_password);
 
         cardView_ButtonRegistrarse = view.findViewById(R.id.cardView_ButtonRegistrarse);
         cardView_ButtonRegistrarse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideSetErrors();
                 ProgressDialog dialog = ProgressDialog.show(getActivity(), "",
                         "Registrándose...", true);
-                dialog.show();
-
+                boolean flag_nombre = false;
+                boolean flag_apellidos = false;
+                boolean flag_spinner = false;
                 String nombre= editText_nombre.getText().toString();
                 String apellidos = editText_apellidos.getText().toString();
 
                 //evaluaciones
                 //nombre y apellidos no sean ""
-                if(spinner_Carreras.getSelectedItemPosition()>0)
-                {
+
+                if(!nombre.isEmpty()){
+                    flag_nombre = true;
+                }else {
+                    editText_nombre.setError("Nombre requerido");
+                }
+
+                if(!apellidos.isEmpty()){
+                    flag_apellidos = true;
+                }else {
+                    editText_apellidos.setError("Apellidos requeridos");
+                }
+
+                if(spinner_Carreras.getSelectedItemPosition()>0){
+                    flag_spinner = true;
+                }else {
+                    flag_spinner = false;
+                    Snackbar.make(v,"Selecione una carrera",Snackbar.LENGTH_SHORT).show();
+                }
+
+                if(flag_apellidos && flag_nombre && flag_spinner){
+
+                    dialog.show();
                     String carrera = spinner_Carreras.getSelectedItem().toString();
                     firebaseAuthHelper.createUserEmailAndPassword(email,password,dialog,new String[]{nombre,apellidos,carrera});
-                }
-                else{
-                    Snackbar.make(v,"Selecione una carrera",Snackbar.LENGTH_SHORT).show();
+                }else {
+                    Snackbar.make(v,"Revise los datos ingresados",Snackbar.LENGTH_SHORT).show();
                     dialog.dismiss();
                 }
-
-
             }
         });
     }
@@ -108,5 +128,11 @@ public class SignInTwoFragment extends Fragment implements Status {
     public void status(String message)
     {
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+    }
+
+
+    private void hideSetErrors(){
+        editText_apellidos.setError(null);
+        editText_nombre.setError(null);
     }
 }

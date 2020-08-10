@@ -69,4 +69,23 @@ public class StringHelper
     {
         return isEmail(email) && !password.isEmpty();
     }
+
+    public int loginHelper(String email, String password){
+
+        if(isEmail(email) && !password.isEmpty()){
+            return 1;//Todo correcto
+        }else {
+            if(email.isEmpty() && !password.isEmpty()){
+                return 2;//Email vacío
+            }else  if(!isEmail(email) && !password.isEmpty()){
+                return 3;//Email invalido
+            }else  if(isEmail(email) && password.isEmpty()){
+                return 4;//Password vacío
+            }else if(email.isEmpty() && password.isEmpty()){
+                return 5;//Email vacío y pasword vacío
+            }
+        }
+
+        return 0;
+    }
 }
