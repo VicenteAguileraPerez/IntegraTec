@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +28,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
+
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.protobuf.StringValue;
 import com.vicenteaguilera.integratec.helpers.utility.ImagesHelper;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -64,6 +69,9 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private TextView textView_Estado;
     private Switch switchEstado;
     private ImageView imageView_perfil;
+    private RadioButton radioButton_AOnline;
+    private RadioButton radioBAPresencial;
+
 
     private IntentResult result= null;
 
@@ -84,6 +92,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         switchEstado = findViewById(R.id.switch_Estado);
         cardView_ButtonPublicar = findViewById(R.id.cardView_ButtonPublicar);
         textView_Estado = findViewById(R.id.textView_Estado);
+        radioButton_AOnline = findViewById(R.id.radioButton_AOnline);
+        radioBAPresencial = findViewById(R.id.radioButton_APresencial);
 
         editText_HoraInicio = findViewById(R.id.editText_HoraInicio);
         editText_HoraInicio.setInputType(InputType.TYPE_NULL);
@@ -124,11 +134,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 .apply(RequestOptions.circleCropTransform())
                 //.apply(RequestOptions.bitmapTransform(new RoundedCorners(16)))
                 .into(imageView_perfil);
-
     }
-
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -184,13 +190,96 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         }
         else if(idView==R.id.cardView_ButtonPublicar)
         {
-
             //evaluación de que las fechas esten !=null
             //seleccionado si es presencial o virtual
             ///si es presencial que este seleccionado el lugar y si es virtual que este seleccionado el url
             // que la hora de asesoría sea de 8:00 am a 8:00pm
             // materia seleccionada
-            Toast.makeText(this, R.string.publicando+"...", Toast.LENGTH_SHORT).show();
+
+            boolean flag_radioButton = false;
+            boolean flag_spinnerMateria = false;
+            boolean flag_TimeStar=false;
+            boolean flag_TimeEnd=false;
+
+            editText_URL.setError(null);
+            editText_HoraInicio.setError(null);
+            editText_HoraFinalizacion.setError(null);
+
+
+            if(radioBAPresencial.isChecked())
+            {
+                if(spinner_lugares.getSelectedItemPosition()>0)
+                {
+                    flag_radioButton=true;
+                }
+                else
+                {
+                    Snackbar.make(view, "Seleccionar un lugar para la asesoría.", Snackbar.LENGTH_SHORT).show();
+                }
+            }
+            else if(radioButton_AOnline.isChecked())
+            {
+                if(!editText_URL.getText().toString().isEmpty())
+                {
+                    flag_radioButton=true;
+                }
+                else
+                {
+                    editText_URL.setError("Ingresar url para la asesoría online.");
+                }
+            }
+
+            if(spinner_materias.getSelectedItemPosition()>0)
+            {
+                flag_spinnerMateria=true;
+            }
+            else
+            {
+                Snackbar.make(view, "Seleccionar materia de asesoría.", Snackbar.LENGTH_SHORT).show();
+            }
+
+            if(!editText_HoraInicio.getText().toString().isEmpty())
+            {
+                int horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2));
+                Log.e("Hora inicio:", horaInicio+"");
+                if(horaInicio>=8 && horaInicio<=20)
+                {
+                    flag_TimeStar=true;
+                }
+                else
+                {
+                    editText_HoraInicio.setError("La hora de inicio debe estar entre las 8:00am y 8:00pm");
+                }
+            }
+            else
+            {
+                editText_HoraInicio.setError("Seleccionar hora de inicio.");
+            }
+
+
+            if(!editText_HoraFinalizacion.getText().toString().isEmpty())
+            {
+                int horaFin = Integer.parseInt(editText_HoraFinalizacion.getText().toString().substring(0,2));
+                Log.e("Hora fin:", horaFin+"");
+                if(horaFin>=8 && horaFin<=20)
+                {
+                    flag_TimeEnd=true;
+                }
+                else
+                {
+                    editText_HoraFinalizacion.setError("La hora de fin debe estar entre las 8:00am y 8:00pm");
+                }
+            }
+            else
+            {
+                editText_HoraFinalizacion.setError("Seleccionar hora de finalización.");
+            }
+
+
+            if(flag_radioButton && flag_spinnerMateria && flag_TimeStar && flag_TimeEnd)
+            {
+                Toast.makeText(this, getResources().getText(R.string.publicando)+"...", Toast.LENGTH_SHORT).show();
+            }
         }
         else if(idView==R.id.switch_Estado)
         {
