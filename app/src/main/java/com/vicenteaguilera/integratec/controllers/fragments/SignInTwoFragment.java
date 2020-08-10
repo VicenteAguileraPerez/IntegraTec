@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.google.android.material.snackbar.Snackbar;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
+import com.vicenteaguilera.integratec.helpers.utility.PropiertiesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.Status;
 
 import static androidx.navigation.Navigation.findNavController;
@@ -27,7 +28,6 @@ import static androidx.navigation.Navigation.findNavController;
 public class SignInTwoFragment extends Fragment implements Status {
 
     private ImageButton imageButton;
-    private final String [] CARRERAS ={"Seleccione una carrera","Ingeniería en Sistemas Computacionales", "Ingeniería en Administración", "Ingeniería en Mecatrónica", "Ingeniería Industrial", "Ingeniería en Mecánica", "Ingeniería en Industrias Alimentarias", "Ingeniería Civil"};
     private Spinner spinner_Carreras;
     private CardView cardView_ButtonRegistrarse;
     private EditText editText_nombre,editText_apellidos;
@@ -55,7 +55,7 @@ public class SignInTwoFragment extends Fragment implements Status {
         View view = inflater.inflate(R.layout.fragment_sign_in_two, container, false);
 
         spinner_Carreras = view.findViewById(R.id.spinner_carreras);
-        ArrayAdapter<String> arrayAdapter= new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1, CARRERAS);
+        ArrayAdapter<String> arrayAdapter= new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1, PropiertiesHelper.CARRERAS);
         spinner_Carreras.setAdapter(arrayAdapter);
 
         return  view;

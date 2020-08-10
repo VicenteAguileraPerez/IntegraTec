@@ -40,6 +40,8 @@ import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.controllers.mainapp.MainAppActivity;
 import com.vicenteaguilera.integratec.helpers.CaptureActivityPortrait;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
+import com.vicenteaguilera.integratec.helpers.utility.PropiertiesHelper;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
@@ -64,10 +66,6 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private ImageView imageView_perfil;
 
     private IntentResult result= null;
-
-
-    private final String [] MATERIAS  ={"Seleccione una materia...","Álgebra", "Álgebra lineal", "Cálculo diferencial", "Cálculo integral", "Cálculo vectorial", "Ecuaciones diferenciales", "Química", "Física"};
-    private final String [] LUGARES ={"Seleccione un lugar...","Biblioteca", "Telemática", "Edificio A", "Edificio F"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -102,8 +100,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         radioButtonListener();
 
 
-        ArrayAdapter<String> arrayAdapterLugares = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, LUGARES);
-        ArrayAdapter<String> arrayAdapterMaterias = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, MATERIAS);
+        ArrayAdapter<String> arrayAdapterLugares = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, PropiertiesHelper.LUGARES);
+        ArrayAdapter<String> arrayAdapterMaterias = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, PropiertiesHelper.MATERIAS);
 
         spinner_lugares.setAdapter(arrayAdapterLugares);
         spinner_materias.setAdapter(arrayAdapterMaterias);
