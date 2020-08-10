@@ -190,96 +190,96 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         }
         else if(idView==R.id.cardView_ButtonPublicar)
         {
-            //evaluación de que las fechas esten !=null
-            //seleccionado si es presencial o virtual
-            ///si es presencial que este seleccionado el lugar y si es virtual que este seleccionado el url
-            // que la hora de asesoría sea de 8:00 am a 8:00pm
-            // materia seleccionada
+                //evaluación de que las fechas esten !=null
+                //seleccionado si es presencial o virtual
+                ///si es presencial que este seleccionado el lugar y si es virtual que este seleccionado el url
+                // que la hora de asesoría sea de 8:00 am a 8:00pm
+                // materia seleccionada
 
-            boolean flag_radioButton = false;
-            boolean flag_spinnerMateria = false;
-            boolean flag_TimeStar=false;
-            boolean flag_TimeEnd=false;
+                boolean flag_radioButton = false;
+                boolean flag_spinnerMateria = false;
+                boolean flag_TimeStar=false;
+                boolean flag_TimeEnd=false;
 
-            editText_URL.setError(null);
-            editText_HoraInicio.setError(null);
-            editText_HoraFinalizacion.setError(null);
+                editText_URL.setError(null);
+                editText_HoraInicio.setError(null);
+                editText_HoraFinalizacion.setError(null);
 
 
-            if(radioBAPresencial.isChecked())
-            {
-                if(spinner_lugares.getSelectedItemPosition()>0)
+                if(radioBAPresencial.isChecked())
                 {
-                    flag_radioButton=true;
+                    if(spinner_lugares.getSelectedItemPosition()>0)
+                    {
+                        flag_radioButton=true;
+                    }
+                    else
+                    {
+                        Snackbar.make(view, "Seleccionar un lugar para la asesoría.", Snackbar.LENGTH_SHORT).show();
+                    }
+                }
+                else if(radioButton_AOnline.isChecked())
+                {
+                    if(!editText_URL.getText().toString().isEmpty())
+                    {
+                        flag_radioButton=true;
+                    }
+                    else
+                    {
+                        editText_URL.setError("Ingresar url para la asesoría online.");
+                    }
+                }
+
+                if(spinner_materias.getSelectedItemPosition()>0)
+                {
+                    flag_spinnerMateria=true;
                 }
                 else
                 {
-                    Snackbar.make(view, "Seleccionar un lugar para la asesoría.", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(view, "Seleccionar materia de asesoría.", Snackbar.LENGTH_SHORT).show();
                 }
-            }
-            else if(radioButton_AOnline.isChecked())
-            {
-                if(!editText_URL.getText().toString().isEmpty())
+
+                if(!editText_HoraInicio.getText().toString().isEmpty())
                 {
-                    flag_radioButton=true;
+                    int horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2));
+                    Log.e("Hora inicio:", horaInicio+"");
+                    if(horaInicio>=8 && horaInicio<=20)
+                    {
+                        flag_TimeStar=true;
+                    }
+                    else
+                    {
+                        editText_HoraInicio.setError("La hora de inicio debe estar entre las 8:00am y 8:00pm");
+                    }
                 }
                 else
                 {
-                    editText_URL.setError("Ingresar url para la asesoría online.");
+                    editText_HoraInicio.setError("Seleccionar hora de inicio.");
                 }
-            }
 
-            if(spinner_materias.getSelectedItemPosition()>0)
-            {
-                flag_spinnerMateria=true;
-            }
-            else
-            {
-                Snackbar.make(view, "Seleccionar materia de asesoría.", Snackbar.LENGTH_SHORT).show();
-            }
 
-            if(!editText_HoraInicio.getText().toString().isEmpty())
-            {
-                int horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2));
-                Log.e("Hora inicio:", horaInicio+"");
-                if(horaInicio>=8 && horaInicio<=20)
+                if(!editText_HoraFinalizacion.getText().toString().isEmpty())
                 {
-                    flag_TimeStar=true;
+                    int horaFin = Integer.parseInt(editText_HoraFinalizacion.getText().toString().substring(0,2));
+                    Log.e("Hora fin:", horaFin+"");
+                    if(horaFin>=8 && horaFin<=20)
+                    {
+                        flag_TimeEnd=true;
+                    }
+                    else
+                    {
+                        editText_HoraFinalizacion.setError("La hora de fin debe estar entre las 8:00am y 8:00pm");
+                    }
                 }
                 else
                 {
-                    editText_HoraInicio.setError("La hora de inicio debe estar entre las 8:00am y 8:00pm");
+                    editText_HoraFinalizacion.setError("Seleccionar hora de finalización.");
                 }
-            }
-            else
-            {
-                editText_HoraInicio.setError("Seleccionar hora de inicio.");
-            }
 
 
-            if(!editText_HoraFinalizacion.getText().toString().isEmpty())
-            {
-                int horaFin = Integer.parseInt(editText_HoraFinalizacion.getText().toString().substring(0,2));
-                Log.e("Hora fin:", horaFin+"");
-                if(horaFin>=8 && horaFin<=20)
+                if(flag_radioButton && flag_spinnerMateria && flag_TimeStar && flag_TimeEnd)
                 {
-                    flag_TimeEnd=true;
+                    Toast.makeText(this, getResources().getText(R.string.publicando)+"...", Toast.LENGTH_SHORT).show();
                 }
-                else
-                {
-                    editText_HoraFinalizacion.setError("La hora de fin debe estar entre las 8:00am y 8:00pm");
-                }
-            }
-            else
-            {
-                editText_HoraFinalizacion.setError("Seleccionar hora de finalización.");
-            }
-
-
-            if(flag_radioButton && flag_spinnerMateria && flag_TimeStar && flag_TimeEnd)
-            {
-                Toast.makeText(this, getResources().getText(R.string.publicando)+"...", Toast.LENGTH_SHORT).show();
-            }
         }
         else if(idView==R.id.switch_Estado)
         {
