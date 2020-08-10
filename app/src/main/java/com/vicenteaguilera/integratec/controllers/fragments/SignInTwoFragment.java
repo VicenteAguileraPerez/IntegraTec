@@ -107,17 +107,16 @@ public class SignInTwoFragment extends Fragment implements Status {
                 if(spinner_Carreras.getSelectedItemPosition()>0){
                     flag_spinner = true;
                 }else {
-                    flag_spinner = false;
-                    Snackbar.make(v,"Selecione una carrera",Snackbar.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Seleccione una carrera", Toast.LENGTH_SHORT).show();
+                    //Snackbar.make(v,"Selecione una carrera",Snackbar.LENGTH_LONG).show();
                 }
 
                 if(flag_apellidos && flag_nombre && flag_spinner){
-
                     dialog.show();
                     String carrera = spinner_Carreras.getSelectedItem().toString();
                     firebaseAuthHelper.createUserEmailAndPassword(email,password,dialog,new String[]{nombre,apellidos,carrera});
                 }else {
-                    Snackbar.make(v,"Revise los datos ingresados",Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(v, "Información invalida, favor de revisar",Snackbar.LENGTH_LONG).show();
                     dialog.dismiss();
                 }
             }

@@ -35,6 +35,7 @@ public class FirestoreHelper
     private static Status status;
     private ProgressDialog dialog;
     public static Asesor asesor=null;
+
     public void addData(Status status, ProgressDialog dialog, Context context, String uid, String email, String password, String[] param)
    {
        if(param.length==3)

@@ -64,9 +64,11 @@ public class SignInFragment extends Fragment  {
                 String password  = editText_password.getText().toString();
                 String password_confirm = editText_password_confirm.getText().toString();
                 String codigo = editText_codigo.getText().toString();
+
                 boolean flag_email = false;
                 boolean flag_password = false;
                 boolean flag_codigo = false;
+
                 ///evaluaciones
                 //email sea un email
                 //evaluar que email no sea vacío
@@ -79,28 +81,49 @@ public class SignInFragment extends Fragment  {
                 if(!email.isEmpty() && stringHelper.isEmail(email)){
                     flag_email = true;
                 }else {
-                    if(email.isEmpty() && !stringHelper.isEmail(email)){
-                        editText_email.setError("Correo Electrónico requerido");
-                    }else if(!email.isEmpty() && !stringHelper.isEmail(email)){
-                        editText_email.setError("Correo Electrónico invalido");
+                    if(email.isEmpty()){
+                        editText_email.setError("Correo electrónico requerido");
+                    }else if(!stringHelper.isEmail(email)){
+                        editText_email.setError("Correo electrónico invalido");
                     }
                 }
 
+                if(!password.isEmpty() && password.length()>=6 && !password_confirm.isEmpty() && password_confirm.length()>=6){
+                    if(password.equals(password_confirm)) {
+                        flag_password=true;
+                    }
+                    else {
+                        editText_password.setError("Las contraseñas no son iguales.");
+                        editText_password_confirm.setError("Las contraseñas no son iguales.");
+                    }
+                }
+                else {
+                    if(password.isEmpty()) {
+                        editText_password.setError("Contraseña requerida");
+                    }else if(password.length()<6) {
+                        editText_password.setError("La contraseña debe tener mínimo 6 carácteres");
+                    }
+
+                    if(password_confirm.isEmpty()) {
+                        editText_password_confirm.setError("Contraseña requerida");
+                    }else if(password_confirm.length()<6) {
+                        editText_password_confirm.setError("La contraseña debe tener mínimo 6 carácteres");
+                    }
+                }
 
                 if(!codigo.isEmpty() && codigo.equals(PropiertiesHelper.CODIGO_CB)){
                     flag_codigo = true;
                 }else {
-                    if(codigo.isEmpty() && !codigo.equals(PropiertiesHelper.CODIGO_CB)){
-                        editText_codigo.setError("Código de Ciencias Basicas requerido");
-                    }else if(!codigo.isEmpty() && !codigo.equals(PropiertiesHelper.CODIGO_CB)){
-                        editText_codigo.setError("Código de Ciencias Basicas incorrecto");
+                    if(codigo.isEmpty()){
+                        editText_codigo.setError("Código de ciencias básicas requerido");
+                    }else if(!codigo.equals(PropiertiesHelper.CODIGO_CB)){
+                        editText_codigo.setError("Código de ciencias básicas incorrecto");
                     }
                 }
 
-
                 Bundle bundle = new Bundle();
 
-                if(flag_email && flag_codigo){
+                if(flag_email && flag_codigo && flag_password){
                     bundle.putString("email",email);
                     bundle.putString("password",password);
 
@@ -108,8 +131,6 @@ public class SignInFragment extends Fragment  {
                 }else {
                     Snackbar.make(view, "Información invalida, favor de revisar",Snackbar.LENGTH_LONG).show();
                 }
-
-
 
             }
         });

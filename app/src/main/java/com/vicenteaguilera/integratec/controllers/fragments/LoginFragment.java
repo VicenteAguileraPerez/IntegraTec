@@ -89,8 +89,8 @@ public class LoginFragment extends Fragment  implements Status{
                         break;
 
                     case 5:
-                        editText_email.setError("Correo electrónico requerido");
                         editText_password.setError("Contraseña requerida");
+                        editText_email.setError("Correo electrónico requerido");
                         break;
                 }
 

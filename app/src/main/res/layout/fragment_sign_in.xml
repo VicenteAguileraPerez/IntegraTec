@@ -75,10 +75,9 @@
                     android:layout_marginBottom="15dp"
                     android:backgroundTint="@android:color/black"
                     android:ems="10"
-                    android:hint="@string/password"
+                    android:hint="@string/confirmar_password"
                     android:importantForAutofill="no"
-                    android:inputType="textPassword"
-                     />
+                    android:inputType="textPassword" />
 
                 <EditText
                     android:id="@+id/editText_codigo"
