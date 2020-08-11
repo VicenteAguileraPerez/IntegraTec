@@ -57,8 +57,8 @@ public class LoginFragment extends Fragment  implements Status{
                 findNavController(requireView()).navigate(R.id.action_loginFragment_to_signInFragment);
             }
         });
-        editText_email= view.findViewById(R.id.editText_email);
-        editText_password = view.findViewById(R.id.editText_password);
+        editText_email= view.findViewById(R.id.editText_nombre);
+        editText_password = view.findViewById(R.id.editText_apellidos);
         cardView_ButtonIniciarSesion = view.findViewById(R.id.cardView_ButtonIniciarSesion);
         cardView_ButtonIniciarSesion.setOnClickListener(new View.OnClickListener() {
             @Override

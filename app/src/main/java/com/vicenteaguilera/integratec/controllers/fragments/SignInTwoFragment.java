@@ -73,8 +73,8 @@ public class SignInTwoFragment extends Fragment implements Status {
 
             }
         });
-        editText_nombre = view.findViewById(R.id.editText_email);
-        editText_apellidos = view.findViewById(R.id.editText_password);
+        editText_nombre = view.findViewById(R.id.editText_nombre);
+        editText_apellidos = view.findViewById(R.id.editText_apellidos);
 
         cardView_ButtonRegistrarse = view.findViewById(R.id.cardView_ButtonRegistrarse);
         cardView_ButtonRegistrarse.setOnClickListener(new View.OnClickListener() {

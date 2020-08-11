@@ -58,6 +58,7 @@
     <string name="integraTec">IntegraTec</string>
     <string name="iconoregreso">iconoRegreso</string>
     <string name="confirmar_password">Confirmar Contraseña</string>
+    <string name="olvidaste_password">¿Olvidaste tú contraseña?</string>
 
 
 </resources>

@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.vicenteaguilera.integratec.R;
@@ -50,8 +49,8 @@ public class SignInFragment extends Fragment  {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         cardView_ButtonSiguiente = view.findViewById(R.id.cardView_ButtonSiguiente);
-        editText_email= view.findViewById(R.id.editText_email);
-        editText_password = view.findViewById(R.id.editText_password);
+        editText_email= view.findViewById(R.id.editText_nombre);
+        editText_password = view.findViewById(R.id.editText_apellidos);
         editText_password_confirm = view.findViewById(R.id.editText_password_confirm);
         editText_codigo = view.findViewById(R.id.editText_codigo);
 
