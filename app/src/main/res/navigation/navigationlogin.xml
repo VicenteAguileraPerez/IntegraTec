@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigationlogin"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.vicenteaguilera.integratec.controllers.fragments.SignInFragment"
+        android:label="fragment_sign_in"
+        tools:layout="@layout/fragment_sign_in">
+        <action
+            android:id="@+id/action_signInFragment_to_singInTwoFragment"
+            app:destination="@id/singInTwoFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:popEnterAnim="@android:anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.vicenteaguilera.integratec.controllers.fragments.LoginFragment"
+        android:label="fragment_login2"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_signInFragment"
+            app:destination="@id/signInFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:popEnterAnim="@android:anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/singInTwoFragment"
+        android:name="com.vicenteaguilera.integratec.controllers.fragments.SignInTwoFragment"
+        android:label="fragment_sign_in_two"
+        tools:layout="@layout/fragment_sign_in_two" />
+</navigation>

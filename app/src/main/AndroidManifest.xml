@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.vicenteaguilera.integratec">
+    package="com.vicenteaguilera.integratec" >
+
+    <!--Acceso a internet-->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!--Estado de internet-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!--Acceso a camara-->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!--Acceso a galeria-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -9,9 +20,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CreateCodeQRActivity">
 
+        <activity android:name=".CreateCodeQRActivity">
+        <activity android:name=".controllers.MainAdviserActivityApp"/>
+        <activity android:name=".controllers.ListAdviserActivity"/>
+        <activity android:name=".controllers.mainapp.MainAppActivity"/>
+        <activity android:name=".controllers.ComplaintSuggestionsActivity"/>
+        <activity android:name=".SplashScreenActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".controllers.OptionsActivity" />
+         <activity android:name=".controllers.AboutActivity">
+
+          </activity>
+        <activity
+            android:name=".helpers.CaptureActivityPortrait"
+            android:screenOrientation="portrait"
+            android:stateNotNeeded="true"
+            android:theme="@style/zxing_CaptureTheme"
+            android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
     </application>
-
 </manifest>

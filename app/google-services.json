@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "892482825542",
+    "firebase_url": "https://integratec-itsu.firebaseio.com",
+    "project_id": "integratec-itsu",
+    "storage_bucket": "integratec-itsu.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:892482825542:android:7ca84de455fb5c3d9dc947",
+        "android_client_info": {
+          "package_name": "com.vicenteaguilera.integratec"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "892482825542-k5dlbi38rtsh9k9lprgn4s0irdvb3mhs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vicenteaguilera.integratec",
+            "certificate_hash": "727a60bc55d41dc8bc64aa3608b1fe14c959821f"
+          }
+        },
+        {
+          "client_id": "892482825542-07cbt1v62gfd40qq7kqchp0tlibflotn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1kM65A9ox-xwKGeMxA1CnZ8F0W2kUdgY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "892482825542-07cbt1v62gfd40qq7kqchp0tlibflotn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

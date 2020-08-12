@@ -1,10 +1,73 @@
 <resources>
     <string name="app_name">IntegraTec</string>
+    
+    <!-- CreateQRCode -->
     <string name="generarQR">Generar QR</string>
-    <string name="nombre">Nombre</string>
     <string name="tema">Tema</string>
     <string name="fecha">Fecha</string>
     <string name="imagen_de_codigo_qr">Imagen de codigo QR</string>
     <string name="guardar_qr">Guardar QR</string>
     <string name="numero_de_control">Número de control</string>
+
+    <!-- MainAdviser -->
+    <string name="acercaDe">Acerca de</string>
+    <string name="quejasSugerencias">Quejas y sugerencias</string>
+    <string name="cerrarSesion">Cerrar sesión</string>
+    <string name="crearQR">Crear código QR</string>
+    <string name="leerQR">Leer código QR</string>
+    <string name="asesoriaPresencial">Asesoria Presencial</string>
+    <string name="timeInicio">Hora Inicio</string>
+    <string name="asesoriaOnline">Asesoria Online</string>
+    <string name="switchEstado">Estado</string>
+    <string name="estado">Inactivo</string>
+    <string name="URL">Introduce la url de la sesión</string>
+    <string name="timeFinalizacion">Hora Finalización</string>
+    <string name="infoExtra">Información extra</string>
+    <string name="imageViewAsesor">Foto de asesor par.</string>
+    <string name="publicar">Publicar</string>
+    <string name="publicando">Publicando</string>
+    <string name="hora_fin">Hora Fin</string>
+    <string name="hora_inicio">Hora Inicio</string>
+    <string name="activo">Activo</string>
+    <string name="inactivo">Inactivo</string>
+
+    <!-- MainApp -->
+    <string name="logo">logo</string>
+    <string name="logo2">logo2</string>
+    <string name="sesion_asesor">Sesión Asesor</string>
+    <string name="asesores_disponibles">Asesores disponibles</string>
+
+    <!--   Complaints and suggestions-->
+    <string name="nombre">Nombre</string>
+    <string name="email">Correo Electrónico</string>
+    <string name="queja">Queja</string>
+    <string name="sugerencia">Sugerencia</string>
+    <string name="mensaje">Mensaje</string>
+    <string name="enviar">Enviar</string>
+    <string name="agradecimientos">¡Gracias, atenderemos pronto tu </string>
+
+
+    <!-- SplashScreen -->
+    <string name="imagen">SplashScreen</string>
+
+
+    <!-- Options -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="SaludoAsesor">¡Bienvenido a IntegraTec Asesor!</string>
+    <string name="descriptionImageOptions">Persona estudiando.</string>
+    <string name="password">Contraseña</string>
+    <string name="iniciarSesion">Iniciar Sesión</string>
+    <string name="codigoCiencias">Código de Ciencias Básicas</string>
+    <string name="siguiente">Siguiente</string>
+    <string name="apellidos">Apellidos</string>
+    <string name="registrarse">Registrarse</string>
+
+    <!--about -->
+    <string name="acerca_de">Acerca de</string>
+    <string name="integraTec">IntegraTec</string>
+    <string name="iconoregreso">iconoRegreso</string>
+    <string name="confirmar_password">Confirmar Contraseña</string>
+    <string name="olvidaste_password">¿Olvidaste tú contraseña?</string>
+
+
 </resources>
