@@ -130,12 +130,14 @@ public class FirebaseAuthHelper
         }
     }
     ///salir
-    public void signout(final ProgressDialog dialog)
+    public  void signout(final ProgressDialog dialog)
     {
         mAuth.signOut();
+        Log.e("er",mAuth.getCurrentUser()+"");
         dialog.dismiss();
         Intent intent = new Intent(context, MainAppActivity.class);
         context.startActivity(intent);
+        ((Activity)context).finish();
     }
 
 

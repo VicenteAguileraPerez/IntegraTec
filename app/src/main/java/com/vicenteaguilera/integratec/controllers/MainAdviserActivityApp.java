@@ -1,5 +1,6 @@
 package com.vicenteaguilera.integratec.controllers;
 
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -32,6 +33,8 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.protobuf.StringValue;
+import com.vicenteaguilera.integratec.SplashScreenActivity;
+import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.utility.ImagesHelper;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -46,6 +49,7 @@ import com.vicenteaguilera.integratec.controllers.mainapp.MainAppActivity;
 import com.vicenteaguilera.integratec.helpers.CaptureActivityPortrait;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
 import com.vicenteaguilera.integratec.helpers.utility.PropiertiesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.Status;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +57,7 @@ import java.util.Calendar;
 import java.util.Objects;
 import id.zelory.compressor.Compressor;
 
-public class MainAdviserActivityApp extends AppCompatActivity implements View.OnClickListener {
+public class MainAdviserActivityApp extends AppCompatActivity implements View.OnClickListener, Status {
     private final static int GALLERY_INTENT = 1;
     private File imagen=null;
 
@@ -71,9 +75,17 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private ImageView imageView_perfil;
     private RadioButton radioButton_AOnline;
     private RadioButton radioBAPresencial;
+    private  FirebaseAuthHelper firebaseAuthHelper = new FirebaseAuthHelper();
 
 
     private IntentResult result= null;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        firebaseAuthHelper.setContext(MainAdviserActivityApp.this);
+        firebaseAuthHelper.setOnStatusListener(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -108,6 +120,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         editText_URL.requestFocus();
         editTextFocusListener();
         radioButtonListener();
+
 
 
         ArrayAdapter<String> arrayAdapterLugares = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, PropiertiesHelper.LUGARES);
@@ -163,9 +176,10 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
             case R.id.item_CerrarSesion:
                 Toast.makeText(MainAdviserActivityApp.this, getResources().getText(R.string.cerrarSesion)+"...", Toast.LENGTH_SHORT).show();
-                intent = new Intent(this, MainAppActivity.class);
-                startActivity(intent);
-                finish();
+                ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
+                        "Nos vemos pronto... "+FirebaseAuthHelper.getCurrentUser(), true);
+                dialog.show();
+                firebaseAuthHelper.signout(dialog);
                 FirestoreHelper.asesor=null;
                 break;
 
@@ -429,5 +443,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         intentIntegrator.setCaptureActivity(CaptureActivityPortrait.class);
         intentIntegrator.setBarcodeImageEnabled(false);
         intentIntegrator.initiateScan();
+    }
+
+    @Override
+    public void status(String message)
+    {
+        Toast.makeText(MainAdviserActivityApp.this,message,Toast.LENGTH_SHORT).show();
     }
 }
