@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">IntegraTec</string>
+    
+    <!-- CreateQRCode -->
+    <string name="generarQR">Generar QR</string>
+    <string name="tema">Tema</string>
+    <string name="fecha">Fecha</string>
+    <string name="imagen_de_codigo_qr">Imagen de codigo QR</string>
+    <string name="guardar_qr">Guardar QR</string>
+    <string name="numero_de_control">Número de control</string>
+
     <!-- MainAdviser -->
     <string name="acercaDe">Acerca de</string>
     <string name="quejasSugerencias">Quejas y sugerencias</string>
