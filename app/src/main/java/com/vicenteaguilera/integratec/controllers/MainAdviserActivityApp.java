@@ -403,6 +403,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 String horas = hrs < 10 ? "0" + hrs : hrs + "";
                 String minutos = min < 10 ? "0" + min : min + "";
                 view.setText(horas + ":" + minutos + " "+aux);
+
             }
         };
         if (picker == null) {
