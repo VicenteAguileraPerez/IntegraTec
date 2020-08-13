@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-
+        <activity android:name=".CreateCodeQRActivity"/>
         <activity android:name=".controllers.MainAdviserActivityApp"/>
         <activity android:name=".controllers.ListAdviserActivity"/>
         <activity android:name=".controllers.mainapp.MainAppActivity"/>
