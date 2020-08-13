@@ -115,6 +115,4 @@ public class CreateCodeQRActivity extends AppCompatActivity {
 
     }
 
-
-
 }
