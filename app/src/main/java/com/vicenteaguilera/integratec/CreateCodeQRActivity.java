@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.vicenteaguilera.integratec.helpers.utility.PropiertiesHelper;
 
 import net.glxn.qrgen.android.QRCode;
 
@@ -28,13 +29,10 @@ public class CreateCodeQRActivity extends AppCompatActivity {
     private EditText editText_NumeroControl;
     private Spinner spinner_Carrera;
     private Spinner spinner_Asignatura;
+    private Spinner spinner_Semestre;
     private ImageView imageView;
     private CardView cardView_BtnCrearQR;
     private CardView cardView_ButtonGuardarQR;
-
-    private final String [] MATERIAS  ={"Seleccione una materia...","Álgebra", "Álgebra lineal", "Cálculo diferencial", "Cálculo integral", "Cálculo vectorial", "Ecuaciones diferenciales", "Química", "Física"};
-    private final String [] CARRERAS ={"Seleccione una carrera...","Ingeniería en Sistemas Computacionales", "Ingeniería en Administración", "Ingeniería en Mecatrónica", "Ingeniería Industrial", "Ingeniería en Mecánica", "Ingeniería en Industrias Alimentarias", "Ingeniería Civil"};
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,17 +44,20 @@ public class CreateCodeQRActivity extends AppCompatActivity {
         editText_NumeroControl = findViewById(R.id.editText_NumeroControl);
         spinner_Carrera = findViewById(R.id.spinner_Carrera);
         spinner_Asignatura = findViewById(R.id.spinner_Asignatura);
+        spinner_Semestre = findViewById(R.id.spinner_Semestre);
         imageView = findViewById(R.id.imageView);
         cardView_BtnCrearQR = findViewById(R.id.cardView_ButtonCrearQR);
         cardView_ButtonGuardarQR = findViewById(R.id.cardView_ButtonGuardarQR);
 
         imageView.setVisibility(View.INVISIBLE);
 
-        ArrayAdapter<String> arrayAdapter_Carreras= new ArrayAdapter<>(this, R.layout.custom_spinner_item, CARRERAS);
-        ArrayAdapter<String> arrayAdapter_Materias= new ArrayAdapter<>(this, R.layout.custom_spinner_item, MATERIAS);
+        ArrayAdapter<String> arrayAdapter_Carreras= new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
+        ArrayAdapter<String> arrayAdapter_Materias= new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.MATERIAS);
+        ArrayAdapter<String> arrayAdapter_Semestres= new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.SEMESTRES);
 
         spinner_Asignatura.setAdapter(arrayAdapter_Materias);
         spinner_Carrera.setAdapter(arrayAdapter_Carreras);
+        spinner_Semestre.setAdapter(arrayAdapter_Semestres);
 
         cardView_BtnCrearQR.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,38 +70,42 @@ public class CreateCodeQRActivity extends AppCompatActivity {
 
     private void crearQR()
     {
-        if(!editText_NumeroControl.getText().toString().isEmpty()){
+        if(!editText_NumeroControl.getText().toString().isEmpty() && editText_NumeroControl.getText().toString().length()==8){
 
-            if(!editText_Nombre.getText().toString().isEmpty())
-            {
-                if(spinner_Carrera.getSelectedItemPosition() != 0)
-                {
-                    if(spinner_Asignatura.getSelectedItemPosition() != 0)
-                    {
-                        if(!editText_Tema.getText().toString().isEmpty())
-                        {
+            if(!editText_Nombre.getText().toString().isEmpty()) {
 
-                            String texto = editText_NumeroControl.getText().toString() + "_" + editText_Nombre.getText().toString() + "_"
-                                    + spinner_Carrera.getSelectedItem().toString() + "_" + spinner_Asignatura.getSelectedItem().toString() + "_"
-                                    + editText_Tema.getText().toString();
+                if(spinner_Semestre.getSelectedItemPosition() != 0) {
 
-                            Bitmap bitmap = QRCode.from(texto).withSize(400, 400).bitmap();
-                            imageView.setImageBitmap(bitmap);
-                            imageView.setVisibility(View.VISIBLE);
+                    if(spinner_Carrera.getSelectedItemPosition() != 0) {
+
+                        if(spinner_Asignatura.getSelectedItemPosition() != 0) {
+
+                            if (!editText_Tema.getText().toString().isEmpty()) {
+
+                                String texto = editText_NumeroControl.getText().toString() + "_" + editText_Nombre.getText().toString() + "_"
+                                        + spinner_Carrera.getSelectedItem().toString() + "_" + spinner_Asignatura.getSelectedItem().toString() + "_"
+                                        + editText_Tema.getText().toString();
+
+                                Bitmap bitmap = QRCode.from(texto).withSize(400, 400).bitmap();
+                                imageView.setImageBitmap(bitmap);
+                                imageView.setVisibility(View.VISIBLE);
+                            } else {
+                                Snackbar.make(findViewById(android.R.id.content), "Debes ingresar el tema de asesoria.", Snackbar.LENGTH_SHORT).show();
+                            }
                         }
                         else
                         {
-                            Snackbar.make(findViewById(android.R.id.content), "Debes ingresar el tema de asesoria.", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(findViewById(android.R.id.content), "Debes seleccionar una materia.", Snackbar.LENGTH_SHORT).show();
                         }
                     }
                     else
                     {
-                        Snackbar.make(findViewById(android.R.id.content), "Debes seleccionar una materia.", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(android.R.id.content), "Debes seleccionar una carrera.", Snackbar.LENGTH_SHORT).show();
                     }
                 }
                 else
                 {
-                    Snackbar.make(findViewById(android.R.id.content), "Debes seleccionar una carrera.", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Debes seleccionar un semestre.", Snackbar.LENGTH_SHORT).show();
                 }
             }
             else
@@ -108,11 +113,7 @@ public class CreateCodeQRActivity extends AppCompatActivity {
                 Snackbar.make(findViewById(android.R.id.content), "Debes ingresar tú nombre.", Snackbar.LENGTH_SHORT).show();
             }
         }else{
-            Snackbar.make(findViewById(android.R.id.content), "Debes ingresar tú número de control.", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "Debes ingresar tú número de control completo.", Snackbar.LENGTH_SHORT).show();
         }
-
-
-
     }
-
 }

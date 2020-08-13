@@ -22,28 +22,39 @@
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="40dp"
                 android:layout_marginEnd="30dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="10dp"
                 android:backgroundTint="@color/colorPrimaryDark"
                 android:ems="10"
-                android:maxLength="8"
                 android:hint="@string/numero_de_control"
+                android:importantForAutofill="no"
                 android:inputType="number"
-                android:importantForAutofill="no" />
+                android:maxLength="8" />
 
             <EditText
                 android:id="@+id/editText_Nombre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="30dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="10dp"
                 android:backgroundTint="@color/colorPrimaryDark"
                 android:ems="10"
                 android:hint="@string/nombre"
                 android:importantForAutofill="no"
-                android:inputType="textPersonName"
+                android:inputType="textCapWords"
                 android:textSize="18sp" />
+
+            <Spinner
+                android:id="@+id/spinner_Semestre"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="10dp" />
 
             <Spinner
                 android:id="@+id/spinner_Carrera"
@@ -51,9 +62,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="30dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="10dp"
                 android:backgroundTint="@color/colorPrimaryDark" />
 
             <Spinner
@@ -62,9 +73,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="30dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="10dp"
                 android:backgroundTint="@color/colorPrimaryDark" />
 
             <EditText
@@ -72,9 +83,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="30dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="10dp"
                 android:backgroundTint="@color/colorPrimaryDark"
                 android:ems="10"
                 android:hint="@string/tema"
@@ -97,7 +108,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
                     android:layout_weight="1"
-                    app:cardBackgroundColor="#E94A47"
+                    app:cardBackgroundColor="@color/background_red"
                     app:cardCornerRadius="20dp">
 
                     <LinearLayout
@@ -130,7 +141,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_weight="1"
-                    app:cardBackgroundColor="#E94A47"
+                    app:cardBackgroundColor="@color/background_red"
                     app:cardCornerRadius="20dp">
 
                     <LinearLayout

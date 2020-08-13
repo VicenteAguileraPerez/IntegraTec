@@ -55,7 +55,7 @@ public class SignInTwoFragment extends Fragment implements Status {
         View view = inflater.inflate(R.layout.fragment_sign_in_two, container, false);
 
         spinner_Carreras = view.findViewById(R.id.spinner_carreras);
-        ArrayAdapter<String> arrayAdapter= new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1, PropiertiesHelper.CARRERAS);
+        ArrayAdapter<String> arrayAdapter= new ArrayAdapter<>(view.getContext(), R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
         spinner_Carreras.setAdapter(arrayAdapter);
 
         return  view;

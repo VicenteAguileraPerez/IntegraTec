@@ -1,5 +1,9 @@
 package com.vicenteaguilera.integratec.helpers.utility;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 public class StringHelper
 {
     //ahhahah   @ ibm.com.mx
@@ -87,5 +91,18 @@ public class StringHelper
         }
 
         return 0;
+    }
+
+    public boolean validateURL(String URL) {
+        try {
+            new URL(URL).toURI();
+            return true;
+        } catch (URISyntaxException e) {
+            System.out.println(e);
+            return false;
+        } catch (MalformedURLException ex) {
+            System.out.println(ex);
+            return false;
+        }
     }
 }

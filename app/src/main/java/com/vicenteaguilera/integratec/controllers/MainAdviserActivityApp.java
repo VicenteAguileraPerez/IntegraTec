@@ -33,6 +33,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.protobuf.StringValue;
+import com.vicenteaguilera.integratec.CreateCodeQRActivity;
 import com.vicenteaguilera.integratec.SplashScreenActivity;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.utility.ImagesHelper;
@@ -50,6 +51,7 @@ import com.vicenteaguilera.integratec.helpers.CaptureActivityPortrait;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
 import com.vicenteaguilera.integratec.helpers.utility.PropiertiesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.Status;
+import com.vicenteaguilera.integratec.helpers.utility.StringHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,7 +77,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private ImageView imageView_perfil;
     private RadioButton radioButton_AOnline;
     private RadioButton radioBAPresencial;
-    private  FirebaseAuthHelper firebaseAuthHelper = new FirebaseAuthHelper();
+    private FirebaseAuthHelper firebaseAuthHelper = new FirebaseAuthHelper();
 
 
     private IntentResult result= null;
@@ -121,10 +123,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         editTextFocusListener();
         radioButtonListener();
 
-
-
-        ArrayAdapter<String> arrayAdapterLugares = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, PropiertiesHelper.LUGARES);
-        ArrayAdapter<String> arrayAdapterMaterias = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, PropiertiesHelper.MATERIAS);
+        ArrayAdapter<String> arrayAdapterLugares = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.LUGARES);
+        ArrayAdapter<String> arrayAdapterMaterias = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.MATERIAS);
 
         spinner_lugares.setAdapter(arrayAdapterLugares);
         spinner_materias.setAdapter(arrayAdapterMaterias);
@@ -184,7 +184,9 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 break;
 
             case R.id.item_Leer_QR:
-                escanearQR();
+                intent = new Intent(this, CreateCodeQRActivity.class);
+                startActivity(intent);
+                //escanearQR();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -235,7 +237,14 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 {
                     if(!editText_URL.getText().toString().isEmpty())
                     {
-                        flag_radioButton=true;
+                        if(new StringHelper().validateURL(editText_URL.getText().toString()))
+                        {
+                            flag_radioButton=true;
+                        }
+                        else
+                        {
+                            editText_URL.setError("El texto que se ingreso no es una URL. Ejemplo URL: https://integratec.my.webex.com/ ");
+                        }
                     }
                     else
                     {
@@ -255,8 +264,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 if(!editText_HoraInicio.getText().toString().isEmpty())
                 {
                     int horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2));
-                    Log.e("Hora inicio:", horaInicio+"");
-                    if(horaInicio>=8 && horaInicio<=20)
+                    String aux = editText_HoraInicio.getText().toString().substring(6,8);
+                    if((((horaInicio>=1 && horaInicio<=8) || horaInicio==12) && aux.equals("pm")) || ((horaInicio>=8 && horaInicio<=11) && aux.equals("am")))
                     {
                         flag_TimeStar=true;
                     }
@@ -274,10 +283,10 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 if(!editText_HoraFinalizacion.getText().toString().isEmpty())
                 {
                     int horaFin = Integer.parseInt(editText_HoraFinalizacion.getText().toString().substring(0,2));
-                    Log.e("Hora fin:", horaFin+"");
-                    if(horaFin>=8 && horaFin<=20)
+                    String aux = editText_HoraFinalizacion.getText().toString().substring(6,8);
+                    if((((horaFin>=1 && horaFin<=8) || horaFin==12) && aux.equals("pm")) || ((horaFin>=8 && horaFin<=11) && aux.equals("am")))
                     {
-                        flag_TimeEnd=true;
+                        flag_TimeStar=true;
                     }
                     else
                     {
@@ -376,14 +385,28 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
             @Override
             public void onTimeSet(TimePicker timePicker, int hrs, int min) {
+                Toast.makeText(MainAdviserActivityApp.this, hrs + ":" + min, Toast.LENGTH_SHORT).show();
+                String aux="am";
+                if(hrs>12)
+                {
+                    hrs=hrs-12;
+                    aux="pm";
+                }
+                else if (hrs==12)
+                {
+                    aux="pm";
+                }
+                else if (hrs==0)
+                {
+                    hrs=12;
+                }
                 String horas = hrs < 10 ? "0" + hrs : hrs + "";
                 String minutos = min < 10 ? "0" + min : min + "";
-                Toast.makeText(MainAdviserActivityApp.this, hrs + ":" + min, Toast.LENGTH_SHORT).show();
-                view.setText(horas + ":" + minutos);
+                view.setText(horas + ":" + minutos + " "+aux);
             }
         };
         if (picker == null) {
-            picker = new TimePickerDialog(MainAdviserActivityApp.this, timePicker, hour, minutes, true);
+            picker = new TimePickerDialog(MainAdviserActivityApp.this, timePicker, hour, minutes, false);
         }
         picker.show();
     }

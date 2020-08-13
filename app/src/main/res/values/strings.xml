@@ -7,7 +7,7 @@
     <string name="fecha">Fecha</string>
     <string name="imagen_de_codigo_qr">Imagen de codigo QR</string>
     <string name="guardar_qr">Guardar QR</string>
-    <string name="numero_de_control">Número de control</string>
+    <string name="numero_de_control">Número de Control</string>
 
     <!-- MainAdviser -->
     <string name="acercaDe">Acerca de</string>
@@ -38,7 +38,7 @@
     <string name="asesores_disponibles">Asesores disponibles</string>
 
     <!--   Complaints and suggestions-->
-    <string name="nombre">Nombre</string>
+    <string name="nombre">Nombre Completo</string>
     <string name="email">Correo Electrónico</string>
     <string name="queja">Queja</string>
     <string name="sugerencia">Sugerencia</string>

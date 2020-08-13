@@ -101,12 +101,12 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="30dp"
                     android:layout_marginBottom="15dp"
+                    app:cardBackgroundColor="@color/background_red"
                     app:cardCornerRadius="100dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@color/background_red"
                         android:orientation="vertical">
 
                         <TextView
