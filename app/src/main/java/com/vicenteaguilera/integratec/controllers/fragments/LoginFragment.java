@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.vicenteaguilera.integratec.R;
-import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.utility.Status;
 import com.vicenteaguilera.integratec.helpers.utility.StringHelper;
@@ -122,7 +121,7 @@ public class LoginFragment extends Fragment  implements Status{
         dialogRecoverPass.setCancelable(false);
         dialogRecoverPass.show();
 
-        final EditText editText_Email = dialogRecoverPass.findViewById(R.id.editText_Email);
+        final EditText editText_Email = dialogRecoverPass.findViewById(R.id.spinner_career);
         CardView cardView_ButtonSend = dialogRecoverPass.findViewById(R.id.cardView_ButtonSend);
         CardView cardView_ButtonCancel = dialogRecoverPass.findViewById(R.id.cardView_ButtonCancel);
 

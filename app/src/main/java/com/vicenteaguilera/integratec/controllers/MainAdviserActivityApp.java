@@ -481,16 +481,19 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
         final EditText editText_Name = dialogEditProfile.findViewById(R.id.editText_Name);
         final EditText editText_LastNames = dialogEditProfile.findViewById(R.id.editText_LastNames);
-        final EditText editText_Email = dialogEditProfile.findViewById(R.id.editText_Email);
+        final Spinner spinner_career = dialogEditProfile.findViewById(R.id.spinner_career);
         CardView cardView_ButtonUpdate = dialogEditProfile.findViewById(R.id.cardView_ButtonSend);
         CardView cardView_ButtonCancel = dialogEditProfile.findViewById(R.id.cardView_ButtonCancel);
+
+        ArrayAdapter<String> arrayAdapterCareer = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
+        spinner_career.setAdapter(arrayAdapterCareer);
 
         cardView_ButtonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 boolean flag_Name=false;
                 boolean flag_LastNames=false;
-                boolean flag_Email=false;
+                boolean flag_Career=false;
 
                 if(!editText_Name.getText().toString().isEmpty()) {
                     flag_Name=true;
@@ -506,19 +509,14 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     editText_LastNames.setError("Apellidos requeridos");
                 }
 
-                if(!editText_Email.getText().toString().isEmpty()) {
-                    if(new StringHelper().isEmail(editText_Email.getText().toString())) {
-                        flag_Email=true;
-                    }
-                    else {
-                        editText_Email.setError("Correo electrónico inválido");
-                    }
+                if(spinner_career.getSelectedItemPosition()!=0) {
+                    flag_Career=true;
                 }
                 else {
-                    editText_Email.setError("Correo electrónico requerido");
+                    Snackbar.make(view, "Seleccionar una carrera", Snackbar.LENGTH_SHORT).show();
                 }
 
-                if(flag_Name && flag_LastNames && flag_Email)
+                if(flag_Name && flag_LastNames)
                 {
                     Toast.makeText(MainAdviserActivityApp.this, "Actualizando datos...", Toast.LENGTH_SHORT).show();
                 }
