@@ -40,7 +40,7 @@
                 android:layout_marginBottom="10dp"
                 android:backgroundTint="@color/colorPrimaryDark"
                 android:ems="10"
-                android:hint="@string/nombre"
+                android:hint="@string/nombre_completo"
                 android:importantForAutofill="no"
                 android:inputType="textCapWords"
                 android:textSize="18sp" />

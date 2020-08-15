@@ -1,5 +1,6 @@
 package com.vicenteaguilera.integratec.controllers.fragments;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.vicenteaguilera.integratec.R;
+import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.utility.Status;
 import com.vicenteaguilera.integratec.helpers.utility.StringHelper;
@@ -24,8 +26,9 @@ import static androidx.navigation.Navigation.findNavController;
 
 public class LoginFragment extends Fragment  implements Status{
 
-    private CardView cardView_registrarse;
+    private CardView cardView_ButtonRegistrarse;
     private CardView cardView_ButtonIniciarSesion;
+    //private CardView cardView_ButtonOlvidastePass;
     private EditText editText_email,editText_password;
     private FirebaseAuthHelper firebaseAuthHelper = new FirebaseAuthHelper();
     private StringHelper stringHelper = new StringHelper();
@@ -49,25 +52,25 @@ public class LoginFragment extends Fragment  implements Status{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        cardView_registrarse = view.findViewById(R.id.cardView_ButtonRegistrarse);
 
-        cardView_registrarse.setOnClickListener(new View.OnClickListener() {
+        editText_email= view.findViewById(R.id.editText_nombre);
+        editText_password = view.findViewById(R.id.editText_apellidos);
+
+        cardView_ButtonRegistrarse = view.findViewById(R.id.cardView_ButtonRegistrarse);
+        cardView_ButtonRegistrarse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 findNavController(requireView()).navigate(R.id.action_loginFragment_to_signInFragment);
             }
         });
-        editText_email= view.findViewById(R.id.editText_nombre);
-        editText_password = view.findViewById(R.id.editText_apellidos);
+
         cardView_ButtonIniciarSesion = view.findViewById(R.id.cardView_ButtonIniciarSesion);
         cardView_ButtonIniciarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 //login evaluacion que email sea email y que pass != ""
                 String email = editText_email.getText().toString();
                 String password  = editText_password.getText().toString();
-
 
                 switch (stringHelper.loginHelper(email,password)){
                     case 1:
@@ -93,10 +96,68 @@ public class LoginFragment extends Fragment  implements Status{
                         editText_email.setError("Correo electrónico requerido");
                         break;
                 }
+            }
+        });
 
+        view.findViewById(R.id.cardView_OlvidastePass)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        showDialogRecoverPass();
+                    }
+                });
+
+    }
+
+    private void showDialogRecoverPass() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater = getLayoutInflater();
+
+        View view = inflater.inflate(R.layout.dialog_recover_pass, null);
+        builder.setView(view)
+                .setTitle("Recuperar contraseña")
+        .setMessage("Para recuperar tu contraseña ingresa el correo electrónico con el que te registraste y da clic en enviar.");
+
+        final AlertDialog dialogRecoverPass =builder.create();
+        dialogRecoverPass.setCancelable(false);
+        dialogRecoverPass.show();
+
+        final EditText editText_Email = dialogRecoverPass.findViewById(R.id.editText_Email);
+        CardView cardView_ButtonSend = dialogRecoverPass.findViewById(R.id.cardView_ButtonSend);
+        CardView cardView_ButtonCancel = dialogRecoverPass.findViewById(R.id.cardView_ButtonCancel);
+
+        cardView_ButtonSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                boolean flag_Email=false;
+                if(!editText_Email.getText().toString().isEmpty()) {
+                    if(new StringHelper().isEmail(editText_Email.getText().toString())) {
+                        flag_Email=true;
+                    }
+                    else {
+                        editText_Email.setError("Correo electrónico inválido");
+                    }
+                }
+                else {
+                    editText_Email.setError("Correo electrónico requerido");
+                }
+
+                if(flag_Email)
+                {
+                    Toast.makeText(getContext(), "Recuperando contraseña...", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        cardView_ButtonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogRecoverPass.dismiss();
             }
         });
     }
+
     @Override
     public void status(String message)
     {

@@ -21,7 +21,7 @@ public class ComplaintSuggestionsActivity extends AppCompatActivity implements V
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complain_suggestions);
         radioGroup_topic = findViewById(R.id.radioGroup_topic);
-        cardView_ButtonPublicar = findViewById(R.id.cardView_ButtonPublicar);
+        cardView_ButtonPublicar = findViewById(R.id.cardView_ButtonCancel);
         cardView_ButtonPublicar.setOnClickListener(this);
         radioButtonListener();
     }
@@ -59,7 +59,7 @@ public class ComplaintSuggestionsActivity extends AppCompatActivity implements V
         int id = view.getId();
 
         switch (id){
-            case R.id.cardView_ButtonPublicar:
+            case R.id.cardView_ButtonCancel:
                 if(!topic.equals(""))
                 {
                     Snackbar.make(view, R.string.agradecimientos + topic, Snackbar.LENGTH_SHORT).show();

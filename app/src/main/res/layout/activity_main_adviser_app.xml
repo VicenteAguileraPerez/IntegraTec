@@ -267,7 +267,7 @@
             </androidx.core.widget.NestedScrollView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardView_ButtonPublicar"
+                android:id="@+id/cardView_ButtonCancel"
                 android:layout_width="355dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
@@ -280,7 +280,7 @@
                     android:layout_height="match_parent">
 
                     <TextView
-                        android:id="@+id/textView_ButtonPublicar"
+                        android:id="@+id/textView_ButtonSend"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/publicar"

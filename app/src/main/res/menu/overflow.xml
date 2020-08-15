@@ -8,6 +8,9 @@
         android:id="@+id/item_QuejasSugerencias"
         android:title="@string/quejasSugerencias" />
     <item
+        android:id="@+id/item_EditarPerfil"
+        android:title="@string/editar_perfil" />
+    <item
         android:id="@+id/item_Crear_QR"
         android:title="@string/crearQR" />
     <item

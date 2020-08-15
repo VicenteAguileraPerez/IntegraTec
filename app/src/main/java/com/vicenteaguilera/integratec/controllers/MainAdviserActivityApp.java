@@ -1,15 +1,15 @@
 package com.vicenteaguilera.integratec.controllers;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,23 +30,15 @@ import androidx.cardview.widget.CardView;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
-import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.protobuf.StringValue;
 import com.vicenteaguilera.integratec.CreateCodeQRActivity;
-import com.vicenteaguilera.integratec.SplashScreenActivity;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.utility.ImagesHelper;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.vicenteaguilera.integratec.R;
-import com.vicenteaguilera.integratec.controllers.mainapp.MainAppActivity;
 import com.vicenteaguilera.integratec.helpers.CaptureActivityPortrait;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
 import com.vicenteaguilera.integratec.helpers.utility.PropiertiesHelper;
@@ -104,7 +96,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         editText_URL = findViewById(R.id.editView_URL);
         editTextTextMultiLine = findViewById(R.id.editTextTextMultiLine);
         switchEstado = findViewById(R.id.switch_Estado);
-        cardView_ButtonPublicar = findViewById(R.id.cardView_ButtonPublicar);
+        cardView_ButtonPublicar = findViewById(R.id.cardView_ButtonCancel);
         textView_Estado = findViewById(R.id.textView_Estado);
         radioButton_AOnline = findViewById(R.id.radioButton_AOnline);
         radioBAPresencial = findViewById(R.id.radioButton_APresencial);
@@ -188,6 +180,12 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 startActivity(intent);
                 //escanearQR();
                 break;
+
+            case R.id.item_EditarPerfil:
+
+                showDialogEditProfile();
+
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -204,7 +202,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         {
             getHora(editText_HoraFinalizacion);
         }
-        else if(idView==R.id.cardView_ButtonPublicar)
+        else if(idView==R.id.cardView_ButtonCancel)
         {
                 //evaluación de que las fechas esten !=null
                 //seleccionado si es presencial o virtual
@@ -466,6 +464,73 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         intentIntegrator.setCaptureActivity(CaptureActivityPortrait.class);
         intentIntegrator.setBarcodeImageEnabled(false);
         intentIntegrator.initiateScan();
+    }
+
+    private void showDialogEditProfile() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+
+        View view = inflater.inflate(R.layout.dialog_edit_profile, null);
+        builder.setView(view)
+                .setTitle("Editar perfil");
+        //.setMessage("Modifica los siguientes campos con la información correcta.");
+
+        final AlertDialog dialogEditProfile =builder.create();
+        dialogEditProfile.setCancelable(false);
+        dialogEditProfile.show();
+
+        final EditText editText_Name = dialogEditProfile.findViewById(R.id.editText_Name);
+        final EditText editText_LastNames = dialogEditProfile.findViewById(R.id.editText_LastNames);
+        final EditText editText_Email = dialogEditProfile.findViewById(R.id.editText_Email);
+        CardView cardView_ButtonUpdate = dialogEditProfile.findViewById(R.id.cardView_ButtonSend);
+        CardView cardView_ButtonCancel = dialogEditProfile.findViewById(R.id.cardView_ButtonCancel);
+
+        cardView_ButtonUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean flag_Name=false;
+                boolean flag_LastNames=false;
+                boolean flag_Email=false;
+
+                if(!editText_Name.getText().toString().isEmpty()) {
+                    flag_Name=true;
+                }
+                else {
+                    editText_Name.setError("Nombre requerido");
+                }
+
+                if(!editText_LastNames.getText().toString().isEmpty()) {
+                    flag_LastNames=true;
+                }
+                else {
+                    editText_LastNames.setError("Apellidos requeridos");
+                }
+
+                if(!editText_Email.getText().toString().isEmpty()) {
+                    if(new StringHelper().isEmail(editText_Email.getText().toString())) {
+                        flag_Email=true;
+                    }
+                    else {
+                        editText_Email.setError("Correo electrónico inválido");
+                    }
+                }
+                else {
+                    editText_Email.setError("Correo electrónico requerido");
+                }
+
+                if(flag_Name && flag_LastNames && flag_Email)
+                {
+                    Toast.makeText(MainAdviserActivityApp.this, "Actualizando datos...", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        cardView_ButtonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogEditProfile.dismiss();
+            }
+        });
     }
 
     @Override

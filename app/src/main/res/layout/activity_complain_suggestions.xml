@@ -19,10 +19,10 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="700dp">
+            android:layout_height="wrap_content">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardView2"
+                android:id="@+id/cardView_background"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="20dp"
@@ -93,7 +93,7 @@
                         app:layout_constraintTop_toTopOf="@+id/guideline5" />
 
                     <EditText
-                        android:id="@+id/editText_nombre"
+                        android:id="@+id/editText_email"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_margin="10dp"
@@ -116,7 +116,7 @@
                         android:layout_margin="10dp"
                         android:backgroundTint="@color/white"
                         android:ems="10"
-                        android:hint="@string/nombre"
+                        android:hint="@string/nombre_completo"
                         android:importantForAutofill="no"
                         android:inputType="textCapWords"
                         android:textColor="@color/white"
@@ -177,7 +177,7 @@
                         app:layout_constraintGuide_percent="0.42" />
 
                     <androidx.cardview.widget.CardView
-                        android:id="@+id/cardView_ButtonPublicar"
+                        android:id="@+id/cardView_ButtonCancel"
                         android:layout_width="307dp"
                         android:layout_height="38dp"
                         android:layout_gravity="center"
@@ -193,7 +193,7 @@
                             android:layout_height="match_parent">
 
                             <TextView
-                                android:id="@+id/textView_ButtonPublicar"
+                                android:id="@+id/textView_ButtonSend"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/enviar"
