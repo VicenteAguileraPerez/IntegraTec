@@ -133,6 +133,7 @@ public class FirebaseAuthHelper
     public  void signout(final ProgressDialog dialog)
     {
         mAuth.signOut();
+        FirestoreHelper.asesor=null;
         Log.e("er",mAuth.getCurrentUser()+"");
         dialog.dismiss();
         Intent intent = new Intent(context, MainAppActivity.class);

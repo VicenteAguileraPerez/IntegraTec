@@ -33,6 +33,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import com.google.android.material.snackbar.Snackbar;
 import com.vicenteaguilera.integratec.CreateCodeQRActivity;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
+import com.vicenteaguilera.integratec.helpers.services.FirebaseStorageHelper;
 import com.vicenteaguilera.integratec.helpers.utility.ImagesHelper;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -70,6 +71,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private RadioButton radioButton_AOnline;
     private RadioButton radioBAPresencial;
     private FirebaseAuthHelper firebaseAuthHelper = new FirebaseAuthHelper();
+    private  FirestoreHelper firestoreHelper = new FirestoreHelper();
+    private FirebaseStorageHelper firebaseStorageHelper = new FirebaseStorageHelper();
 
 
     private IntentResult result= null;
@@ -79,6 +82,13 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         super.onStart();
         firebaseAuthHelper.setContext(MainAdviserActivityApp.this);
         firebaseAuthHelper.setOnStatusListener(this);
+        firebaseStorageHelper.setStatusListener(this);
+        //textview_Nombre setearle asesor.nombre apelldido
+        //xml
+        //elipsis ...
+        //maxline 1
+
+
     }
 
     @Override
@@ -132,7 +142,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), placeholder);
         circularBitmapDrawable.setCircular(true);
         Glide.with(getApplicationContext())
-                .load("https://firebasestorage.googleapis.com/v0/b/integratec-itsu.appspot.com/o/practilablogo.png?alt=media&token=346b3247-ebf3-4aed-a907-f59d8a8eb5f6")
+                .load(FirestoreHelper.asesor.getuRI_image())
                 .placeholder(circularBitmapDrawable)
                 .fitCenter()
                 .centerCrop()
@@ -299,6 +309,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
                 if(flag_radioButton && flag_spinnerMateria && flag_TimeStar && flag_TimeEnd)
                 {
+
                     Toast.makeText(this, getResources().getText(R.string.publicando)+"...", Toast.LENGTH_SHORT).show();
                 }
         }
@@ -427,9 +438,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                         .apply(RequestOptions.circleCropTransform())
                         .into(imageView_perfil);
 
-                //storageFirebase.EliminarFoto(FirebaseConexionFirestore.getValue("NumeroControl").toString(), FirebaseConexionFirestore.PERSONA,getView());
-                //storageFirebase.agregarFoto(FirebaseConexionFirestore.getValue("NumeroControl").toString(),Uri.fromFile(imagen) , FirebaseConexionFirestore.PERSONA,getView(), 1);
-
+                firebaseStorageHelper.deleteImage(FirestoreHelper.asesor.getUid());
+                firebaseStorageHelper.addImage(FirestoreHelper.asesor.getUid(),Uri.fromFile(imagen));
 
 
             } catch (IOException | NullPointerException e) {
@@ -516,9 +526,14 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     Snackbar.make(view, "Seleccionar una carrera", Snackbar.LENGTH_SHORT).show();
                 }
 
-                if(flag_Name && flag_LastNames)
+                if(flag_Name && flag_LastNames && flag_Career)
                 {
-                    Toast.makeText(MainAdviserActivityApp.this, "Actualizando datos...", Toast.LENGTH_SHORT).show();
+                    ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
+                            "Actualizando..", true);
+                    dialog.show();
+                    firestoreHelper.updateDataAsesor(editText_Name.getText().toString(), editText_LastNames.getText().toString(),
+                            String.valueOf(spinner_career.getSelectedItem()),dialog,MainAdviserActivityApp.this);
+                   // Toast.makeText(MainAdviserActivityApp.this, "Actualizando datos...", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -534,6 +549,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     @Override
     public void status(String message)
     {
+        if(message.equals("Datos actualizados"))
+        {
+            ///actualizar los edittext textview visibles
+        }
+
         Toast.makeText(MainAdviserActivityApp.this,message,Toast.LENGTH_SHORT).show();
     }
 }

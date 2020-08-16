@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -32,10 +34,10 @@ public class FirestoreHelper
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final CollectionReference AsesoresCollection = db.collection("asesores");
     private final CollectionReference AsesoriaPublicaCollection = db.collection("asesoria_publica");
-    private static Status status;
-    private ProgressDialog dialog;
+    //private static Status status;
+    //private ProgressDialog dialog;
     public static Asesor asesor=null;
-
+    //agrega los datos la primera vez
     public void addData(Status status, ProgressDialog dialog, Context context, String uid, String email, String password, String[] param)
    {
        if(param.length==3)
@@ -58,6 +60,7 @@ public class FirestoreHelper
            //es un profesor
        }
    }
+   //registra
    private void registerDataUserToFirestore(CollectionReference collectionReference, final String document, final Status status, final ProgressDialog dialog, final Map<String, Object> data, final Context context)
    {
        // Add a new document with a generated ID
@@ -129,6 +132,57 @@ public class FirestoreHelper
         });
 
     }
+    public void updateDataAsesor(final String nombre, final String apellido, final String carrera, final ProgressDialog dialog, final Status status)
+    {
+        Map<String,Object> asesor = new HashMap<>();
+        asesor.put("nombre", nombre);
+        asesor.put("apellido", apellido);
+        asesor.put("carrera", carrera);
+        AsesoresCollection.document(FirestoreHelper.asesor.getUid()).update(asesor)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                FirestoreHelper.asesor.setNombre(nombre);
+                FirestoreHelper.asesor.setApellidos(apellido);
+                FirestoreHelper.asesor.setCarrera(carrera);
+                status.status("Datos actualizados");
+                dialog.dismiss();
+            }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+             @Override
+             public void onFailure(@NonNull Exception e)
+             {
+                status.status("Datos no actualizados, verifica tu conexión a Internet");
+                dialog.dismiss();
+             }
+        });
+
+    }
+    public void updateImageAsesor(final String uri_image, final Status status)
+    {
+        Map<String,Object> asesor = new HashMap<>();
+        asesor.put("uri_image", uri_image);
+
+        AsesoresCollection.document(FirestoreHelper.asesor.getUid()).update(asesor)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        FirestoreHelper.asesor.setuRI_image(uri_image);
+                        status.status("Datos actualizados");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e)
+                    {
+                        status.status("Imagen no actualizada, verifica tu conexión a Internet");
+                    }
+                });
+
+    }
+
+
 
     private void registerDataAsesoriaPublicaToFirestore(CollectionReference collectionReference, String document, final Status status, final ProgressDialog dialog, Map<String, Object> data, final Context context)
     {

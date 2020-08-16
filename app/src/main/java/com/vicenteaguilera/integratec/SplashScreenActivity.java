@@ -50,7 +50,7 @@ public class SplashScreenActivity extends AppCompatActivity  implements Status
             public void run() {
                 Intent intent;
                 ProgressDialog dialog = ProgressDialog.show(SplashScreenActivity.this, "",
-                        "Ingresando... "+FirebaseAuthHelper.getCurrentUser(), true);
+                        "Ingresando... ", true);
                 dialog.show();
                 if(FirebaseAuthHelper.getCurrentUser()!=null)
                 {
