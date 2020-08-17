@@ -121,7 +121,7 @@ public class LoginFragment extends Fragment  implements Status{
         dialogRecoverPass.setCancelable(false);
         dialogRecoverPass.show();
 
-        final EditText editText_Email = dialogRecoverPass.findViewById(R.id.spinner_career);
+        final EditText editText_Email = dialogRecoverPass.findViewById(R.id.textView_email);
         CardView cardView_ButtonSend = dialogRecoverPass.findViewById(R.id.cardView_ButtonSend);
         CardView cardView_ButtonCancel = dialogRecoverPass.findViewById(R.id.cardView_ButtonCancel);
 

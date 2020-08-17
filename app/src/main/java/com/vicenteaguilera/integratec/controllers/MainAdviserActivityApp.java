@@ -55,6 +55,9 @@ import id.zelory.compressor.Compressor;
 public class MainAdviserActivityApp extends AppCompatActivity implements View.OnClickListener, Status {
     private final static int GALLERY_INTENT = 1;
     private File imagen=null;
+    private String nombre = FirestoreHelper.asesor.getNombre();
+    private String apellido = FirestoreHelper.asesor.getApellidos();
+    private String carrera = FirestoreHelper.asesor.getCarrera();
 
     private TimePickerDialog picker=null;
     private Spinner spinner_materias;
@@ -66,6 +69,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private CardView cardView_ButtonPublicar;
     private EditText editTextTextMultiLine;
     private TextView textView_Estado;
+    private TextView textView_Nombre;
     private Switch switchEstado;
     private ImageView imageView_perfil;
     private RadioButton radioButton_AOnline;
@@ -83,6 +87,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         firebaseAuthHelper.setContext(MainAdviserActivityApp.this);
         firebaseAuthHelper.setOnStatusListener(this);
         firebaseStorageHelper.setStatusListener(this);
+        textView_Nombre.setText(nombre +  " "+apellido);
         //textview_Nombre setearle asesor.nombre apelldido
         //xml
         //elipsis ...
@@ -108,6 +113,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         switchEstado = findViewById(R.id.switch_Estado);
         cardView_ButtonPublicar = findViewById(R.id.cardView_ButtonCancel);
         textView_Estado = findViewById(R.id.textView_Estado);
+        textView_Nombre = findViewById(R.id.textView_Nombre);
         radioButton_AOnline = findViewById(R.id.radioButton_AOnline);
         radioBAPresencial = findViewById(R.id.radioButton_APresencial);
 
@@ -491,12 +497,16 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
         final EditText editText_Name = dialogEditProfile.findViewById(R.id.editText_Name);
         final EditText editText_LastNames = dialogEditProfile.findViewById(R.id.editText_LastNames);
-        final Spinner spinner_career = dialogEditProfile.findViewById(R.id.spinner_career);
+        final Spinner spinner_career = dialogEditProfile.findViewById(R.id.textView_email);
         CardView cardView_ButtonUpdate = dialogEditProfile.findViewById(R.id.cardView_ButtonSend);
         CardView cardView_ButtonCancel = dialogEditProfile.findViewById(R.id.cardView_ButtonCancel);
 
         ArrayAdapter<String> arrayAdapterCareer = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
         spinner_career.setAdapter(arrayAdapterCareer);
+
+        editText_Name.setText(nombre);
+        editText_LastNames.setText(apellido);
+        spinner_career.setSelection(retornaCarrera());
 
         cardView_ButtonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -555,5 +565,27 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         }
 
         Toast.makeText(MainAdviserActivityApp.this,message,Toast.LENGTH_SHORT).show();
+    }
+
+
+    public int retornaCarrera(){
+
+        if(carrera.equals("Ingeniería en Sistemas Computacionales")){
+            return 1;
+        }else if(carrera.equals("Ingeniería en Administración")){
+            return 2;
+        }else if(carrera.equals("Ingeniería en Mecatrónica")){
+            return 3;
+        }else if(carrera.equals("Ingeniería Industrial")){
+            return 4;
+        }else if(carrera.equals("Ingeniería en Mecánica")){
+            return 5;
+        }else if(carrera.equals("Ingeniería en Industrias Alimentarias")){
+            return 6;
+        }else if(carrera.equals("Ingeniería Civil")){
+            return 7;
+        }
+
+        return 0;
     }
 }
