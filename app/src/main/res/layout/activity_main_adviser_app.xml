@@ -188,8 +188,21 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
+
+            <EditText
+                android:id="@+id/editTextText_otroLugar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:ems="10"
+                android:hint="Indique el lugar"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                android:visibility="gone" />
 
             <Spinner
                 android:id="@+id/spinner_Materia"

@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -53,6 +54,8 @@ import java.util.Objects;
 import id.zelory.compressor.Compressor;
 
 public class MainAdviserActivityApp extends AppCompatActivity implements View.OnClickListener, Status {
+    private EditText editTextText_otroLugar;
+
     private final static int GALLERY_INTENT = 1;
     private File imagen=null;
     private String nombre = FirestoreHelper.asesor.getNombre();
@@ -87,13 +90,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         firebaseAuthHelper.setContext(MainAdviserActivityApp.this);
         firebaseAuthHelper.setOnStatusListener(this);
         firebaseStorageHelper.setStatusListener(this);
-        textView_Nombre.setText(nombre +  " "+apellido);
-        //textview_Nombre setearle asesor.nombre apelldido
-        //xml
-        //elipsis ...
-        //maxline 1
-
-
+        textView_Nombre.setText(nombre + " " + apellido);
     }
 
     @Override
@@ -104,6 +101,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         ActionBar toolbar = getSupportActionBar();
         Objects.requireNonNull(toolbar).setElevation(0);
         setTitle("Menú Asesor");
+        editTextText_otroLugar = findViewById(R.id.editTextText_otroLugar);
         imageView_perfil = findViewById(R.id.imageView_perfil);
         spinner_materias = findViewById(R.id.spinner_Materia);
         spinner_lugares = findViewById(R.id.spinner_Lugar);
@@ -155,6 +153,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 .apply(RequestOptions.circleCropTransform())
                 //.apply(RequestOptions.bitmapTransform(new RoundedCorners(16)))
                 .into(imageView_perfil);
+
+
     }
 
     @Override
@@ -230,6 +230,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 boolean flag_spinnerMateria = false;
                 boolean flag_TimeStar=false;
                 boolean flag_TimeEnd=false;
+                boolean flag_otherPlace = false;
 
                 editText_URL.setError(null);
                 editText_HoraInicio.setError(null);
@@ -241,6 +242,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     if(spinner_lugares.getSelectedItemPosition()>0)
                     {
                         flag_radioButton=true;
+
                     }
                     else
                     {
@@ -370,10 +372,27 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     {
                         spinner_lugares.setVisibility(View.GONE);
                         editText_URL.setVisibility(View.VISIBLE);
+                        editTextText_otroLugar.setVisibility(View.GONE);
+
                     }else if(checkedRadioButton.getId()==R.id.radioButton_APresencial)
                     {
                         editText_URL.setVisibility(View.GONE);
                         spinner_lugares.setVisibility(View.VISIBLE);
+                        spinner_lugares.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                if(spinner_lugares.getItemIdAtPosition(position)!=PropiertiesHelper.LUGARES.length-1){
+                                    editTextText_otroLugar.setVisibility(View.GONE);
+                                }else{
+                                    editTextText_otroLugar.setVisibility(View.VISIBLE);
+                                }
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
                     }
                 }
 
