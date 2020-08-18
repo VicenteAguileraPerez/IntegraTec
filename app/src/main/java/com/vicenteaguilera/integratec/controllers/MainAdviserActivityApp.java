@@ -235,17 +235,27 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 editText_URL.setError(null);
                 editText_HoraInicio.setError(null);
                 editText_HoraFinalizacion.setError(null);
+                editTextText_otroLugar.setError(null);
 
 
-                if(radioBAPresencial.isChecked())
+            if(radioBAPresencial.isChecked())
                 {
                     if(spinner_lugares.getSelectedItemPosition()>0)
                     {
-                        flag_radioButton=true;
-
+                        if(spinner_lugares.getSelectedItem().toString().equals("Otro(Especifique)"))
+                        {
+                            if(!editTextText_otroLugar.getText().toString().isEmpty()) {
+                                flag_otherPlace=true;
+                            }
+                            else {
+                                editTextText_otroLugar.setError("Es necesario llenar este campo.");
+                            }
+                        }
+                        else {
+                            flag_radioButton=true;
+                        }
                     }
-                    else
-                    {
+                    else {
                         Snackbar.make(view, "Seleccionar un lugar para la asesoría.", Snackbar.LENGTH_SHORT).show();
                     }
                 }
@@ -302,7 +312,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     String aux = editText_HoraFinalizacion.getText().toString().substring(6,8);
                     if((((horaFin>=1 && horaFin<=8) || horaFin==12) && aux.equals("pm")) || ((horaFin>=8 && horaFin<=11) && aux.equals("am")))
                     {
-                        flag_TimeStar=true;
+                        flag_TimeEnd=true;
                     }
                     else
                     {
@@ -314,10 +324,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     editText_HoraFinalizacion.setError("Seleccionar hora de finalización.");
                 }
 
-
-                if(flag_radioButton && flag_spinnerMateria && flag_TimeStar && flag_TimeEnd)
+                if(((flag_radioButton || flag_otherPlace)==true) && flag_spinnerMateria && flag_TimeStar && flag_TimeEnd)
                 {
-
                     Toast.makeText(this, getResources().getText(R.string.publicando)+"...", Toast.LENGTH_SHORT).show();
                 }
         }
@@ -378,6 +386,10 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     {
                         editText_URL.setVisibility(View.GONE);
                         spinner_lugares.setVisibility(View.VISIBLE);
+                        if(spinner_lugares.getSelectedItem().toString().equals("Otro(Especifique)"))
+                        {
+                            editTextText_otroLugar.setVisibility(View.VISIBLE);
+                        }
                         spinner_lugares.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
