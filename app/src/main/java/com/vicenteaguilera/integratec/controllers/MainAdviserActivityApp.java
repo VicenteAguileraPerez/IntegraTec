@@ -58,9 +58,6 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
     private final static int GALLERY_INTENT = 1;
     private File imagen=null;
-    private String nombre = FirestoreHelper.asesor.getNombre();
-    private String apellido = FirestoreHelper.asesor.getApellidos();
-    private String carrera = FirestoreHelper.asesor.getCarrera();
 
     private TimePickerDialog picker=null;
     private Spinner spinner_materias;
@@ -90,7 +87,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         firebaseAuthHelper.setContext(MainAdviserActivityApp.this);
         firebaseAuthHelper.setOnStatusListener(this);
         firebaseStorageHelper.setStatusListener(this);
-        textView_Nombre.setText(nombre + " " + apellido);
+        textView_Nombre.setText(FirestoreHelper.asesor.getNombre() +  " " + FirestoreHelper.asesor.getApellidos());
     }
 
     @Override
@@ -535,8 +532,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         ArrayAdapter<String> arrayAdapterCareer = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
         spinner_career.setAdapter(arrayAdapterCareer);
 
-        editText_Name.setText(nombre);
-        editText_LastNames.setText(apellido);
+        editText_Name.setText(FirestoreHelper.asesor.getNombre());
+        editText_LastNames.setText(FirestoreHelper.asesor.getApellidos());
         spinner_career.setSelection(retornaCarrera());
 
         cardView_ButtonUpdate.setOnClickListener(new View.OnClickListener() {
@@ -574,6 +571,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     dialog.show();
                     firestoreHelper.updateDataAsesor(editText_Name.getText().toString(), editText_LastNames.getText().toString(),
                             String.valueOf(spinner_career.getSelectedItem()),dialog,MainAdviserActivityApp.this);
+
                    // Toast.makeText(MainAdviserActivityApp.this, "Actualizando datos...", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -592,7 +590,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     {
         if(message.equals("Datos actualizados"))
         {
-            ///actualizar los edittext textview visibles
+           textView_Nombre.setText(FirestoreHelper.asesor.getNombre() + " "+ FirestoreHelper.asesor.getApellidos());
         }
 
         Toast.makeText(MainAdviserActivityApp.this,message,Toast.LENGTH_SHORT).show();
@@ -601,19 +599,19 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
     public int retornaCarrera(){
 
-        if(carrera.equals("Ingeniería en Sistemas Computacionales")){
+        if(FirestoreHelper.asesor.getCarrera().equals("Ingeniería en Sistemas Computacionales")){
             return 1;
-        }else if(carrera.equals("Ingeniería en Administración")){
+        }else if(FirestoreHelper.asesor.getCarrera().equals("Ingeniería en Administración")){
             return 2;
-        }else if(carrera.equals("Ingeniería en Mecatrónica")){
+        }else if(FirestoreHelper.asesor.getCarrera().equals("Ingeniería en Mecatrónica")){
             return 3;
-        }else if(carrera.equals("Ingeniería Industrial")){
+        }else if(FirestoreHelper.asesor.getCarrera().equals("Ingeniería Industrial")){
             return 4;
-        }else if(carrera.equals("Ingeniería en Mecánica")){
+        }else if(FirestoreHelper.asesor.getCarrera().equals("Ingeniería en Mecánica")){
             return 5;
-        }else if(carrera.equals("Ingeniería en Industrias Alimentarias")){
+        }else if(FirestoreHelper.asesor.getCarrera().equals("Ingeniería en Industrias Alimentarias")){
             return 6;
-        }else if(carrera.equals("Ingeniería Civil")){
+        }else if(FirestoreHelper.asesor.getCarrera().equals("Ingeniería Civil")){
             return 7;
         }
 
