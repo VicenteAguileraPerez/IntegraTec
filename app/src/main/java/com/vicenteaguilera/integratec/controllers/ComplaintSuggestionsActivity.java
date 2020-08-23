@@ -3,6 +3,7 @@ package com.vicenteaguilera.integratec.controllers;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioButton;
@@ -10,6 +11,13 @@ import android.widget.RadioGroup;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.vicenteaguilera.integratec.R;
+import com.vicenteaguilera.integratec.helpers.utility.SenderAsycTask;
+
+import java.util.Properties;
+
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
 
 public class ComplaintSuggestionsActivity extends AppCompatActivity implements View.OnClickListener {
     private CardView cardView_ButtonPublicar;
@@ -62,9 +70,27 @@ public class ComplaintSuggestionsActivity extends AppCompatActivity implements V
             case R.id.cardView_ButtonPublicar:
                 if(!topic.equals(""))
                 {
+
                     Snackbar.make(view, R.string.agradecimientos + topic, Snackbar.LENGTH_SHORT).show();
                 }
                 break;
         }
+    }
+    public void sendEmailWithGmail2(final String from, final String passwordfrom, String to, Context context, String[]datos) {
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "465");
+
+        Session session = Session.getDefaultInstance(props, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(from, passwordfrom);
+            }
+        });
+
+        SenderAsycTask task = new SenderAsycTask(session, from,to,context,datos);
+        task.execute();
     }
 }

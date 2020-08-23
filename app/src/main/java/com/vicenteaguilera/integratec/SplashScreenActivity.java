@@ -22,7 +22,6 @@ import java.util.Objects;
 
 public class SplashScreenActivity extends AppCompatActivity  implements Status
 {
-
     private TextView textView_IntegraTec;
     private ImageView imageView_Splash_Screen;
     private final FirestoreHelper firestoreHelper = new FirestoreHelper();

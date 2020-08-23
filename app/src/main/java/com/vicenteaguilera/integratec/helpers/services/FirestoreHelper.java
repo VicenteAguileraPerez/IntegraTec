@@ -13,10 +13,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.vicenteaguilera.integratec.SplashScreenActivity;
 import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
 import com.vicenteaguilera.integratec.controllers.OptionsActivity;
@@ -28,6 +30,8 @@ import com.vicenteaguilera.integratec.models.Asesor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import static android.content.ContentValues.TAG;
 
 public class FirestoreHelper
 {
@@ -184,25 +188,70 @@ public class FirestoreHelper
 
 
 
-    private void registerDataAsesoriaPublicaToFirestore(CollectionReference collectionReference, String document, final Status status, final ProgressDialog dialog, Map<String, Object> data, final Context context)
+    public void registerDataAsesoriaPublicaToFirestore(CollectionReference collectionReference, String document, final Status status, final ProgressDialog dialog, Map<String, Object> data,boolean estado, final Context context)
     {
         // Add a new document with a generated ID
-        collectionReference.document(document).set(data)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task)
-                    {
-                        if(task.isSuccessful())
-                        {
-                            status.status("asesoría pública...");
-                            dialog.dismiss();
-                        }
-                        else
-                        {
-                            dialog.dismiss();
-                            status.status("Error del registro de los datos. Inténtelo de nuevo");
+        if(estado) {
+            AsesoriaPublicaCollection.document(document).set(data)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                status.status("asesoría pública...");
+                                dialog.dismiss();
+                            } else {
+                                dialog.dismiss();
+                                status.status("Error del registro de los datos. Inténtelo de nuevo");
 
+                            }
                         }
+                    });
+        }
+        else
+        {
+            AsesoriaPublicaCollection.document(asesor.getUid())
+                    .delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            status.status("asesoría terminada...");
+                            dialog.dismiss();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            status.status("Error del eliminación de asesoría. Inténtelo de nuevo");
+                        }
+                    });
+        }
+    }
+    public void listenasesorias()
+    {
+        AsesoriaPublicaCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshots,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "listen:error", e);
+                            return;
+                        }
+
+                        for (DocumentChange dc : snapshots.getDocumentChanges())
+                        {
+                            switch (dc.getType()) {
+                                case ADDED:
+                                    Log.d(TAG, "New city: " + dc.getDocument().getData());
+                                    break;
+                                case MODIFIED:
+                                    Log.d(TAG, "Modified city: " + dc.getDocument().getData());
+                                    break;
+                                case REMOVED:
+                                    Log.d(TAG, "Removed city: " + dc.getDocument().getData());
+                                    break;
+                            }
+                        }
+
                     }
                 });
     }

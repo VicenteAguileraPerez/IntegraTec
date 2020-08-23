@@ -134,6 +134,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         imageView_perfil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
                 startActivityForResult(Intent.createChooser(intent,"Selecciona una imagen"),GALLERY_INTENT);
@@ -323,6 +324,20 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
                 if(((flag_radioButton || flag_otherPlace)==true) && flag_spinnerMateria && flag_TimeStar && flag_TimeEnd)
                 {
+
+                    //data de info
+                    /**
+                     * imageuri
+                     * nombre
+                     * if()
+                     *  url ""
+                     *  lugar ""
+                     * h_incio dada en 12hrs
+                     * h_fin dada en 12 hrs
+                     * informacion
+                     * fecha fecha actual
+                     * estado
+                     */
                     Toast.makeText(this, getResources().getText(R.string.publicando)+"...", Toast.LENGTH_SHORT).show();
                 }
         }

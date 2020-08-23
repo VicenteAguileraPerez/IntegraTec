@@ -6,11 +6,14 @@ package com.vicenteaguilera.integratec.models;
 
 public class RealtimeAsesoria
 {
+    //string url imagen del asesor
+    // nombre del asesor
+    //hora inicio
+    //hora fin
     private String lugar;
     private String URL;
     private String materia;
-    //private Timestamp hora_inicio;
-    //private Timestamp hora_fin;
+
     private String informacion;
 
    /* public RealtimeAsesoria(String lugar, String URL, String materia, Timestamp hora_inicio, Timestamp hora_fin, String informacion) {

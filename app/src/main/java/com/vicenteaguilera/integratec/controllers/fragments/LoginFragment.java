@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
+import com.vicenteaguilera.integratec.helpers.services.FirebaseQueryHelper;
 import com.vicenteaguilera.integratec.helpers.utility.Status;
 import com.vicenteaguilera.integratec.helpers.utility.StringHelper;
 
@@ -144,7 +145,7 @@ public class LoginFragment extends Fragment  implements Status{
 
                 if(flag_Email)
                 {
-                    Toast.makeText(getContext(), "Recuperando contraseña...", Toast.LENGTH_SHORT).show();
+                    new FirebaseQueryHelper().BuscarCredenciales(editText_Email.getText().toString(),getActivity());
                 }
             }
         });
