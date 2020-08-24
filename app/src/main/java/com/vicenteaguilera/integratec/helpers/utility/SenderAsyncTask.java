@@ -119,12 +119,12 @@ public class SenderAsyncTask extends AsyncTask<String, String, String> {
                         "<p ALIGN=\"justify\"><font size=3 face=\"Sans Serif,arial,verdana\">" + "Agradecemos tu colaboración <strong>" + datos[0]+
                         "</strong> evaluaremos la petición y tendremos pronta respuesta a tu petición." + "</font></p>" +
                         "<p ALIGN=\"justify\"><font size=3 face=\"Sans Serif,arial,verdana\">Saludos cordiales,</font></p>" +
-                        "<p><font size=3 face=\"Sans Serif,arial,verdana\">El equipo </font><font color=\"#008577\" size=3 face=\"Sans Serif,arial,verdana\">IntegraTec.</font></p>" +
+                        "<p><font size=3 face=\"Sans Serif,arial,verdana\">El equipo </font><font color=\"#EA2925\" size=3 face=\"Sans Serif,arial,verdana\">IntegraTec.</font></p>" +
                         "<br>" +
                         "<hr>" +
                         "<footer>" +
                         "<p><font color=\"#C5BFBF\" size=2 face=\"Sans Serif,arial,verdana\">Gracias!!</font></p>" +
-                        "<p ALIGN=\"justify\"><font color=\"#C5BFBF\" size=1 face=\"Sans Serif,arial,verdana\">©IntegraTec from Instituto Tecnológico Superior de Uruapan, Carretera Uruapan-Carapan No. 5555 Col. La Basilia Uruapan, Michoacán. Este correo fue enviado para: " + to+ " y fue enviado por IntegraTec </font></p>" +
+                        "<p ALIGN=\"justify\"><font color=\"#C5BFBF\" size=1 face=\"Sans Serif,arial,verdana\"><font color=\"#EA2925\" size=1 face=\"Sans Serif,arial,verdana\">©IntegraTec</font> from Instituto Tecnológico Superior de Uruapan, Carretera Uruapan-Carapan No. 5555 Col. La Basilia Uruapan, Michoacán. Este correo fue enviado para: <font color=\"#1a73e8\" size=1 face=\"Sans Serif,arial,verdana\">" + to + "</font> y fue enviado por <font color=\"#EA2925\" size=1 face=\"Sans Serif,arial,verdana\">IntegraTec</font></font>.</p>" +
                         "</footer>" +
                         "</body>";
         mimeMessage.setContent(htmlText, "text/html; charset=utf-8");
@@ -138,7 +138,7 @@ public class SenderAsyncTask extends AsyncTask<String, String, String> {
         mimeMessage2.setSubject("Quejas y sugerencias de IntegraTec");
         String htmlText3 = "<p ALIGN=\"center\"><img  width=\"200\" height=\"200\" src=\"https://firebasestorage.googleapis.com/v0/b/integratec-itsu.appspot.com/o/integratec4.png?alt=media&token=67ee39a5-9dbb-4cf7-b0cb-5fe09d9222fc\"></p>";
         String htmlText4 =
-                "<body> " + "<h4><font size=3 face=\"Sans Serif,arial,verdana\">Hola administrador de IntegraTec, </font></h4> " +
+                "<body> " + "<h4><font size=3 face=\"Sans Serif,arial,verdana\">Hola administrador de <font color=\"#EA2925\" size=3 face=\"Sans Serif,arial,verdana\">©IntegraTec</font>,</font></h4> " +
                         "<br>" + htmlText3 +
                         "<hr>" +
                         "<p ALIGN=\"justify\"><font size=3 face=\"Sans Serif,arial,verdana\">" + "Petición de <strong>" + datos[0] + " ,"+ datos[1] +/*datos[0]=nombre datos[1]=email*/
@@ -146,7 +146,7 @@ public class SenderAsyncTask extends AsyncTask<String, String, String> {
                         "<p ALIGN=\"center\"><font size=3 face=\"Sans Serif,arial,verdana\">" + datos[3] + "</font></p>" +/*datos[3]=mensaje*/
                         "<hr>" +
                         "<footer>" +
-                        "<p ALIGN=\"justify\"><font color=\"#C5BFBF\" size=1 face=\"Sans Serif,arial,verdana\">©IntegraTec from Instituto Tecnológico Superior de Uruapan, Carretera Uruapan-Carapan No. 5555 Col. La Basilia Uruapan, Michoacán.</font></p>" +
+                        "<p ALIGN=\"justify\"><font color=\"#C5BFBF\" size=1 face=\"Sans Serif,arial,verdana\"><font color=\"#EA2925\" size=1 face=\"Sans Serif,arial,verdana\">©IntegraTec</font> from Instituto Tecnológico Superior de Uruapan, Carretera Uruapan-Carapan No. 5555 Col. La Basilia Uruapan, Michoacán. Este correo fue enviado para: <font color=\"#1a73e8\" size=1 face=\"Sans Serif,arial,verdana\">" + to + "</font> y fue enviado por <font color=\"#EA2925\" size=1 face=\"Sans Serif,arial,verdana\">IntegraTec</font></font>.</p>" +
                         "</footer>" +
                         "</body>";
 

@@ -30,7 +30,7 @@ public class ComplaintSuggestionsActivity extends AppCompatActivity implements V
     private EditText editText_mensaje;
     private EditText editText_nombre;
 
-    String topic="";
+    String topic="queja";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,7 @@ public class ComplaintSuggestionsActivity extends AppCompatActivity implements V
     }
 
     private void radioButtonListener() {
-        /*radioGroup_topic.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        radioGroup_topic.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int radiobutton) {
 
@@ -73,15 +73,15 @@ public class ComplaintSuggestionsActivity extends AppCompatActivity implements V
                         topic="";
                     }
                 }
-
             }
-        });*/
-        if (radioButton_queja.isChecked()) {
+        });
+
+        /*if (radioButton_queja.isChecked()) {
             topic = getResources().getString(R.string.queja).toLowerCase();
         }
         else if (radioButton_sugerencia.isChecked()) {
             topic = getResources().getString(R.string.sugerencia).toLowerCase();
-        }
+        }*/
     }
 
     @Override
@@ -131,8 +131,12 @@ public class ComplaintSuggestionsActivity extends AppCompatActivity implements V
                     datos[1] = editText_email.getText().toString();
                     datos[2] = topic;
                     datos[3] = editText_mensaje.getText().toString();
-                    Snackbar.make(view, getResources().getText(R.string.agradecimientos) + topic, Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(view, getResources().getText(R.string.agradecimientos) +" "+ topic, Snackbar.LENGTH_SHORT).show();
                     sendEmailWithGmail(PropiertiesHelper.EMAIL, PropiertiesHelper.PASSWORD, editText_email.getText().toString(), view.getContext(), datos);
+                    editText_nombre.setText("");
+                    editText_mensaje.setText("");
+                    editText_email.setText("");
+                    radioButton_queja.setChecked(true);
                 }
                 break;
         }
