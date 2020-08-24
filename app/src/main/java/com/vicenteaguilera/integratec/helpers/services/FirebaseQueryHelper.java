@@ -1,18 +1,15 @@
 package com.vicenteaguilera.integratec.helpers.services;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.vicenteaguilera.integratec.helpers.utility.PropiertiesHelper;
-import com.vicenteaguilera.integratec.helpers.utility.SenderAsycTask;
+import com.vicenteaguilera.integratec.helpers.utility.SenderAsyncTask;
 
 import java.util.Map;
 import java.util.Properties;
@@ -43,7 +40,7 @@ public class FirebaseQueryHelper
                     Map<String,Object> mapData= queryDocumentSnapshots.getDocuments().get(0).getData();
                     String [] datos = {mapData.get("nombre")+" "+mapData.get("apellido"),String.valueOf(mapData.get("password"))};
 
-                    sendEmailWithGmail2(PropiertiesHelper.EMAIL,PropiertiesHelper.PASSWORD,String.valueOf(mapData.get("email")),context,datos);
+                    sendEmailWithGmail(PropiertiesHelper.EMAIL,PropiertiesHelper.PASSWORD,String.valueOf(mapData.get("email")),context,datos);
 
                 }
                 else {
@@ -52,7 +49,7 @@ public class FirebaseQueryHelper
             }
         });
     }
-    public void sendEmailWithGmail2(final String from, final String passwordfrom,String to,Context context,String[]datos) {
+    public void sendEmailWithGmail(final String from, final String passwordfrom,String to,Context context,String[]datos) {
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.socketFactory.port", "465");
@@ -66,7 +63,7 @@ public class FirebaseQueryHelper
             }
         });
 
-        SenderAsycTask task = new SenderAsycTask(session, from,to,context,datos);
+        SenderAsyncTask task = new SenderAsyncTask(session, from,to,context,datos);
         task.execute();
     }
 }

@@ -1,17 +1,20 @@
 package com.vicenteaguilera.integratec.controllers;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.vicenteaguilera.integratec.R;
-import com.vicenteaguilera.integratec.helpers.utility.SenderAsycTask;
+import com.vicenteaguilera.integratec.helpers.utility.PropiertiesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.SenderAsyncTask;
+import com.vicenteaguilera.integratec.helpers.utility.StringHelper;
 
 import java.util.Properties;
 
@@ -20,22 +23,35 @@ import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 
 public class ComplaintSuggestionsActivity extends AppCompatActivity implements View.OnClickListener {
-    private CardView cardView_ButtonPublicar;
+    private CardView cardView_ButtonEnviar;
     private RadioButton radioButton_queja,radioButton_sugerencia;
     private RadioGroup radioGroup_topic;
+    private EditText editText_email;
+    private EditText editText_mensaje;
+    private EditText editText_nombre;
+
     String topic="";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complain_suggestions);
+
+        editText_email = findViewById(R.id.editText_email);
+        editText_mensaje = findViewById(R.id.editText_mensaje);
+        editText_nombre = findViewById(R.id.editText_nombre);
+
+        radioButton_sugerencia =findViewById(R.id.radioButton_sugerencia);
+        radioButton_queja = findViewById(R.id.radioButton_queja);
+
         radioGroup_topic = findViewById(R.id.radioGroup_topic);
-        cardView_ButtonPublicar = findViewById(R.id.cardView_ButtonPublicar);
-        cardView_ButtonPublicar.setOnClickListener(this);
+        cardView_ButtonEnviar = findViewById(R.id.cardView_ButtonEnviar);
+        cardView_ButtonEnviar.setOnClickListener(this);
         radioButtonListener();
     }
-    private void radioButtonListener()
-    {
-        radioGroup_topic.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+    private void radioButtonListener() {
+        /*radioGroup_topic.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int radiobutton) {
 
@@ -59,7 +75,13 @@ public class ComplaintSuggestionsActivity extends AppCompatActivity implements V
                 }
 
             }
-        });
+        });*/
+        if (radioButton_queja.isChecked()) {
+            topic = getResources().getString(R.string.queja).toLowerCase();
+        }
+        else if (radioButton_sugerencia.isChecked()) {
+            topic = getResources().getString(R.string.sugerencia).toLowerCase();
+        }
     }
 
     @Override
@@ -67,16 +89,56 @@ public class ComplaintSuggestionsActivity extends AppCompatActivity implements V
         int id = view.getId();
 
         switch (id){
-            case R.id.cardView_ButtonPublicar:
-                if(!topic.equals(""))
-                {
+            case R.id.cardView_ButtonEnviar:
 
-                    Snackbar.make(view, R.string.agradecimientos + topic, Snackbar.LENGTH_SHORT).show();
+                boolean flagEmail=false;
+                boolean flagMensaje=false;
+                boolean flagNombre=false;
+
+                //evaluación de nombre
+                if(!editText_nombre.getText().toString().isEmpty()) {
+                    flagNombre=true;
+                }
+                else{
+                    editText_nombre.setError("Debes ingresar tu nombre completo.");
+                }
+
+                //evaluación de email
+                if(!editText_email.getText().toString().isEmpty()) {
+                    if(new StringHelper().isEmail(editText_email.getText().toString())) {
+                        flagEmail=true;
+                    }
+                    else {
+                        editText_email.setError("Correo electrónico inválido.");
+                    }
+                }
+                else {
+                    editText_email.setError("Debes ingresar un correo electrónico  para recibir respuesta a tu petición.");
+                }
+
+                //evaluación de mensaje
+                if(!editText_mensaje.getText().toString().isEmpty()) {
+                    flagMensaje=true;
+                }
+                else{
+                    editText_mensaje.setError("Debes ingresar una queja o sugerencia.");
+                }
+
+                if(!topic.equals("") && flagEmail && flagMensaje && flagNombre)
+                {
+                    String datos[] = new String[4];
+                    datos[0] = editText_nombre.getText().toString();
+                    datos[1] = editText_email.getText().toString();
+                    datos[2] = topic;
+                    datos[3] = editText_mensaje.getText().toString();
+                    Snackbar.make(view, getResources().getText(R.string.agradecimientos) + topic, Snackbar.LENGTH_SHORT).show();
+                    sendEmailWithGmail(PropiertiesHelper.EMAIL, PropiertiesHelper.PASSWORD, editText_email.getText().toString(), view.getContext(), datos);
                 }
                 break;
         }
     }
-    public void sendEmailWithGmail2(final String from, final String passwordfrom, String to, Context context, String[]datos) {
+
+    private void sendEmailWithGmail(final String from, final String passwordfrom, String to, Context context, String[]datos) {
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.socketFactory.port", "465");
@@ -90,7 +152,7 @@ public class ComplaintSuggestionsActivity extends AppCompatActivity implements V
             }
         });
 
-        SenderAsycTask task = new SenderAsycTask(session, from,to,context,datos);
+        SenderAsyncTask task = new SenderAsyncTask(session,from,to,context,datos);
         task.execute();
     }
 }
