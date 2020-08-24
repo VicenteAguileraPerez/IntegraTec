@@ -72,6 +72,10 @@
     <string name="editar_perfil">Editar perfil</string>
     <string name="cancelar">Cancelar</string>
     <string name="actualizar">Actualizar</string>
+    <string name="lugarAsesoria">Lugar de asesoría:</string>
+    <string name="horario">Horario:</string>
+    <string name="materia">Materia:</string>
+    <string name="informacion_extra">Información extra:</string>
 
 
 </resources>
