@@ -1,26 +1,21 @@
 package com.vicenteaguilera.integratec;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-
-import android.app.DatePickerDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.vicenteaguilera.integratec.helpers.utility.PropiertiesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.SaveImageHelper;
 
 import net.glxn.qrgen.android.QRCode;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
 
 public class CreateCodeQRActivity extends AppCompatActivity {
 
@@ -33,6 +28,7 @@ public class CreateCodeQRActivity extends AppCompatActivity {
     private ImageView imageView;
     private CardView cardView_BtnCrearQR;
     private CardView cardView_ButtonGuardarQR;
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +61,19 @@ public class CreateCodeQRActivity extends AppCompatActivity {
                 crearQR();
             }
         });
-
+        cardView_ButtonGuardarQR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(bitmap!=null)
+                {
+                    new SaveImageHelper().SaveImage(view.getContext(), bitmap);
+                }
+                else
+                {
+                    Snackbar.make(findViewById(android.R.id.content), "Debes crear primero un QR.", Snackbar.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void crearQR()
@@ -86,7 +94,7 @@ public class CreateCodeQRActivity extends AppCompatActivity {
                                         + spinner_Carrera.getSelectedItem().toString() + "_" + spinner_Asignatura.getSelectedItem().toString() + "_"
                                         + editText_Tema.getText().toString();
 
-                                Bitmap bitmap = QRCode.from(texto).withSize(400, 400).bitmap();
+                                bitmap = QRCode.from(texto).withSize(400, 400).bitmap();
                                 imageView.setImageBitmap(bitmap);
                                 imageView.setVisibility(View.VISIBLE);
                             } else {
