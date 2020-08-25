@@ -76,6 +76,7 @@ public class CreateCodeQRActivity extends AppCompatActivity {
         });
     }
 
+
     private void crearQR()
     {
         if(!editText_NumeroControl.getText().toString().isEmpty() && editText_NumeroControl.getText().toString().length()==8){
