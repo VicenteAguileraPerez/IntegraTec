@@ -1,24 +1,43 @@
 package com.vicenteaguilera.integratec;
 
+import android.Manifest;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.vicenteaguilera.integratec.helpers.utility.PropiertiesHelper;
-import com.vicenteaguilera.integratec.helpers.utility.SaveImageHelper;
 
 import net.glxn.qrgen.android.QRCode;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Objects;
+
 public class CreateCodeQRActivity extends AppCompatActivity {
 
+    private final int REQUEST_CODE_ASK_PERMISSION = 111;
     private EditText editText_Nombre;
     private EditText editText_Tema;
     private EditText editText_NumeroControl;
@@ -61,12 +80,22 @@ public class CreateCodeQRActivity extends AppCompatActivity {
                 crearQR();
             }
         });
+
         cardView_ButtonGuardarQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(bitmap!=null)
                 {
-                    new SaveImageHelper().SaveImage(view.getContext(), bitmap);
+                    if (solicitarPermiso()) {
+                        String nombre = obtenerNombre();
+                        try {
+                            saveImage(bitmap, nombre);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }else {
+                        Toast.makeText(getApplicationContext(),"Para guardar el código QR necesita conceder los permisos.",Toast.LENGTH_LONG).show();
+                    }
                 }
                 else
                 {
@@ -124,5 +153,45 @@ public class CreateCodeQRActivity extends AppCompatActivity {
         }else{
             Snackbar.make(findViewById(android.R.id.content), "Debes ingresar tú número de control completo.", Snackbar.LENGTH_SHORT).show();
         }
+    }
+
+    private boolean solicitarPermiso(){
+        int permiso = ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if(permiso!= PackageManager.PERMISSION_GRANTED){
+            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE_ASK_PERMISSION);
+            }
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+    private String obtenerNombre() {
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = df.format(c.getTime());
+        return "CodigoQR "+formattedDate;
+    }
+
+    private void saveImage(Bitmap bitmap, @NonNull String name) throws IOException {
+        OutputStream outputStream;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ContentResolver contentResolver = getApplicationContext().getContentResolver();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, name + ".png");
+            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/png");
+            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
+            Uri imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+            outputStream = contentResolver.openOutputStream(Objects.requireNonNull(imageUri));
+        } else {
+            String imagesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+            File image = new File(imagesDir, name + ".png");
+            outputStream = new FileOutputStream(image);
+        }
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+        Objects.requireNonNull(outputStream).close();
+        Toast.makeText(getApplicationContext(),"Imagen guardada",Toast.LENGTH_SHORT).show();
     }
 }
