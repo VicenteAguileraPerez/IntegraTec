@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -182,10 +183,13 @@ public class CreateCodeQRActivity extends AppCompatActivity {
             ContentValues contentValues = new ContentValues();
             contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, name + ".jpg");
             contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg");
-            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
+            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DCIM);
             Uri imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
             outputStream = contentResolver.openOutputStream(Objects.requireNonNull(imageUri));
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+
+            Objects.requireNonNull(outputStream).close();
+            Toast.makeText(getApplicationContext(),"Imagen guardada.",Toast.LENGTH_SHORT).show();
         } else {
             String imagesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath()+"/";
             File dir = new File(imagesDir, "QR IntegraTec" );
@@ -193,18 +197,28 @@ public class CreateCodeQRActivity extends AppCompatActivity {
             if (!dir.exists()) {
                 if(dir.mkdirs())
                 {
-                    File image = new File(dir, name + ".png");
+                    File image = new File(dir, name + ".jpg");
                     outputStream = new FileOutputStream(image);
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+
+                    Objects.requireNonNull(outputStream).close();
+                    MakeSureFileWasCreatedThenMakeAvabile(image);
+                    Toast.makeText(getApplicationContext(),"Imagen guardada.",Toast.LENGTH_SHORT).show();
                 }
             }
-            File image = new File(dir, name + ".png");
+            /*File image = new File(dir, name + ".png");
             outputStream = new FileOutputStream(image);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);*/
         }
+    }
 
-        Objects.requireNonNull(outputStream).close();
-        Toast.makeText(getApplicationContext(),"Imagen guardada",Toast.LENGTH_SHORT).show();
+    private void MakeSureFileWasCreatedThenMakeAvabile(File file){
+        MediaScannerConnection.scanFile(getApplicationContext(),
+                new String[] { file.toString() } , null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+
+                    public void onScanCompleted(String path, Uri uri) {
+                    }
+                });
     }
 }
