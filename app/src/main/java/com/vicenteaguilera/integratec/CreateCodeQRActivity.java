@@ -183,35 +183,36 @@ public class CreateCodeQRActivity extends AppCompatActivity {
             ContentValues contentValues = new ContentValues();
             contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, name + ".jpg");
             contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg");
-            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
+            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DCIM+ File.pathSeparator+"QR IntegraTec");
             Uri imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
             outputStream = contentResolver.openOutputStream(Objects.requireNonNull(imageUri));
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
 
-            Objects.requireNonNull(outputStream).close();
-            Toast.makeText(getApplicationContext(),"Imagen guardada.",Toast.LENGTH_SHORT).show();
-        } else {
+
+
+        }
+        else {
             String imagesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath()+"/";
             File dir = new File(imagesDir, "QR IntegraTec" );
-
             if (!dir.exists()) {
-                if(dir.mkdirs())
-                {
-                    File image = new File(dir, name + ".jpg");
-                    outputStream = new FileOutputStream(image);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-
-                    Objects.requireNonNull(outputStream).close();
-                    MakeSureFileWasCreatedThenMakeAvabile(image);
-                    Toast.makeText(getApplicationContext(),"Imagen guardada.",Toast.LENGTH_SHORT).show();
-                }
+                dir.mkdirs();
             }
+            File image = new File(dir, name + ".jpg");
+            outputStream = new FileOutputStream(image);
+            MakeSureFileWasCreatedThenMakeAvabile(image);
+
             /*File image = new File(dir, name + ".png");
             outputStream = new FileOutputStream(image);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);*/
         }
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+        Objects.requireNonNull(outputStream).close();
+        Toast.makeText(getApplicationContext(),"Imagen guardada.",Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Metodo para actualizar la galería
+     * @param file imagen a guardar
+     */
     private void MakeSureFileWasCreatedThenMakeAvabile(File file){
         MediaScannerConnection.scanFile(getApplicationContext(),
                 new String[] { file.toString() } , null,
