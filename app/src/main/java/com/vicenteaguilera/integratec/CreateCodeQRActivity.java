@@ -198,7 +198,7 @@ public class CreateCodeQRActivity extends AppCompatActivity {
             }
             File image = new File(dir, name + ".jpg");
             outputStream = new FileOutputStream(image);
-            MakeSureFileWasCreatedThenMakeAvabile(image);
+            MakeSureFileWasCreatedThenMakeAvaliable(image);
 
             /*File image = new File(dir, name + ".png");
             outputStream = new FileOutputStream(image);
@@ -213,7 +213,7 @@ public class CreateCodeQRActivity extends AppCompatActivity {
      * Metodo para actualizar la galería
      * @param file imagen a guardar
      */
-    private void MakeSureFileWasCreatedThenMakeAvabile(File file){
+    private void MakeSureFileWasCreatedThenMakeAvaliable(File file){
         MediaScannerConnection.scanFile(getApplicationContext(),
                 new String[] { file.toString() } , null,
                 new MediaScannerConnection.OnScanCompletedListener() {
