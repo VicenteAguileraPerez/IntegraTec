@@ -140,7 +140,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 startActivityForResult(Intent.createChooser(intent,"Selecciona una imagen"),GALLERY_INTENT);
             }
         });
-        Bitmap placeholder = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.imagen);
+        Bitmap placeholder = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.user);
         RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), placeholder);
         circularBitmapDrawable.setCircular(true);
         Glide.with(getApplicationContext())
