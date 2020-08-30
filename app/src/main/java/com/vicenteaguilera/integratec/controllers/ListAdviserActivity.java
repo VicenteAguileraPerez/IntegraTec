@@ -46,7 +46,7 @@ public class ListAdviserActivity extends AppCompatActivity implements ListaAseso
     @Override
     protected void onStart()
     {
-        new FirestoreHelper().getAsesorData(this,this);
+        new FirestoreHelper().listenAsesorias(this);
         super.onStart();
     }
 
@@ -81,7 +81,7 @@ public class ListAdviserActivity extends AppCompatActivity implements ListaAseso
             case R.id.item_ActualizarLista:
                 listView_asesores.setVisibility(View.INVISIBLE);
                 progressBar.setVisibility(View.VISIBLE);
-                new FirestoreHelper().getAsesorData(this,this);
+                new FirestoreHelper().listenAsesorias(this);
                 break;
 
             case R.id.item_Crear_QR:

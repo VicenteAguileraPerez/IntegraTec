@@ -229,40 +229,14 @@ public class FirestoreHelper
                     });
         }
     }
-    public void getAsesorData(final ListaAsesores listaAsesores, final Status status)
+    public void getAsesoriaData( final Status status)
     {
-        final List<String> idList = new ArrayList<>();
-        final List<String> namesList = new ArrayList<>();
-        final List<String> imagesList = new ArrayList<>();
-        AsesoresCollection.get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task)
-                    {
-                        idList.clear();
-                        namesList.clear();
-                        imagesList.clear();
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult()))
-                            {
-                               idList.add(document.getId());
-                               String nombre =document.get("nombre")+" "+document.get("apellido");
-                               namesList.add(nombre);
-                               String image= String.valueOf(document.get("uri_image"));
-                               imagesList.add(image);
-                            }
-                            listenAsesorias(listaAsesores,idList,namesList,imagesList);
-                        } else {
-                            status.status("Verifica tu conexión a Internet y actualiza de forma manual la lista");
-                        }
-                    }
-                });
+        //futura implementación quizá
     }
-    public void listenAsesorias(final ListaAsesores listaAsesores, final List<String> idsList, final List<String> namesList, final List<String> imagesList)
+    public void listenAsesorias(final ListaAsesores listaAsesores)
     {
         final List<RealtimeAsesoria> realtimeAsesoriaList = new ArrayList<>();
         final RealtimeAsesoria[] realtimeAsesoria = new RealtimeAsesoria[1];
-
 
         AsesoriaPublicaCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
@@ -272,6 +246,8 @@ public class FirestoreHelper
                             Log.w(TAG, "listen:error", e);
                             return;
                         }
+                        //como la lista se vuelve final si y si entrara por segunda vez y no hay el clear va a contener los elementos pasados + los actuales
+                        //y ocaciones que haya repetidos
                         realtimeAsesoriaList.clear();
 
                         for (final DocumentChange dc : Objects.requireNonNull(snapshots).getDocumentChanges())
@@ -280,37 +256,19 @@ public class FirestoreHelper
                             switch (dc.getType()) {
                                 case ADDED:
                                 case MODIFIED:
-                                    String nombre ="";
-                                    String image ="";
-                                    for(int i=0;i<idsList.size();i++)
-                                    {
-                                        if(idsList.get(i).equals(dc.getDocument().getId()))
-                                        {
-                                           nombre= namesList.get(i);
-                                           image=imagesList.get(i);
-                                           idsList.remove(i);
-                                           namesList.remove(i);
-                                           imagesList.remove(i);
-                                           break;
-                                        }
 
-                                    }
+
                                     final Map<String,Object> asesoria_add =  dc.getDocument().getData();
                                     realtimeAsesoria[0] = new RealtimeAsesoria(dc.getDocument().getId(),asesoria_add.get("lugar").toString(),
                                             asesoria_add.get("URL").toString(), asesoria_add.get("materia").toString(), asesoria_add.get("h_inicio").toString(),
-                                            asesoria_add.get("h_final").toString(), asesoria_add.get("informacion").toString(),asesoria_add.get("fecha").toString(), nombre, image);
-
+                                            asesoria_add.get("h_final").toString(), asesoria_add.get("informacion").toString(),asesoria_add.get("fecha").toString(), asesoria_add.get("nombre").toString(), asesoria_add.get("image_asesor").toString());
                                     realtimeAsesoriaList.add(realtimeAsesoria[0]);
                                     break;
                                 case REMOVED:
                                     break;
                             }
                         }
-                        //para liberar memoria y eliminar los datos de los asesores no utilizados
-                        idsList.clear();
-                        imagesList.clear();
-                        namesList.clear();
-                        //
+
                         listaAsesores.getAsesoresRealtime(realtimeAsesoriaList);
 
                     }

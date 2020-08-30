@@ -349,6 +349,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                         asesor.put("lugar", "");
 
                     }
+                    asesor.put("nombre",FirestoreHelper.asesor.getNombre()+" "+FirestoreHelper.asesor.getApellidos());
+                    asesor.put("image_asesor",FirestoreHelper.asesor.getuRI_image());
                     asesor.put("materia", spinner_materias.getSelectedItem().toString());
                     asesor.put("h_inicio", editText_HoraInicio.getText().toString());
                     asesor.put("h_final", editText_HoraFinalizacion.getText().toString());
