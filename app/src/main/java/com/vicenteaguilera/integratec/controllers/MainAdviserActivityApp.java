@@ -1,5 +1,6 @@
 package com.vicenteaguilera.integratec.controllers;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
@@ -83,6 +84,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
     private IntentResult result= null;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onStart() {
         super.onStart();
