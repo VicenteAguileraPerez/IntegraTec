@@ -17,6 +17,9 @@
         android:id="@+id/item_Leer_QR"
         android:title="@string/leerQR" />
     <item
+        android:id="@+id/item_ActualizarLista"
+        android:title="@string/actualizar_lista_de_asesores" />
+    <item
         android:id="@+id/item_CerrarSesion"
         android:title="@string/cerrarSesion" />
 

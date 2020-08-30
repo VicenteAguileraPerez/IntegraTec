@@ -88,7 +88,7 @@ public class CreateCodeQRActivity extends AppCompatActivity {
                 if(bitmap!=null)
                 {
                     if (solicitarPermiso()) {
-                        String nombre = obtenerNombre();
+                        String nombre = "CodigoQR "+PropiertiesHelper.obtenerFecha();
                         try {
                             saveImage(bitmap, nombre);
                         } catch (IOException e) {
@@ -169,12 +169,7 @@ public class CreateCodeQRActivity extends AppCompatActivity {
         }
     }
 
-    private String obtenerNombre() {
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = df.format(c.getTime());
-        return "CodigoQR "+formattedDate;
-    }
+
 
     private void saveImage(Bitmap bitmap, @NonNull String name) throws IOException {
         OutputStream outputStream;

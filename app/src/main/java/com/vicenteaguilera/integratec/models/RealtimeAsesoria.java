@@ -6,33 +6,52 @@ public class RealtimeAsesoria
     // nombre del asesor
     //hora inicio
     //hora fin
+    private String idAsesor;
     private String lugar;
     private String URL;
     private String materia;
-    private String url_imagen;
-    private String nombre;
     private String hora_inicio;
     private String hora_fin;
     private String informacion;
+    private String fecha;
+    private String nombre;
+    private String image_asesor;
 
-   /* public RealtimeAsesoria(String lugar, String URL, String materia, Timestamp hora_inicio, Timestamp hora_fin, String informacion) {
-        this.lugar = lugar;
-        this.URL = URL;
-        this.materia = materia;
-        this.hora_inicio = hora_inicio;
-        this.hora_fin = hora_fin;
-        this.informacion = informacion;
-    }*/
+    public String getNombre() {
+        return nombre;
+    }
 
-    public RealtimeAsesoria(String lugar, String URL, String materia, String url_imagen, String nombre, String hora_inicio, String hora_fin, String informacion) {
-        this.lugar = lugar;
-        this.URL = URL;
-        this.materia = materia;
-        this.url_imagen = url_imagen;
+    public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getImage_asesor() {
+        return image_asesor;
+    }
+
+    public void setImage_asesor(String image_asesor) {
+        this.image_asesor = image_asesor;
+    }
+
+    public RealtimeAsesoria(String idAsesor, String lugar, String URL, String materia, String hora_inicio, String hora_fin, String informacion, String fecha, String nombre, String image_asesor) {
+        this.idAsesor = idAsesor;
+        this.lugar = lugar;
+        this.URL = URL;
+        this.materia = materia;
         this.hora_inicio = hora_inicio;
         this.hora_fin = hora_fin;
         this.informacion = informacion;
+        this.fecha = fecha;
+        this.nombre = nombre;
+        this.image_asesor = image_asesor;
+    }
+
+    public String getIdAsesor() {
+        return idAsesor;
+    }
+
+    public void setIdAsesor(String idAsesor) {
+        this.idAsesor = idAsesor;
     }
 
     public String getLugar() {
@@ -59,22 +78,6 @@ public class RealtimeAsesoria
         this.materia = materia;
     }
 
-    public String getUrl_imagen() {
-        return url_imagen;
-    }
-
-    public void setUrl_imagen(String url_imagen) {
-        this.url_imagen = url_imagen;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
     public String getHora_inicio() {
         return hora_inicio;
     }
@@ -97,5 +100,13 @@ public class RealtimeAsesoria
 
     public void setInformacion(String informacion) {
         this.informacion = informacion;
+    }
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
     }
 }

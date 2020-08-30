@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.vicenteaguilera.integratec.R;
+import com.vicenteaguilera.integratec.controllers.ListAdviserActivity;
 import com.vicenteaguilera.integratec.controllers.OptionsActivity;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 
@@ -33,15 +34,18 @@ public class MainAppActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View view)
     {
         int id= view.getId();
+        Intent intent;
         switch (id)
         {
             case R.id.button_asesores_disponibles:
                 Snackbar.make(view,"Asesores Disponibles",Snackbar.LENGTH_SHORT).show();
-
+                Snackbar.make(view,"Sesión Asesores",Snackbar.LENGTH_SHORT).show();
+                 intent = new Intent(MainAppActivity.this, ListAdviserActivity.class);
+                startActivity(intent);
                 break;
             case R.id.button_sesion_asesores:
                 Snackbar.make(view,"Sesión Asesores",Snackbar.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainAppActivity.this, OptionsActivity.class);
+                intent = new Intent(MainAppActivity.this, OptionsActivity.class);
                 startActivity(intent);
                 break;
 

@@ -76,6 +76,8 @@
     <string name="horario">Horario:</string>
     <string name="materia">Materia:</string>
     <string name="informacion_extra">Información extra:</string>
+    <string name="no_hay_asesores_disponibles">No hay asesores disponibles</string>
+    <string name="actualizar_lista_de_asesores">Actualizar lista de asesores</string>
 
 
 </resources>

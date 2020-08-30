@@ -50,6 +50,8 @@ import com.vicenteaguilera.integratec.helpers.utility.StringHelper;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import id.zelory.compressor.Compressor;
 
@@ -159,7 +161,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.overflow, menu);
-        menu.removeItem(R.id.item_Crear_QR);
+        menu.removeItem(R.id.item_ActualizarLista);
         return true;
     }
     @Override
@@ -190,9 +192,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 break;
 
             case R.id.item_Leer_QR:
+                escanearQR();
+                break;
+            case R.id.item_Crear_QR:
                 intent = new Intent(this, CreateCodeQRActivity.class);
                 startActivity(intent);
-                //escanearQR();
                 break;
 
             case R.id.item_EditarPerfil:
@@ -322,22 +326,38 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     editText_HoraFinalizacion.setError("Seleccionar hora de finalización.");
                 }
 
-                if(((flag_radioButton || flag_otherPlace)==true) && flag_spinnerMateria && flag_TimeStar && flag_TimeEnd)
+                if(((flag_radioButton || flag_otherPlace)) && flag_spinnerMateria && flag_TimeStar && flag_TimeEnd)
                 {
 
-                    //data de info
-                    /**
-                     * imageuri
-                     * nombre
-                     * if()
-                     *  url ""
-                     *  lugar ""
-                     * h_incio dada en 12hrs
-                     * h_fin dada en 12 hrs
-                     * informacion
-                     * fecha fecha actual
-                     * estado
-                     */
+
+                    Map<String, Object> asesor = new HashMap<>();
+                    if(radioBAPresencial.isChecked())
+                    {
+                        asesor.put("URL", "");
+                        if(spinner_lugares.getSelectedItemPosition()==PropiertiesHelper.LUGARES.length-1)
+                        {
+                            asesor.put("lugar", editTextText_otroLugar.getText().toString());
+                        }
+                        else
+                        {
+                            asesor.put("lugar", spinner_lugares.getSelectedItem().toString());
+                        }
+                    }
+                    else
+                    {
+                        asesor.put("URL", editText_URL.getText().toString());
+                        asesor.put("lugar", "");
+
+                    }
+                    asesor.put("materia", spinner_materias.getSelectedItem().toString());
+                    asesor.put("h_inicio", editText_HoraInicio.getText().toString());
+                    asesor.put("h_final", editText_HoraFinalizacion.getText().toString());
+                    asesor.put("informacion", editTextTextMultiLine.getText().toString());
+                    asesor.put("fecha",PropiertiesHelper.obtenerFecha().substring(0,10));
+                    ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
+                            switchEstado.isChecked()?"Publicando asesoría...":"Terminando asesoría.."+FirebaseAuthHelper.getCurrentUser(), true);
+                    dialog.show();
+                    firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(),this,dialog,asesor,switchEstado.isChecked(),MainAdviserActivityApp.this);
                     Toast.makeText(this, getResources().getText(R.string.publicando)+"...", Toast.LENGTH_SHORT).show();
                 }
         }
