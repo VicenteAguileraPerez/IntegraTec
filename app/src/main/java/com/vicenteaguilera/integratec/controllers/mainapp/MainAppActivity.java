@@ -39,8 +39,7 @@ public class MainAppActivity extends AppCompatActivity implements View.OnClickLi
         {
             case R.id.button_asesores_disponibles:
                 Snackbar.make(view,"Asesores Disponibles",Snackbar.LENGTH_SHORT).show();
-                Snackbar.make(view,"Sesión Asesores",Snackbar.LENGTH_SHORT).show();
-                 intent = new Intent(MainAppActivity.this, ListAdviserActivity.class);
+                intent = new Intent(MainAppActivity.this, ListAdviserActivity.class);
                 startActivity(intent);
                 break;
             case R.id.button_sesion_asesores:

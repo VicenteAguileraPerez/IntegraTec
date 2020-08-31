@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -72,6 +73,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private EditText editText_HoraInicio;
     private EditText editText_HoraFinalizacion;
     private CardView cardView_ButtonPublicar;
+    private ImageButton imageButton_edit_image;
     private EditText editTextTextMultiLine;
     private TextView textView_Estado;
     private TextView textView_Nombre;
@@ -106,6 +108,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         setTitle("Menú Asesor");
         editTextText_otroLugar = findViewById(R.id.editTextText_otroLugar);
         imageView_perfil = findViewById(R.id.imageView_perfil);
+        imageButton_edit_image = findViewById(R.id.imageButton_edit_image);
         spinner_materias = findViewById(R.id.spinner_Materia);
         spinner_lugares = findViewById(R.id.spinner_Lugar);
         radioGroup = findViewById(R.id.radioGroup);
@@ -137,7 +140,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
         spinner_lugares.setAdapter(arrayAdapterLugares);
         spinner_materias.setAdapter(arrayAdapterMaterias);
-        imageView_perfil.setOnClickListener(new View.OnClickListener() {
+        imageButton_edit_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
