@@ -86,4 +86,6 @@ dependencies {
     //compresion de imagenes
     implementation 'id.zelory:compressor:2.1.0'
 
+    implementation 'androidx.preference:preference:1.1.1'
+
 }

@@ -32,16 +32,15 @@ import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+
 import java.io.File;
 import java.io.OutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-
-
-import static com.balda.flipper.MediaStoreCompat.Status.DELETE;
+import static com.vicenteaguilera.integratec.helpers.flipper.MediaStoreCompat.Status.DELETE;
 
 @SuppressWarnings("unused")
 public class MediaStoreCompat {
