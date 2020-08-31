@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -13,12 +14,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
 import com.vicenteaguilera.integratec.controllers.OptionsActivity;
@@ -26,7 +25,6 @@ import com.vicenteaguilera.integratec.helpers.utility.ListaAsesores;
 import com.vicenteaguilera.integratec.helpers.utility.Status;
 import com.vicenteaguilera.integratec.models.Asesor;
 import com.vicenteaguilera.integratec.models.RealtimeAsesoria;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -107,6 +105,7 @@ public class FirestoreHelper
                         {
                             status.status("Bienvenido "+asesor.getNombre()+" "+asesor.getApellidos());
                             Intent intent = new Intent(context, MainAdviserActivityApp.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(intent);
                             ((Activity)context).finish();
                         }
@@ -249,28 +248,17 @@ public class FirestoreHelper
                         //como la lista se vuelve final si y si entrara por segunda vez y no hay el clear va a contener los elementos pasados + los actuales
                         //y ocaciones que haya repetidos
                         realtimeAsesoriaList.clear();
-
-                        for (final DocumentChange dc : Objects.requireNonNull(snapshots).getDocumentChanges())
+                        final int size = snapshots.getDocuments().size();
+                        Log.e("Documets: ", size+"");
+                        for (final DocumentSnapshot dc : snapshots.getDocuments())
                         {
-
-                            switch (dc.getType()) {
-                                case ADDED:
-                                case MODIFIED:
-
-
-                                    final Map<String,Object> asesoria_add =  dc.getDocument().getData();
-                                    realtimeAsesoria[0] = new RealtimeAsesoria(dc.getDocument().getId(),asesoria_add.get("lugar").toString(),
+                                    final Map<String,Object> asesoria_add =  dc.getData();
+                                    realtimeAsesoria[0] = new RealtimeAsesoria(dc.getId(),asesoria_add.get("lugar").toString(),
                                             asesoria_add.get("URL").toString(), asesoria_add.get("materia").toString(), asesoria_add.get("h_inicio").toString(),
                                             asesoria_add.get("h_final").toString(), asesoria_add.get("informacion").toString(),asesoria_add.get("fecha").toString(), asesoria_add.get("nombre").toString(), asesoria_add.get("image_asesor").toString());
                                     realtimeAsesoriaList.add(realtimeAsesoria[0]);
-                                    break;
-                                case REMOVED:
-                                    break;
-                            }
                         }
-
                         listaAsesores.getAsesoresRealtime(realtimeAsesoriaList);
-
                     }
                 });
     }

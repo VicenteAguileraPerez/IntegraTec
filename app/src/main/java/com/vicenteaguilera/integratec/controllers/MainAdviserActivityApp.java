@@ -21,10 +21,10 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,18 +32,19 @@ import androidx.cardview.widget.CardView;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.vicenteaguilera.integratec.CreateCodeQRActivity;
-import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
-import com.vicenteaguilera.integratec.helpers.services.FirebaseStorageHelper;
-import com.vicenteaguilera.integratec.helpers.utility.ImagesHelper;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.vicenteaguilera.integratec.CreateCodeQRActivity;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.helpers.CaptureActivityPortrait;
+import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
+import com.vicenteaguilera.integratec.helpers.services.FirebaseStorageHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
+import com.vicenteaguilera.integratec.helpers.utility.ImagesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.PropiertiesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.Status;
 import com.vicenteaguilera.integratec.helpers.utility.StringHelper;
@@ -54,6 +55,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
 import id.zelory.compressor.Compressor;
 
 public class MainAdviserActivityApp extends AppCompatActivity implements View.OnClickListener, Status {
@@ -73,7 +75,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private EditText editTextTextMultiLine;
     private TextView textView_Estado;
     private TextView textView_Nombre;
-    private Switch switchEstado;
+    private SwitchMaterial switchEstado;
     private ImageView imageView_perfil;
     private RadioButton radioButton_AOnline;
     private RadioButton radioBAPresencial;
