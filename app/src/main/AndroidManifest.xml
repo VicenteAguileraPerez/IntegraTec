@@ -23,7 +23,7 @@
         android:requestLegacyExternalStorage="true">
 
         <activity android:name=".CreateCodeQRActivity"/>
-        <activity android:name=".controllers.MainAdviserActivityApp" android:noHistory="true"/>
+        <activity android:name=".controllers.MainAdviserActivityApp" />
         <activity android:name=".controllers.ListAdviserActivity" android:parentActivityName=".controllers.mainapp.MainAppActivity"/>
         <activity android:name=".controllers.mainapp.MainAppActivity"/>
         <activity android:name=".controllers.ComplaintSuggestionsActivity"/>
@@ -34,7 +34,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".controllers.OptionsActivity" />
-         <activity android:name=".controllers.AboutActivity">
+         <activity android:name=".controllers.AboutActivity" >
 
           </activity>
         <activity

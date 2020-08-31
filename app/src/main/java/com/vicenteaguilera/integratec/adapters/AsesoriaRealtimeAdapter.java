@@ -97,7 +97,7 @@ public class AsesoriaRealtimeAdapter extends BaseAdapter
                    .centerCrop()
                    .apply(RequestOptions.circleCropTransform())
                    .into( asesoriaRealtimeHolder.image);
-
+           asesoriaRealtimeHolder.textView_Informacion_Extra.setSelected(true);
            asesoriaRealtimeHolder.textView_nombre.setText(realtimeAsesoria.getNombre());
            asesoriaRealtimeHolder.textView_Lugar_Asesoria.setText(realtimeAsesoria.getURL().equals("")?"Lugar de asesoria: "+realtimeAsesoria.getLugar():"Lugar de asesoria: "+realtimeAsesoria.getURL());
            asesoriaRealtimeHolder.textView_Horario.setText("Horario: "+realtimeAsesoria.getHora_inicio()+" a "+realtimeAsesoria.getHora_fin());
