@@ -286,7 +286,7 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="20dp"
                 app:cardBackgroundColor="@color/background_red"
-                app:cardCornerRadius="40dp">
+                app:cardCornerRadius="20dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
