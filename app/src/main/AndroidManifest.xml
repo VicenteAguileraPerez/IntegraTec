@@ -25,7 +25,7 @@
         <activity android:name=".CreateCodeQRActivity"/>
         <activity android:name=".controllers.MainAdviserActivityApp" android:noHistory="true"/>
         <activity android:name=".controllers.ListAdviserActivity" android:parentActivityName=".controllers.mainapp.MainAppActivity"/>
-        <activity android:name=".controllers.mainapp.MainAppActivity" />
+        <activity android:name=".controllers.mainapp.MainAppActivity"/>
         <activity android:name=".controllers.ComplaintSuggestionsActivity"/>
         <activity android:name=".SplashScreenActivity" >
             <intent-filter>
