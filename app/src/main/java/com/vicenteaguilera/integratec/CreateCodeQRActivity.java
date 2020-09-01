@@ -123,7 +123,7 @@ public class CreateCodeQRActivity extends AppCompatActivity {
 
                                 String texto = editText_NumeroControl.getText().toString() + "_" + editText_Nombre.getText().toString() + "_"
                                         + spinner_Carrera.getSelectedItem().toString() + "_" + spinner_Asignatura.getSelectedItem().toString() + "_"
-                                        + editText_Tema.getText().toString();
+                                        + editText_Tema.getText().toString() + "_" + spinner_Semestre.getSelectedItem().toString() + "_"+PropiertiesHelper.obtenerFecha().substring(0,9);
 
                                 bitmap = QRCode.from(texto).withSize(400, 400).bitmap();
                                 imageView.setImageBitmap(bitmap);
