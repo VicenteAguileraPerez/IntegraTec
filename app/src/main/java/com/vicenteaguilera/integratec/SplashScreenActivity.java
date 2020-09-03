@@ -10,13 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
 import com.vicenteaguilera.integratec.controllers.mainapp.MainAppActivity;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
-import com.vicenteaguilera.integratec.helpers.utility.Status;
+import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
 
 import java.util.Objects;
 

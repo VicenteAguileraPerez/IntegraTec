@@ -21,8 +21,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
 import com.vicenteaguilera.integratec.controllers.OptionsActivity;
-import com.vicenteaguilera.integratec.helpers.utility.ListaAsesores;
-import com.vicenteaguilera.integratec.helpers.utility.Status;
+import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesores;
+import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
 import com.vicenteaguilera.integratec.models.Asesor;
 import com.vicenteaguilera.integratec.models.RealtimeAsesoria;
 

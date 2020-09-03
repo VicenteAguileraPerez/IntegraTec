@@ -1,4 +1,4 @@
-package com.vicenteaguilera.integratec.helpers.utility;
+package com.vicenteaguilera.integratec.adapters;
 
 import android.view.View;
 import android.view.ViewGroup;

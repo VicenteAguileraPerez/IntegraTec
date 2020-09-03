@@ -12,9 +12,9 @@ import androidx.cardview.widget.CardView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.vicenteaguilera.integratec.R;
-import com.vicenteaguilera.integratec.helpers.utility.PropiertiesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.SenderAsyncTask;
-import com.vicenteaguilera.integratec.helpers.utility.StringHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.StringHelper;
 
 import java.util.Properties;
 

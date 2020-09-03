@@ -80,6 +80,7 @@
     <string name="actualizar_lista_de_asesores">Actualizar lista de asesores</string>
     <string name="indique_el_lugar">Indique el lugar</string>
     <string name="cerrar">Cerrar</string>
+    <string name="editar">editar</string>
 
 
 </resources>

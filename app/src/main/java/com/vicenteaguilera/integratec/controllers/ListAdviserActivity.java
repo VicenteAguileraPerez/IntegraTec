@@ -2,10 +2,8 @@ package com.vicenteaguilera.integratec.controllers;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,10 +15,9 @@ import android.widget.Toast;
 import com.vicenteaguilera.integratec.CreateCodeQRActivity;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.adapters.AsesoriaRealtimeAdapter;
-import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
-import com.vicenteaguilera.integratec.helpers.utility.ListaAsesores;
-import com.vicenteaguilera.integratec.helpers.utility.Status;
+import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesores;
+import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
 import com.vicenteaguilera.integratec.models.RealtimeAsesoria;
 
 import java.util.List;

@@ -24,7 +24,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.vicenteaguilera.integratec.helpers.utility.PropiertiesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
 
 import net.glxn.qrgen.android.QRCode;
 
@@ -32,8 +32,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Objects;
 
 public class CreateCodeQRActivity extends AppCompatActivity {

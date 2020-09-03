@@ -20,8 +20,8 @@ import android.widget.Toast;
 import com.google.android.material.snackbar.Snackbar;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
-import com.vicenteaguilera.integratec.helpers.utility.PropiertiesHelper;
-import com.vicenteaguilera.integratec.helpers.utility.Status;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
 
 import static androidx.navigation.Navigation.findNavController;
 

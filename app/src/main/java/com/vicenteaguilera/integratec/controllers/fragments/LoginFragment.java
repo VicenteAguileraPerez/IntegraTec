@@ -18,8 +18,8 @@ import android.widget.Toast;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseQueryHelper;
-import com.vicenteaguilera.integratec.helpers.utility.Status;
-import com.vicenteaguilera.integratec.helpers.utility.StringHelper;
+import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.StringHelper;
 
 import static androidx.navigation.Navigation.findNavController;
 

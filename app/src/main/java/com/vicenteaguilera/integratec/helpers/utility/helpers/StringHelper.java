@@ -1,4 +1,4 @@
-package com.vicenteaguilera.integratec.helpers.utility;
+package com.vicenteaguilera.integratec.helpers.utility.helpers;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;

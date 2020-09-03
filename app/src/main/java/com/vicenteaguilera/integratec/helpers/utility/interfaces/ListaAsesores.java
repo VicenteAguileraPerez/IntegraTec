@@ -1,4 +1,4 @@
-package com.vicenteaguilera.integratec.helpers.utility;
+package com.vicenteaguilera.integratec.helpers.utility.interfaces;
 
 import com.vicenteaguilera.integratec.models.RealtimeAsesoria;
 

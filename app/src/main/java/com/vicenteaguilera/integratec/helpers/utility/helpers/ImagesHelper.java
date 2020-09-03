@@ -1,4 +1,4 @@
-package com.vicenteaguilera.integratec.helpers.utility;
+package com.vicenteaguilera.integratec.helpers.utility.helpers;
 
 import android.content.Context;
 import android.database.Cursor;

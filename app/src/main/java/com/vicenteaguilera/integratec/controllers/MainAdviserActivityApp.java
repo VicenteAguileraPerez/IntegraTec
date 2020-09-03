@@ -45,10 +45,11 @@ import com.vicenteaguilera.integratec.helpers.CaptureActivityPortrait;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseStorageHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
-import com.vicenteaguilera.integratec.helpers.utility.ImagesHelper;
-import com.vicenteaguilera.integratec.helpers.utility.PropiertiesHelper;
-import com.vicenteaguilera.integratec.helpers.utility.Status;
-import com.vicenteaguilera.integratec.helpers.utility.StringHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.ImagesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.SharedPreferencesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.StringHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -356,6 +357,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                         asesor.put("lugar", "");
 
                     }
+
                     asesor.put("nombre",FirestoreHelper.asesor.getNombre()+" "+FirestoreHelper.asesor.getApellidos());
                     asesor.put("image_asesor",FirestoreHelper.asesor.getuRI_image());
                     asesor.put("materia", spinner_materias.getSelectedItem().toString());
@@ -363,6 +365,10 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     asesor.put("h_final", editText_HoraFinalizacion.getText().toString());
                     asesor.put("informacion", editTextTextMultiLine.getText().toString());
                     asesor.put("fecha",PropiertiesHelper.obtenerFecha().substring(0,10));
+                    //shared preferences
+                    SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(MainAdviserActivityApp.this);
+
+                    //firebase
                     ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
                             switchEstado.isChecked()?"Publicando asesoría...":"Terminando asesoría.."+FirebaseAuthHelper.getCurrentUser(), true);
                     dialog.show();

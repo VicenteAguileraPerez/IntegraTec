@@ -15,8 +15,8 @@ import android.widget.ImageButton;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.vicenteaguilera.integratec.R;
-import com.vicenteaguilera.integratec.helpers.utility.PropiertiesHelper;
-import com.vicenteaguilera.integratec.helpers.utility.StringHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.StringHelper;
 
 import static androidx.navigation.Navigation.createNavigateOnClickListener;
 import static androidx.navigation.Navigation.findNavController;

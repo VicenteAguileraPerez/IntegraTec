@@ -12,8 +12,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.vicenteaguilera.integratec.controllers.mainapp.MainAppActivity;
-import com.vicenteaguilera.integratec.helpers.utility.Status;
-import com.vicenteaguilera.integratec.helpers.utility.StringHelper;
+import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.StringHelper;
 
 import java.util.Objects;
 
