@@ -65,7 +65,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
     private final static int GALLERY_INTENT = 1;
     private File imagen=null;
-
+    private SharedPreferencesHelper sharedPreferencesHelper;
     private TimePickerDialog picker=null;
     private Spinner spinner_materias;
     private Spinner spinner_lugares;
@@ -161,6 +161,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 .apply(RequestOptions.circleCropTransform())
                 //.apply(RequestOptions.bitmapTransform(new RoundedCorners(16)))
                 .into(imageView_perfil);
+        sharedPreferencesHelper = new SharedPreferencesHelper(MainAdviserActivityApp.this);
 
 
     }
@@ -366,7 +367,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     asesor.put("informacion", editTextTextMultiLine.getText().toString());
                     asesor.put("fecha",PropiertiesHelper.obtenerFecha().substring(0,10));
                     //shared preferences
-                    SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(MainAdviserActivityApp.this);
+                    //sharedPreferencesHelper.getPreferences();
 
                     //firebase
                     ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
