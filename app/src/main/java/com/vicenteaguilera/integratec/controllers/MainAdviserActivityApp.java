@@ -96,6 +96,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     @Override
     protected void onStart() {
         super.onStart();
+        clear();
         setData(sharedPreferencesHelper.getPreferences());
         firebaseAuthHelper.setContext(MainAdviserActivityApp.this);
         firebaseAuthHelper.setOnStatusListener(this);
@@ -417,6 +418,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     }
                     else
                     {
+                        clear();
                         sharedPreferencesHelper.deletePreferences();
                     }
 
@@ -424,7 +426,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
                             switchEstado.isChecked()?"Publicando asesoría...":"Terminando asesoría..", true);
                     dialog.show();
-                    firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(),this,dialog,asesor,switchEstado.isChecked(),MainAdviserActivityApp.this);
+                    firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(),this,dialog,asesor,switchEstado.isChecked());
                     Toast.makeText(this, getResources().getText(R.string.publicando)+"...", Toast.LENGTH_SHORT).show();
                 }
         }
@@ -644,7 +646,6 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         View view = inflater.inflate(R.layout.dialog_edit_profile, null);
         builder.setView(view)
                 .setTitle("Editar perfil");
-        //.setMessage("Modifica los siguientes campos con la información correcta.");
 
         final AlertDialog dialogEditProfile =builder.create();
         dialogEditProfile.setCancelable(false);
@@ -769,5 +770,18 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         data.put("info",editTextTextMultiLine.getText().toString());
 
         return data;
+    }
+    private void clear()
+    {
+
+        radioBAPresencial.setChecked(true);
+        spinner_lugares.setSelection(0);
+        spinner_materias.setSelection(0);
+        editText_HoraInicio.getText().clear();
+        editText_HoraFinalizacion.getText().clear();
+        editTextTextMultiLine.getText().clear();
+        editTextText_otroLugar.getText().clear();
+        editText_URL.getText().clear();
+
     }
 }

@@ -14,11 +14,15 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
 import com.vicenteaguilera.integratec.controllers.OptionsActivity;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesores;
@@ -31,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 import static android.content.ContentValues.TAG;
 
@@ -39,6 +44,7 @@ public class FirestoreHelper
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final CollectionReference AsesoresCollection = db.collection("asesores");
     private final CollectionReference AsesoriaPublicaCollection = db.collection("asesoria_publica");
+    private final CollectionReference AsesoriaCollection = db.collection("asesoria");
     //private static Status status;
     //private ProgressDialog dialog;
     public static Asesor asesor=null;
@@ -65,7 +71,16 @@ public class FirestoreHelper
            //es un profesor
        }
    }
-   //registra
+
+    /**
+     * Registrar asesor en el sistema.
+     * @param collectionReference
+     * @param document
+     * @param status
+     * @param dialog
+     * @param data
+     * @param context
+     */
    private void registerDataUserToFirestore(CollectionReference collectionReference, final String document, final Status status, final ProgressDialog dialog, final Map<String, Object> data, final Context context)
    {
        // Add a new document with a generated ID
@@ -188,9 +203,15 @@ public class FirestoreHelper
 
     }
 
-
-
-    public void registerDataAsesoriaPublicaToFirestore(String document, final Status status, final ProgressDialog dialog, Map<String, Object> data,boolean estado, final Context context)
+    /**
+     * Registrar asesoría publica en firebase
+     * @param document
+     * @param status
+     * @param dialog
+     * @param data
+     * @param estado
+     */
+    public void registerDataAsesoriaPublicaToFirestore(String document, final Status status, final ProgressDialog dialog, Map<String, Object> data,boolean estado)
     {
         // Add a new document with a generated ID
         if(estado) {
@@ -228,10 +249,7 @@ public class FirestoreHelper
                     });
         }
     }
-    public void getAsesoriaData( final Status status)
-    {
-        //futura implementación quizá
-    }
+
     public void listenAsesorias(final ListaAsesores listaAsesores)
     {
         final List<RealtimeAsesoria> realtimeAsesoriaList = new ArrayList<>();
@@ -248,7 +266,7 @@ public class FirestoreHelper
                         //como la lista se vuelve final si y si entrara por segunda vez y no hay el clear va a contener los elementos pasados + los actuales
                         //y ocaciones que haya repetidos
                         realtimeAsesoriaList.clear();
-                        final int size = snapshots.getDocuments().size();
+                        final int size = Objects.requireNonNull(snapshots).getDocuments().size();
                         Log.e("Documets: ", size+"");
                         for (final DocumentSnapshot dc : snapshots.getDocuments())
                         {
@@ -259,6 +277,66 @@ public class FirestoreHelper
                                     realtimeAsesoriaList.add(realtimeAsesoria[0]);
                         }
                         listaAsesores.getAsesoresRealtime(realtimeAsesoriaList);
+                    }
+                });
+    }
+    /**
+     *
+     */
+    public void addAsesoriaData(String materia, String fecha, String h_inicio,String h_final,final Status status)
+    {
+        Map<String, Object> asesoria = new HashMap<>();
+        asesoria.put("asesor",asesor.getUid());
+        asesoria.put("nombre", (asesor.getNombre()+" "+asesor.getApellidos()).toUpperCase());
+        asesoria.put("materia", materia.toUpperCase());
+        asesoria.put("fecha", fecha);
+        asesoria.put("h_inicio", h_inicio.toUpperCase());
+        asesoria.put("h_final", h_final.toUpperCase());
+        AsesoriaCollection.add(asesoria).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentReference> task) {
+                if(task.isComplete())
+                {
+                    status.status("¡Asesoría terminada!");
+                }
+            }
+        });
+
+    }
+    public void getAsesoriasData()
+    {
+        AsesoriaCollection
+                .whereEqualTo("asesor", asesor.getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
+    public void deleteAsesoriasData(String document)
+    {
+        final WriteBatch batch =  db.batch();
+        AsesoriaCollection
+                .whereEqualTo("asesor", asesor.getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                              batch.delete(document.getReference());
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
                     }
                 });
     }
