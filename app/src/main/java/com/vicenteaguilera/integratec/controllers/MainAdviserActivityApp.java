@@ -10,12 +10,14 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -85,7 +87,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private FirebaseAuthHelper firebaseAuthHelper = new FirebaseAuthHelper();
     private  FirestoreHelper firestoreHelper = new FirestoreHelper();
     private FirebaseStorageHelper firebaseStorageHelper = new FirebaseStorageHelper();
-
+    private int positionPlace=-1;
+    private int positionSubject=-1;
 
     private IntentResult result= null;
 
@@ -93,10 +96,53 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     @Override
     protected void onStart() {
         super.onStart();
+        setData(sharedPreferencesHelper.getPreferences());
         firebaseAuthHelper.setContext(MainAdviserActivityApp.this);
         firebaseAuthHelper.setOnStatusListener(this);
         firebaseStorageHelper.setStatusListener(this);
         textView_Nombre.setText(FirestoreHelper.asesor.getNombre() +  " " + FirestoreHelper.asesor.getApellidos());
+    }
+
+    private void setData(Map<String, Object> preferences)
+    {
+        Boolean estado = Boolean.parseBoolean(String.valueOf(preferences.get("estado")));
+        Boolean tipo =  Boolean.parseBoolean(String.valueOf(preferences.get("tipo")));
+        String url = (String) preferences.get("url");
+        String lugar2 = (String) preferences.get("lugar2");
+        String h_inicio = (String) preferences.get("h_inicio");
+        String h_final = (String) preferences.get("h_fin");
+        String info = (String) preferences.get("info");
+        int pos;
+        if(estado)
+        {
+            switchEstado.setChecked(estado);
+
+            if (tipo) {
+                radioBAPresencial.setChecked(true);
+                pos=Integer.parseInt(String.valueOf(preferences.get("lugar")));
+                positionPlace = pos;
+                spinner_lugares.setSelection(pos);
+                if(pos==PropiertiesHelper.LUGARES.length-1)
+                {
+                    editTextText_otroLugar.setText(lugar2);
+                }
+            }
+            else {
+                radioButton_AOnline.setChecked(true);
+                editText_URL.setText(url);
+            }
+            pos = Integer.parseInt(String.valueOf(preferences.get("materia")));
+            positionSubject = pos;
+            spinner_materias.setSelection(pos);
+            editText_HoraInicio.setText(h_inicio);
+            editText_HoraFinalizacion.setText(h_final);
+            if (info != null) {
+                editTextTextMultiLine.setText(info);
+            } else {
+                editTextTextMultiLine.setText("");
+            }
+        }
+
     }
 
     @Override
@@ -116,7 +162,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         editText_URL = findViewById(R.id.editView_URL);
         editTextTextMultiLine = findViewById(R.id.editTextTextMultiLine);
         switchEstado = findViewById(R.id.switch_Estado);
-        cardView_ButtonPublicar = findViewById(R.id.cardView_ButtonCancel);
+        cardView_ButtonPublicar = findViewById(R.id.cardView_ButtonPublicar);
         textView_Estado = findViewById(R.id.textView_Estado);
         textView_Nombre = findViewById(R.id.textView_Nombre);
         radioButton_AOnline = findViewById(R.id.radioButton_AOnline);
@@ -162,6 +208,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 //.apply(RequestOptions.bitmapTransform(new RoundedCorners(16)))
                 .into(imageView_perfil);
         sharedPreferencesHelper = new SharedPreferencesHelper(MainAdviserActivityApp.this);
+
+
 
 
     }
@@ -229,13 +277,9 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         {
             getHora(editText_HoraFinalizacion);
         }
-        else if(idView==R.id.cardView_ButtonCancel)
+        else if(idView==R.id.cardView_ButtonPublicar)
         {
-                //evaluación de que las fechas esten !=null
-                //seleccionado si es presencial o virtual
-                ///si es presencial que este seleccionado el lugar y si es virtual que este seleccionado el url
-                // que la hora de asesoría sea de 8:00 am a 8:00pm
-                // materia seleccionada
+
 
                 boolean flag_radioButton = false;
                 boolean flag_spinnerMateria = false;
@@ -367,11 +411,18 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     asesor.put("informacion", editTextTextMultiLine.getText().toString());
                     asesor.put("fecha",PropiertiesHelper.obtenerFecha().substring(0,10));
                     //shared preferences
-                    //sharedPreferencesHelper.getPreferences();
+                    if(switchEstado.isChecked())
+                    {
+                        sharedPreferencesHelper.addPreferences(dataToSave());
+                    }
+                    else
+                    {
+                        sharedPreferencesHelper.deletePreferences();
+                    }
 
                     //firebase
                     ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
-                            switchEstado.isChecked()?"Publicando asesoría...":"Terminando asesoría.."+FirebaseAuthHelper.getCurrentUser(), true);
+                            switchEstado.isChecked()?"Publicando asesoría...":"Terminando asesoría..", true);
                     dialog.show();
                     firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(),this,dialog,asesor,switchEstado.isChecked(),MainAdviserActivityApp.this);
                     Toast.makeText(this, getResources().getText(R.string.publicando)+"...", Toast.LENGTH_SHORT).show();
@@ -415,7 +466,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     }
     private void radioButtonListener()
     {
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int radiobutton) {
 
@@ -446,16 +498,40 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                                 }else{
                                     editTextText_otroLugar.setVisibility(View.VISIBLE);
                                 }
+                                positionPlace = position;
                             }
 
                             @Override
-                            public void onNothingSelected(AdapterView<?> parent) {
-
-                            }
+                            public void onNothingSelected(AdapterView<?> parent) {}
                         });
                     }
                 }
 
+            }
+        });
+        /* parent The AdapterView where the selection happened
+         * view The view within the AdapterView that was clicked
+         * position The position of the view in the adapter
+         * id The row id of the item that is selected*/
+        spinner_materias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id)
+            {
+                positionSubject = position;
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }
+        });
+        switchEstado.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean status)
+            {
+                if (status) {
+                    textView_Estado.setText(R.string.activo);
+
+                } else {
+                    textView_Estado.setText(R.string.inactivo);
+                }
             }
         });
     }
@@ -578,7 +654,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         final EditText editText_LastNames = dialogEditProfile.findViewById(R.id.editText_LastNames);
         final Spinner spinner_career = dialogEditProfile.findViewById(R.id.textView_email);
         CardView cardView_ButtonUpdate = dialogEditProfile.findViewById(R.id.cardView_ButtonSend);
-        CardView cardView_ButtonCancel = dialogEditProfile.findViewById(R.id.cardView_ButtonCancel);
+        CardView cardView_ButtonCancel = dialogEditProfile.findViewById(R.id.cardView_ButtonPublicar);
 
         ArrayAdapter<String> arrayAdapterCareer = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
         spinner_career.setAdapter(arrayAdapterCareer);
@@ -665,7 +741,33 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         }else if(FirestoreHelper.asesor.getCarrera().equals("Ingeniería Civil")){
             return 7;
         }
-
         return 0;
+    }
+    public Map<String,Object> dataToSave()
+    {
+        Map<String,Object> data = new HashMap<>();
+        data.put("estado",switchEstado.isChecked());
+        data.put("tipo",radioBAPresencial.isChecked());
+        if(radioBAPresencial.isChecked()) {
+            if (spinner_lugares.getSelectedItemPosition() == PropiertiesHelper.LUGARES.length - 1) {
+                data.put("lugar2", editTextText_otroLugar.getText().toString());
+            } else {
+                data.put("lugar2", "");
+            }
+            data.put("lugar", positionPlace);
+            data.put("url",  "");
+        }
+        else
+        {
+            data.put("url",  editText_URL.getText().toString());
+            data.put("lugar", -1);
+            data.put("lugar2", "");
+        }
+        data.put("materia",positionSubject);
+        data.put("h_inicio",editText_HoraInicio.getText().toString());
+        data.put("h_fin",editText_HoraFinalizacion.getText().toString());
+        data.put("info",editTextTextMultiLine.getText().toString());
+
+        return data;
     }
 }

@@ -137,7 +137,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/estado"
+                    android:text="@string/inactivo"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -226,7 +226,7 @@
                 android:ems="10"
                 android:hint="@string/indique_el_lugar"
                 android:importantForAutofill="no"
-                android:inputType="textPersonName"
+                android:inputType="textCapSentences"
                 android:visibility="gone" />
 
             <Spinner
@@ -305,7 +305,7 @@
             </androidx.core.widget.NestedScrollView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardView_ButtonCancel"
+                android:id="@+id/cardView_ButtonPublicar"
                 android:layout_width="355dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"

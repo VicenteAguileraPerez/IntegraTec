@@ -102,7 +102,8 @@ public class AsesoriaRealtimeAdapter extends BaseAdapter
            asesoriaRealtimeHolder.textView_Lugar_Asesoria.setText(realtimeAsesoria.getURL().equals("")?"Lugar de asesoria: "+realtimeAsesoria.getLugar():"Lugar de asesoria: "+realtimeAsesoria.getURL());
            asesoriaRealtimeHolder.textView_Horario.setText("Horario: "+realtimeAsesoria.getHora_inicio()+" a "+realtimeAsesoria.getHora_fin());
            asesoriaRealtimeHolder.textView_Materia.setText("Materia: "+realtimeAsesoria.getMateria());
-           asesoriaRealtimeHolder.textView_Informacion_Extra.setText("Información extra: "+realtimeAsesoria.getInformacion());
+           String informacion = realtimeAsesoria.getInformacion();
+           asesoriaRealtimeHolder.textView_Informacion_Extra.setText(informacion.equals("")?"No hay información extra proporcionada por el asesor":"Información extra: "+informacion);
 
        }
        else {

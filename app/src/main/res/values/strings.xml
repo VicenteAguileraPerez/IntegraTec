@@ -19,12 +19,11 @@
     <string name="timeInicio">Hora Inicio</string>
     <string name="asesoriaOnline">Asesoria Online</string>
     <string name="switchEstado">Estado</string>
-    <string name="estado">Inactivo</string>
     <string name="URL">Introduce la url de la sesión</string>
     <string name="timeFinalizacion">Hora Finalización</string>
     <string name="infoExtra">Información extra</string>
     <string name="imageViewAsesor">Foto de asesor par.</string>
-    <string name="publicar">Publicar</string>
+    <string name="publicar">Publicar/Terminar asesoría</string>
     <string name="publicando">Publicando</string>
     <string name="hora_fin">Hora Fin</string>
     <string name="hora_inicio">Hora Inicio</string>

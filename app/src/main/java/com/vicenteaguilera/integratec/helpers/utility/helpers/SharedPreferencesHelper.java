@@ -19,26 +19,41 @@ public class SharedPreferencesHelper
         this.context = context;
         sharedPref = context.getSharedPreferences(DATA, Context.MODE_PRIVATE);
     }
-    public  Set<String> getPreferences()
+    public  Map<String, Object> getPreferences()
     {
-        Set<String> data= new HashSet<>();
-        SharedPreferences sharedPref = ((Activity)context).getPreferences(Context.MODE_PRIVATE);
-        Set<String> datos = sharedPref.getStringSet("data", null);
-        if(datos!=null)
-            data=datos;
-        return data;
+        Map<String,Object> saveAsesoria = new HashMap<>();
 
+        SharedPreferences sharedPref = ((Activity)context).getPreferences(Context.MODE_PRIVATE);
+        saveAsesoria.put("estado",sharedPref.getString("estado", null));
+        saveAsesoria.put("tipo",sharedPref.getString("tipo", null));
+        saveAsesoria.put("lugar",sharedPref.getString("lugar", null));
+        saveAsesoria.put("lugar2",sharedPref.getString("lugar2", null));
+        saveAsesoria.put("materia",sharedPref.getString("materia",null));
+        saveAsesoria.put("url",sharedPref.getString("url", null));
+        saveAsesoria.put("h_inicio",sharedPref.getString("h_inicio", null));
+        saveAsesoria.put("h_fin",sharedPref.getString("h_fin", null));
+        saveAsesoria.put("info",sharedPref.getString("info", null));
+
+        return  saveAsesoria;
     }
     public void deletePreferences()
     {
         SharedPreferences sharedPref = ((Activity)context).getPreferences(Context.MODE_PRIVATE);
         sharedPref.edit().clear().apply();
     }
-    public void addPreferences(Set<String> saveAsesoria)
+    public void addPreferences(Map<String,Object> saveAsesoria)
     {
         SharedPreferences sharedPref = ((Activity)context).getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putStringSet("data", saveAsesoria);
+        editor.putString("estado", String.valueOf( saveAsesoria.get("estado")));
+        editor.putString("tipo",String.valueOf(saveAsesoria.get("tipo")));
+        editor.putString("lugar2",String.valueOf(saveAsesoria.get("lugar2")));
+        editor.putString("lugar",String.valueOf(saveAsesoria.get("lugar")));
+        editor.putString("url",String.valueOf(saveAsesoria.get("url")));
+        editor.putString("materia",String.valueOf(saveAsesoria.get("materia")));
+        editor.putString("h_inicio",String.valueOf(saveAsesoria.get("h_inicio")));
+        editor.putString("h_fin",String.valueOf(saveAsesoria.get("h_fin")));
+        editor.putString("info",String.valueOf(saveAsesoria.get("info")));
         editor.apply();
     }
 }

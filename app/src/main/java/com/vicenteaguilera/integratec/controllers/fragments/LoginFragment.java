@@ -124,7 +124,7 @@ public class LoginFragment extends Fragment  implements Status{
 
         final EditText editText_Email = dialogRecoverPass.findViewById(R.id.textView_email);
         CardView cardView_ButtonSend = dialogRecoverPass.findViewById(R.id.cardView_ButtonSend);
-        CardView cardView_ButtonCancel = dialogRecoverPass.findViewById(R.id.cardView_ButtonCancel);
+        CardView cardView_ButtonCancel = dialogRecoverPass.findViewById(R.id.cardView_ButtonPublicar);
 
         cardView_ButtonSend.setOnClickListener(new View.OnClickListener() {
             @Override
