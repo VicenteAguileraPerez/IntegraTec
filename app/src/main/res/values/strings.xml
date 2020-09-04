@@ -80,6 +80,12 @@
     <string name="indique_el_lugar">Indique el lugar</string>
     <string name="cerrar">Cerrar</string>
     <string name="editar">editar</string>
+    <string name="crear_pdf_asesorias">Crear PDF asesorías</string>
+    <string name="crear_pdf_de_asesorados">Crear PDF de asesorados</string>
+    <string name="nuevo_semestre">Nuevo semestre</string>
+    <string name="eliminar_sin_crear_pdfs">Eliminar sin crear PDFs</string>
+    <string name="eliminar_y_crear_pdfs">Eliminar y Crear PDFs</string>
+    <string name="content_new_semester">¿Quieres eliminar o eliminar y crear los PDF?\n\nAl realizar alguna de estas operaciones, los datos serán eliminados del sistema y sólo tendrá la evidencia de los pdf. \nSi no quiere realizar ninguna operación da click en el botón de cerrar</string>
 
 
 </resources>

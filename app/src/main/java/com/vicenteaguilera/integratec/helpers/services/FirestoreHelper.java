@@ -211,7 +211,7 @@ public class FirestoreHelper
      * @param data
      * @param estado
      */
-    public void registerDataAsesoriaPublicaToFirestore(String document, final Status status, final ProgressDialog dialog, Map<String, Object> data,boolean estado)
+    public void registerDataAsesoriaPublicaToFirestore(String document, final Status status, final ProgressDialog dialog, final Map<String, Object> data, boolean estado)
     {
         // Add a new document with a generated ID
         if(estado) {
@@ -232,12 +232,14 @@ public class FirestoreHelper
         }
         else
         {
+
             AsesoriaPublicaCollection.document(asesor.getUid())
                     .delete()
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             status.status("asesoría terminada...");
+                            addAsesoriaData(String.valueOf(data.get("materia")),String.valueOf(data.get("fecha")),String.valueOf(data.get("h_inicio")),String.valueOf(data.get("h_final")),status);
                             dialog.dismiss();
                         }
                     })
@@ -321,9 +323,8 @@ public class FirestoreHelper
                     }
                 });
     }
-    public void deleteAsesoriasData(String document)
+    public void deleteAsesoriasData()
     {
-        final WriteBatch batch =  db.batch();
         AsesoriaCollection
                 .whereEqualTo("asesor", asesor.getUid())
                 .get()
@@ -331,8 +332,10 @@ public class FirestoreHelper
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                              batch.delete(document.getReference());
+                            for (QueryDocumentSnapshot document : task.getResult())
+                            {
+
+                               document.getReference().delete();
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());

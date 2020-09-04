@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class SharedPreferencesHelper
@@ -55,5 +56,11 @@ public class SharedPreferencesHelper
         editor.putString("h_fin",String.valueOf(saveAsesoria.get("h_fin")));
         editor.putString("info",String.valueOf(saveAsesoria.get("info")));
         editor.apply();
+    }
+    public boolean hasData()
+    {
+        SharedPreferences sharedPref = ((Activity)context).getPreferences(Context.MODE_PRIVATE);
+        String estado = sharedPref.getString("estado", "");
+        return !Objects.requireNonNull(estado).isEmpty();
     }
 }

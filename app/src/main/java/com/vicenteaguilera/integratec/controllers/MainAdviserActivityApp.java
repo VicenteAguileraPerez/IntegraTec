@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -256,11 +257,17 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 intent = new Intent(this, CreateCodeQRActivity.class);
                 startActivity(intent);
                 break;
-
             case R.id.item_EditarPerfil:
-
                 showDialogEditProfile();
+                break;
+            case R.id.item_Crear_PDF_asesorados:
 
+                break;
+            case R.id.item_Crear_PDF_asesorias:
+
+                break;
+            case R.id.item_nuevo_semestre:
+                showDialogNewSemester();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -349,6 +356,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     String aux = editText_HoraInicio.getText().toString().substring(6,8);
                     if((((horaInicio>=1 && horaInicio<=8) || horaInicio==12) && aux.equals("pm")) || ((horaInicio>=8 && horaInicio<=11) && aux.equals("am")))
                     {
+
                         flag_TimeStar=true;
                     }
                     else
@@ -380,54 +388,56 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     editText_HoraFinalizacion.setError("Seleccionar hora de finalización.");
                 }
 
+
+
                 if(((flag_radioButton || flag_otherPlace)) && flag_spinnerMateria && flag_TimeStar && flag_TimeEnd)
                 {
-
-
-                    Map<String, Object> asesor = new HashMap<>();
-                    if(radioBAPresencial.isChecked())
+                    if(getRangoValidoHoras())
                     {
-                        asesor.put("URL", "");
-                        if(spinner_lugares.getSelectedItemPosition()==PropiertiesHelper.LUGARES.length-1)
+                        if(sharedPreferencesHelper.hasData() || switchEstado.isChecked())
                         {
-                            asesor.put("lugar", editTextText_otroLugar.getText().toString());
+                            Map<String, Object> asesor = new HashMap<>();
+                            if (radioBAPresencial.isChecked()) {
+                                asesor.put("URL", "");
+                                if (spinner_lugares.getSelectedItemPosition() == PropiertiesHelper.LUGARES.length - 1) {
+                                    asesor.put("lugar", editTextText_otroLugar.getText().toString());
+                                } else {
+                                    asesor.put("lugar", spinner_lugares.getSelectedItem().toString());
+                                }
+                            } else {
+                                asesor.put("URL", editText_URL.getText().toString());
+                                asesor.put("lugar", "");
+
+                            }
+
+                            asesor.put("nombre", FirestoreHelper.asesor.getNombre() + " " + FirestoreHelper.asesor.getApellidos());
+                            asesor.put("image_asesor", FirestoreHelper.asesor.getuRI_image());
+                            asesor.put("materia", spinner_materias.getSelectedItem().toString());
+                            asesor.put("h_inicio", editText_HoraInicio.getText().toString());
+                            asesor.put("h_final", editText_HoraFinalizacion.getText().toString());
+                            asesor.put("informacion", editTextTextMultiLine.getText().toString());
+                            asesor.put("fecha", PropiertiesHelper.obtenerFecha().substring(0, 10));
+
+
+                            //firebase
+                            ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
+                                    switchEstado.isChecked() ? "Publicando asesoría..." : "Terminando asesoría..", true);
+                            dialog.show();
+                            firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, asesor, switchEstado.isChecked());
+                            Toast.makeText(this, getResources().getText(R.string.publicando) + "...", Toast.LENGTH_SHORT).show();
+                            //shared preferences
+                            if (switchEstado.isChecked()) {
+                                sharedPreferencesHelper.addPreferences(dataToSave());
+                            } else {
+                                clear();
+                                sharedPreferencesHelper.deletePreferences();
+                            }
                         }
                         else
                         {
-                            asesor.put("lugar", spinner_lugares.getSelectedItem().toString());
+                            Snackbar.make(cardView_ButtonPublicar.getRootView(),"Debes de poner estado en activo para crear una asesoría, actualmente no tienes ninguna.",Snackbar.LENGTH_SHORT).show();
                         }
                     }
-                    else
-                    {
-                        asesor.put("URL", editText_URL.getText().toString());
-                        asesor.put("lugar", "");
-
-                    }
-
-                    asesor.put("nombre",FirestoreHelper.asesor.getNombre()+" "+FirestoreHelper.asesor.getApellidos());
-                    asesor.put("image_asesor",FirestoreHelper.asesor.getuRI_image());
-                    asesor.put("materia", spinner_materias.getSelectedItem().toString());
-                    asesor.put("h_inicio", editText_HoraInicio.getText().toString());
-                    asesor.put("h_final", editText_HoraFinalizacion.getText().toString());
-                    asesor.put("informacion", editTextTextMultiLine.getText().toString());
-                    asesor.put("fecha",PropiertiesHelper.obtenerFecha().substring(0,10));
-                    //shared preferences
-                    if(switchEstado.isChecked())
-                    {
-                        sharedPreferencesHelper.addPreferences(dataToSave());
-                    }
-                    else
-                    {
-                        clear();
-                        sharedPreferencesHelper.deletePreferences();
-                    }
-
-                    //firebase
-                    ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
-                            switchEstado.isChecked()?"Publicando asesoría...":"Terminando asesoría..", true);
-                    dialog.show();
-                    firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(),this,dialog,asesor,switchEstado.isChecked());
-                    Toast.makeText(this, getResources().getText(R.string.publicando)+"...", Toast.LENGTH_SHORT).show();
                 }
         }
         else if(idView==R.id.switch_Estado)
@@ -582,7 +592,64 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         }
         picker.show();
     }
+    private boolean getRangoValidoHoras()
+    {
+       boolean  flag_TimeValid=false;
 
+        if((editText_HoraInicio.getText().toString().substring(6).equals("pm") && editText_HoraFinalizacion.getText().toString().substring(6).equals("pm")) || (editText_HoraInicio.getText().toString().substring(6).equals("am") && editText_HoraFinalizacion.getText().toString().substring(6).equals("am") ))
+        {
+            int horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2));
+            int horaFin = Integer.parseInt(editText_HoraFinalizacion.getText().toString().substring(0,2));
+            Log.e("if",horaInicio+" "+horaFin);
+            //evalua horas para calcular que si sea una hora min
+            if(horaInicio<horaFin)
+            {
+
+                //evalua min
+                horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(3,5));
+                horaFin = Integer.parseInt(editText_HoraFinalizacion.getText().toString().substring(3,5));
+                if((horaInicio-horaFin)<=0)
+                {
+                    flag_TimeValid = true;
+                }
+                else
+                {
+                    Toast.makeText(MainAdviserActivityApp.this,"Las asesorías deben durar 1 hora.", Toast.LENGTH_SHORT).show();
+                    editText_HoraInicio.setError("Hora inválida.");
+                    editText_HoraFinalizacion.setError("Hora inválida.");
+                    editText_HoraInicio.getText().clear();
+                    editText_HoraFinalizacion.getText().clear();
+                }
+            }
+            else if(horaInicio==horaFin)
+            {
+                Toast.makeText(MainAdviserActivityApp.this,"Las asesorías deben durar 1 hora.", Toast.LENGTH_SHORT).show();
+                editText_HoraInicio.setError("Hora inválida.");
+                editText_HoraFinalizacion.setError("Hora inválida.");
+                editText_HoraInicio.getText().clear();
+                editText_HoraFinalizacion.getText().clear();
+            }
+            else
+            {
+                Toast.makeText(MainAdviserActivityApp.this,"Hora de inicio es mayor que hora final.", Toast.LENGTH_SHORT).show();
+                editText_HoraInicio.setError("Hora inválida.");
+                editText_HoraFinalizacion.setError("Hora inválida.");
+                editText_HoraInicio.getText().clear();
+                editText_HoraFinalizacion.getText().clear();
+            }
+        }
+        else
+        {
+            Log.e("else","soy el else prin");
+            Toast.makeText(MainAdviserActivityApp.this,"Hora de inicio es mayor que hora final", Toast.LENGTH_SHORT).show();
+            editText_HoraInicio.setError("Hora invalida");
+            editText_HoraFinalizacion.setError("Hora invalida");
+            editText_HoraInicio.getText().clear();
+            editText_HoraFinalizacion.getText().clear();
+        }
+        return flag_TimeValid;
+
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -654,7 +721,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         final EditText editText_Name = dialogEditProfile.findViewById(R.id.editText_Name);
         final EditText editText_LastNames = dialogEditProfile.findViewById(R.id.editText_LastNames);
         final Spinner spinner_career = dialogEditProfile.findViewById(R.id.textView_email);
-        CardView cardView_ButtonUpdate = dialogEditProfile.findViewById(R.id.cardView_ButtonSend);
+        CardView cardView_ButtonUpdate = dialogEditProfile.findViewById(R.id.cardView_Button_Delete);
         CardView cardView_ButtonCancel = dialogEditProfile.findViewById(R.id.cardView_ButtonPublicar);
 
         ArrayAdapter<String> arrayAdapterCareer = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
@@ -711,6 +778,46 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 dialogEditProfile.dismiss();
             }
         });
+    }
+    public void showDialogNewSemester()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+
+        View view = inflater.inflate(R.layout.dialog_delete_data, null);
+        builder.setView(view)
+                .setTitle(R.string.nuevo_semestre);
+
+        final AlertDialog dialogEditProfile =builder.create();
+        dialogEditProfile.setCancelable(false);
+        dialogEditProfile.show();
+
+
+        CardView cardView_ButtonDelete_PDF= dialogEditProfile.findViewById(R.id.cardView_Button_Delete_PDF);
+        CardView cardView_ButtonDelete= dialogEditProfile.findViewById(R.id.cardView_Button_Delete);
+        CardView cardView_ButtonCancel = dialogEditProfile.findViewById(R.id.cardView_ButtonPublicar);
+
+        cardView_ButtonDelete_PDF.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                firestoreHelper.deleteAsesoriasData();
+            }
+        });
+        cardView_ButtonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                firestoreHelper.deleteAsesoriasData();
+            }
+        });
+
+        cardView_ButtonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogEditProfile.dismiss();
+            }
+        });
+
+
     }
 
     @Override
