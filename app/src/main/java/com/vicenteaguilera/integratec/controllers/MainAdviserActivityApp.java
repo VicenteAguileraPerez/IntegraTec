@@ -4,8 +4,10 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -42,9 +44,11 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.vicenteaguilera.integratec.AsesoradosActivity;
 import com.vicenteaguilera.integratec.CreateCodeQRActivity;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.helpers.CaptureActivityPortrait;
+import com.vicenteaguilera.integratec.helpers.DataBaseHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseStorageHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
@@ -90,6 +94,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private FirebaseStorageHelper firebaseStorageHelper = new FirebaseStorageHelper();
     private int positionPlace=-1;
     private int positionSubject=-1;
+    private DataBaseHelper helper;
 
     private IntentResult result= null;
 
@@ -211,9 +216,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 .into(imageView_perfil);
         sharedPreferencesHelper = new SharedPreferencesHelper(MainAdviserActivityApp.this);
 
-
-
-
+        helper = new DataBaseHelper(this, PropiertiesHelper.NOMBRE_BD , null, 1);
     }
 
     @Override
@@ -264,7 +267,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
                 break;
             case R.id.item_Crear_PDF_asesorias:
-
+                intent = new Intent(this, AsesoradosActivity.class);
+                startActivity(intent);
                 break;
             case R.id.item_nuevo_semestre:
                 showDialogNewSemester();
@@ -684,6 +688,10 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 if(result.getContents() != null)
                 {
                     Toast.makeText(MainAdviserActivityApp.this,result.getContents(),Toast.LENGTH_SHORT).show();
+
+                    String values = result.getContents();
+
+                    showDialogRegistrar(values);
                 }
                 else
                 {
@@ -691,6 +699,76 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 }
         }
         }
+    }
+
+    private void showDialogRegistrar(String values) {
+        final String array[] = values.split("_");
+
+        if(array.length == 7){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            LayoutInflater inflater = getLayoutInflater();
+
+            View view = inflater.inflate(R.layout.dialog_registar_alumno, null);
+            builder.setView(view)
+                    .setTitle("Registrar asesorado");
+
+            final AlertDialog dialogRegistrar =builder.create();
+            dialogRegistrar.setCancelable(false);
+            dialogRegistrar.show();
+
+            final TextView textView_NumeroControl = dialogRegistrar.findViewById(R.id.textView_NumeroControl);
+            final TextView textView_Nombre = dialogRegistrar.findViewById(R.id.textView_Nombre);
+            final TextView textView_Carrera = dialogRegistrar.findViewById(R.id.textView_Carrera);
+            final TextView textView_Semestre = dialogRegistrar.findViewById(R.id.textView_Semestre);
+            final TextView textView_Materia = dialogRegistrar.findViewById(R.id.textView_Materia);
+            final TextView textView_Tema = dialogRegistrar.findViewById(R.id.textView_Tema);
+            final TextView textView_Fecha = dialogRegistrar.findViewById(R.id.textView_Fecha);
+
+            textView_NumeroControl.setText("Número de contro:"+array[0]);
+            textView_Nombre.setText("Nombre completo:"+array[1]);
+            textView_Carrera.setText("Carrera:"+array[2]);
+            textView_Materia.setText("Materia:"+array[3]);
+            textView_Tema.setText("Tema:"+array[4]);
+            textView_Semestre.setText("Semestre:"+array[5]);
+            textView_Fecha.setText("Fecha:"+array[6]);
+
+            CardView cardView_Registrar = dialogRegistrar.findViewById(R.id.cardviewRegistrar);
+            CardView cardView_Cancel = dialogRegistrar.findViewById(R.id.cardviewCancel);
+
+            cardView_Registrar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    registrar(array);
+                    dialogRegistrar.dismiss();
+                }
+            });
+
+            cardView_Cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialogRegistrar.dismiss();
+                }
+            });
+
+        }else {
+            Toast.makeText(this, "El código QR no contiene todos los parametros necesarios para poder ser registadros con exito", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void registrar(String[] array) {
+        SQLiteDatabase db =  helper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(PropiertiesHelper.CAMPO_NCONTROL, array[0]);
+        values.put(PropiertiesHelper.CAMPO_NOMBRE, array[1]);
+        values.put(PropiertiesHelper.CAMPO_CARRERA, array[2]);
+        values.put(PropiertiesHelper.CAMPO_MATERIA, array[3]);
+        values.put(PropiertiesHelper.CAMPO_TEMA, array[4]);
+        values.put(PropiertiesHelper.CAMPO_SEMESTRE, array[5]);
+        values.put(PropiertiesHelper.CAMPO_FECHA, array[6]);
+
+        Long idR = db.insert(PropiertiesHelper.NOMBRE_TABLA, "id", values);
+        Toast.makeText(this, "Alumno registrado con exito", Toast.LENGTH_LONG).show();
     }
 
     private void escanearQR()

@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
+
 public class DataBaseHelper extends SQLiteOpenHelper
 {
     public DataBaseHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
@@ -13,12 +15,13 @@ public class DataBaseHelper extends SQLiteOpenHelper
     }
 
     @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
-
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL("create table asesorados(id integer primary key, nControl integer, nombre text,semestre text, carrera text, materia text, tema text, fecha text)");
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+    public void onUpgrade(SQLiteDatabase db, int versionAntigua, int versionNueva) {
+        db.execSQL("drop table if exists "+ PropiertiesHelper.NOMBRE_TABLA);
+        onCreate(db);
     }
 }
