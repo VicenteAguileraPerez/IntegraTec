@@ -8,6 +8,7 @@ import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -132,8 +133,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
     private StorageManagerCompat manager;
     private final static String NOMBRE_DIRECTORIO = "PDFsIntegraTec";
-    private final static String NOMBRE_DOCUMENTO = "PDF_Asesorias.pdf";
-    private final static String NOMBRE_DOCUMENTO2 = "PDF_Asesorados.pdf";
+    private final static String NOMBRE_DOCUMENTO = "PDF_Asesorias";
+    private final static String NOMBRE_DOCUMENTO2 = "PDF_Asesorados";
     private final static String ETIQUETA_ERROR = "ERROR";
     boolean flagPDFAsesorias=false;
     boolean flagPDFAsesorados=false;
@@ -757,11 +758,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 DocumentFile myFile=null;
                 if(flagPDFAsesorias)
                 {
-                    myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO, "");
+                    myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO+"_"+PropiertiesHelper.obtenerFecha().substring(0,10)+".pdf", "");
                 }
                 else if(flagPDFAsesorados)
                 {
-                    myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO2, "");
+                    myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO2+"_"+PropiertiesHelper.obtenerFecha().substring(0,10)+".pdf", "");
                 }                try {
                     Document documento = new Document(PageSize.LETTER.rotate());
                     OutputStream os = getContentResolver().openOutputStream(Objects.requireNonNull(myFile).getUri());
@@ -1073,11 +1074,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 File f = null;
                 if(flagPDFAsesorias)
                 {
-                    f = crearFichero(NOMBRE_DOCUMENTO);
+                    f = crearFichero(NOMBRE_DOCUMENTO+"_"+PropiertiesHelper.obtenerFecha().substring(0,10)+".pdf");
                 }
                 else if(flagPDFAsesorados)
                 {
-                    f = crearFichero(NOMBRE_DOCUMENTO2);
+                    f = crearFichero(NOMBRE_DOCUMENTO2+"_"+PropiertiesHelper.obtenerFecha().substring(0,10)+".pdf");
                 }
                 FileOutputStream ficheroPdf = new FileOutputStream(Objects.requireNonNull(f).getAbsolutePath());
                 dibujarPDF(documento, ficheroPdf);
@@ -1122,11 +1123,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             DocumentFile myFile=null;
             if(flagPDFAsesorias)
             {
-                myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO, "");
+                myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO+"_"+PropiertiesHelper.obtenerFecha().substring(0,10)+".pdf", "");
             }
             else if(flagPDFAsesorados)
             {
-                myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO2, "");
+                myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO2+"_"+PropiertiesHelper.obtenerFecha().substring(0,10)+".pdf", "");
             }
             try {
                 Document documento = new Document(PageSize.LETTER.rotate());
@@ -1284,9 +1285,18 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 tabla.addCell(cellFecha);
                 tabla.setHeaderRows(1);
 
-                for (int i = 0; i < 500; i++) {
-                    tabla.addCell("Celda " + i);
+                SQLiteDatabase db = helper.getReadableDatabase();
+                Cursor cursor = db.rawQuery("SELECT * FROM "+ PropiertiesHelper.NOMBRE_TABLA, null);
+
+                while (cursor.moveToNext()) {
+                    tabla.addCell(String.valueOf(cursor.getInt(1)));
+                    tabla.addCell(cursor.getString(2));
+                    tabla.addCell(cursor.getString(4)+" "+cursor.getString(3));
+                    tabla.addCell(cursor.getString(5));
+                    tabla.addCell(cursor.getString(6));
+                    tabla.addCell(cursor.getString(7));
                 }
+
                 tabla.setHorizontalAlignment(Element.ALIGN_CENTER);
                 documento.add(tabla);
             }
