@@ -309,12 +309,13 @@ public class AsesoradosActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                consultarBDPorFiltro(searchView.getQuery().toString());
+
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
+                consultarBDPorFiltro(searchView.getQuery().toString());
                 return false;
             }
         });
