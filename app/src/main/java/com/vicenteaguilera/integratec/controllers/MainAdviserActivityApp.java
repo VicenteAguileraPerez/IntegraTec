@@ -80,8 +80,11 @@ import com.vicenteaguilera.integratec.helpers.utility.WaterMark;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.ImagesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.SharedPreferencesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesorias;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.StringHelper;
+import com.vicenteaguilera.integratec.models.Asesoria;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -91,6 +94,7 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -99,7 +103,7 @@ import id.zelory.compressor.Compressor;
 
 
 
-public class MainAdviserActivityApp extends AppCompatActivity implements View.OnClickListener, Status {
+public class MainAdviserActivityApp extends AppCompatActivity implements View.OnClickListener, Status, ListaAsesorias {
     private EditText editTextText_otroLugar;
 
     private final static int GALLERY_INTENT = 1;
@@ -129,6 +133,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private int positionSubject=-1;
     private DataBaseHelper helper;
 
+    private List<Asesoria> asesoriaList;
+
     private IntentResult result= null;
 
     private StorageManagerCompat manager;
@@ -148,6 +154,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         firebaseAuthHelper.setContext(MainAdviserActivityApp.this);
         firebaseAuthHelper.setOnStatusListener(this);
         firebaseStorageHelper.setStatusListener(this);
+        firestoreHelper.listenGetAsesoriasData(this);
         textView_Nombre.setText(FirestoreHelper.asesor.getNombre() +  " " + FirestoreHelper.asesor.getApellidos());
     }
 
@@ -758,18 +765,44 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 DocumentFile myFile=null;
                 if(flagPDFAsesorias)
                 {
-                    myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO+"_"+PropiertiesHelper.obtenerFecha().substring(0,10)+".pdf", "");
+                    if(asesoriaList!=null)
+                    {
+                        try {
+                            myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO+"_"+PropiertiesHelper.obtenerFecha()+".pdf", "");
+                            Document documento = new Document(PageSize.LETTER.rotate());
+                            OutputStream os = getContentResolver().openOutputStream(Objects.requireNonNull(myFile).getUri());
+                            dibujarPDF(documento, (FileOutputStream) os);
+                            Toast.makeText(MainAdviserActivityApp.this, "Se creo tu archivo pdf "+ myFile.getUri().getPath(), Toast.LENGTH_LONG).show();
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), "No hay datos para generar el pdf.", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else if(flagPDFAsesorados)
                 {
-                    myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO2+"_"+PropiertiesHelper.obtenerFecha().substring(0,10)+".pdf", "");
-                }                try {
-                    Document documento = new Document(PageSize.LETTER.rotate());
-                    OutputStream os = getContentResolver().openOutputStream(Objects.requireNonNull(myFile).getUri());
-                    dibujarPDF(documento, (FileOutputStream) os);
-                    Toast.makeText(MainAdviserActivityApp.this, "Se creo tu archivo pdf "+ myFile.getUri().getPath(), Toast.LENGTH_LONG).show();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                    SQLiteDatabase db = helper.getReadableDatabase();
+                    Cursor cursor = db.rawQuery("SELECT * FROM "+ PropiertiesHelper.NOMBRE_TABLA, null);
+                    if(cursor.getCount()!=0)
+                    {
+                        try {
+                            myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO2+"_"+PropiertiesHelper.obtenerFecha()+".pdf", "");
+                            Document documento = new Document(PageSize.LETTER.rotate());
+                            OutputStream os = getContentResolver().openOutputStream(Objects.requireNonNull(myFile).getUri());
+                            dibujarPDF(documento, (FileOutputStream) os);
+                            Toast.makeText(MainAdviserActivityApp.this, "Se creo tu archivo pdf "+ myFile.getUri().getPath(), Toast.LENGTH_LONG).show();
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), "No hay datos para generar el pdf.", Toast.LENGTH_SHORT).show();
+                    }
+                    cursor.close();
                 }
             } catch (OperationFailedException e) {
                 e.printStackTrace();
@@ -1074,15 +1107,35 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 File f = null;
                 if(flagPDFAsesorias)
                 {
-                    f = crearFichero(NOMBRE_DOCUMENTO+"_"+PropiertiesHelper.obtenerFecha().substring(0,10)+".pdf");
+                    if(asesoriaList!=null)
+                    {
+                        f = crearFichero(NOMBRE_DOCUMENTO+"_"+PropiertiesHelper.obtenerFecha()+".pdf");
+                        FileOutputStream ficheroPdf = new FileOutputStream(Objects.requireNonNull(f).getAbsolutePath());
+                        dibujarPDF(documento, ficheroPdf);
+                        Toast.makeText(MainAdviserActivityApp.this, "Se creo tu archivo pdf en "+ f.getAbsolutePath(), Toast.LENGTH_LONG).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), "No hay datos para generar el pdf.", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else if(flagPDFAsesorados)
                 {
-                    f = crearFichero(NOMBRE_DOCUMENTO2+"_"+PropiertiesHelper.obtenerFecha().substring(0,10)+".pdf");
+                    SQLiteDatabase db = helper.getReadableDatabase();
+                    Cursor cursor = db.rawQuery("SELECT * FROM "+ PropiertiesHelper.NOMBRE_TABLA, null);
+                    if(cursor.getCount()!=0)
+                    {
+                        f = crearFichero(NOMBRE_DOCUMENTO2+"_"+PropiertiesHelper.obtenerFecha()+".pdf");
+                        FileOutputStream ficheroPdf = new FileOutputStream(Objects.requireNonNull(f).getAbsolutePath());
+                        dibujarPDF(documento, ficheroPdf);
+                        Toast.makeText(MainAdviserActivityApp.this, "Se creo tu archivo pdf en "+ f.getAbsolutePath(), Toast.LENGTH_LONG).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), "No hay datos para generar el pdf.", Toast.LENGTH_SHORT).show();
+                    }
+                    cursor.close();
                 }
-                FileOutputStream ficheroPdf = new FileOutputStream(Objects.requireNonNull(f).getAbsolutePath());
-                dibujarPDF(documento, ficheroPdf);
-                Toast.makeText(MainAdviserActivityApp.this, "Se creo tu archivo pdf en "+ f.getAbsolutePath(), Toast.LENGTH_LONG).show();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -1123,21 +1176,44 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             DocumentFile myFile=null;
             if(flagPDFAsesorias)
             {
-                myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO+"_"+PropiertiesHelper.obtenerFecha().substring(0,10)+".pdf", "");
+                if(asesoriaList!=null)
+                {
+                    try {
+                        myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO+"_"+PropiertiesHelper.obtenerFecha()+".pdf", "");
+                        Document documento = new Document(PageSize.LETTER.rotate());
+                        OutputStream os = getContentResolver().openOutputStream(Objects.requireNonNull(myFile).getUri());
+                        dibujarPDF(documento, (FileOutputStream) os);
+                        Toast.makeText(MainAdviserActivityApp.this, "Se creo tu archivo pdf "+ myFile.getUri().getPath(), Toast.LENGTH_LONG).show();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "No hay datos para generar el pdf.", Toast.LENGTH_SHORT).show();
+                }
             }
             else if(flagPDFAsesorados)
             {
-                myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO2+"_"+PropiertiesHelper.obtenerFecha().substring(0,10)+".pdf", "");
-            }
-            try {
-                Document documento = new Document(PageSize.LETTER.rotate());
-                OutputStream os = getContentResolver().openOutputStream(Objects.requireNonNull(myFile).getUri());
-                dibujarPDF(documento, (FileOutputStream) os);
-                Toast.makeText(MainAdviserActivityApp.this, "Se creo tu archivo pdf "+ myFile.getUri().getPath(), Toast.LENGTH_LONG).show();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-
+                SQLiteDatabase db = helper.getReadableDatabase();
+                Cursor cursor = db.rawQuery("SELECT * FROM "+ PropiertiesHelper.NOMBRE_TABLA, null);
+                if(cursor.getCount()!=0)
+                {
+                    try {
+                        myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO2+"_"+PropiertiesHelper.obtenerFecha()+".pdf", "");
+                        Document documento = new Document(PageSize.LETTER.rotate());
+                        OutputStream os = getContentResolver().openOutputStream(Objects.requireNonNull(myFile).getUri());
+                        dibujarPDF(documento, (FileOutputStream) os);
+                        Toast.makeText(MainAdviserActivityApp.this, "Se creo tu archivo pdf "+ myFile.getUri().getPath(), Toast.LENGTH_LONG).show();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "No hay datos para generar el pdf.", Toast.LENGTH_SHORT).show();
+                }
+                cursor.close();            }
         }
     }
 
@@ -1268,8 +1344,12 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 tabla.addCell(cellHoraSalida);
                 tabla.setHeaderRows(1);
 
-                for (int i = 0; i < 500; i++) {
-                    tabla.addCell("Celda " + i);
+                for (int i = 0; i < asesoriaList.size(); i++) {
+                    tabla.addCell(asesoriaList.get(i).getNombre());
+                    tabla.addCell(asesoriaList.get(i).getMateria());
+                    tabla.addCell(asesoriaList.get(i).getFecha());
+                    tabla.addCell(asesoriaList.get(i).getH_inicio());
+                    tabla.addCell(asesoriaList.get(i).getH_final());
                 }
                 tabla.setHorizontalAlignment(Element.ALIGN_CENTER);
                 documento.add(tabla);
@@ -1296,7 +1376,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     tabla.addCell(cursor.getString(6));
                     tabla.addCell(cursor.getString(7));
                 }
-
+                cursor.close();
                 tabla.setHorizontalAlignment(Element.ALIGN_CENTER);
                 documento.add(tabla);
             }
@@ -1310,6 +1390,14 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         } finally {
             // Cerramos el documento.
             documento.close();
+        }
+    }
+
+    @Override
+    public void getAsesorias(List<Asesoria> asesoriaList) {
+        if(asesoriaList.size()!=0)
+        {
+            this.asesoriaList = asesoriaList;
         }
     }
 }

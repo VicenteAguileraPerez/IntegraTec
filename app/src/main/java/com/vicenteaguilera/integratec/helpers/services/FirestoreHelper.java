@@ -26,8 +26,10 @@ import com.google.firebase.firestore.WriteBatch;
 import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
 import com.vicenteaguilera.integratec.controllers.OptionsActivity;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesores;
+import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesorias;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
 import com.vicenteaguilera.integratec.models.Asesor;
+import com.vicenteaguilera.integratec.models.Asesoria;
 import com.vicenteaguilera.integratec.models.RealtimeAsesoria;
 
 import java.util.ArrayList;
@@ -305,8 +307,10 @@ public class FirestoreHelper
         });
 
     }
-    public void getAsesoriasData()
+    public void listenGetAsesoriasData(final ListaAsesorias listaAsesorias)
     {
+        final List<Asesoria> asesoriaList = new ArrayList<>();
+        final Asesoria[] asesorias = new Asesoria[1];
         AsesoriaCollection
                 .whereEqualTo("asesor", asesor.getUid())
                 .get()
@@ -316,7 +320,13 @@ public class FirestoreHelper
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
+                                final Map<String,Object> asesoria_add =  document.getData();
+                                asesorias[0] = new Asesoria(asesoria_add.get("asesor").toString(), asesoria_add.get("nombre").toString(),
+                                        asesoria_add.get("materia").toString(), asesoria_add.get("fecha").toString(),
+                                        asesoria_add.get("h_inicio").toString(), asesoria_add.get("h_final").toString());
+                                asesoriaList.add(asesorias[0]);
                             }
+                            listaAsesorias.getAsesorias(asesoriaList);
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
@@ -334,7 +344,6 @@ public class FirestoreHelper
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult())
                             {
-
                                document.getReference().delete();
                             }
                         } else {
