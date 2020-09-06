@@ -1,5 +1,6 @@
 package com.vicenteaguilera.integratec.controllers;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -7,11 +8,14 @@ import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -35,8 +40,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
+import androidx.documentfile.provider.DocumentFile;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -44,27 +51,51 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.HeaderFooter;
+import com.lowagie.text.Image;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import com.vicenteaguilera.integratec.AsesoradosActivity;
 import com.vicenteaguilera.integratec.CreateCodeQRActivity;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.helpers.CaptureActivityPortrait;
 import com.vicenteaguilera.integratec.helpers.DataBaseHelper;
+import com.vicenteaguilera.integratec.helpers.flipper.DocumentFileCompat;
+import com.vicenteaguilera.integratec.helpers.flipper.OperationFailedException;
+import com.vicenteaguilera.integratec.helpers.flipper.Root;
+import com.vicenteaguilera.integratec.helpers.flipper.StorageManagerCompat;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseStorageHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
+import com.vicenteaguilera.integratec.helpers.utility.WaterMark;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.ImagesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.SharedPreferencesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.StringHelper;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import harmony.java.awt.Color;
 import id.zelory.compressor.Compressor;
 
 public class MainAdviserActivityApp extends AppCompatActivity implements View.OnClickListener, Status {
@@ -97,6 +128,14 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private DataBaseHelper helper;
 
     private IntentResult result= null;
+
+    private StorageManagerCompat manager;
+    private final static String NOMBRE_DIRECTORIO = "PDFsIntegraTec";
+    private final static String NOMBRE_DOCUMENTO = "PDF_Asesorias.pdf";
+    private final static String NOMBRE_DOCUMENTO2 = "PDF_Asesorados.pdf";
+    private final static String ETIQUETA_ERROR = "ERROR";
+    boolean flagPDFAsesorias=false;
+    boolean flagPDFAsesorados=false;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -264,11 +303,30 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 showDialogEditProfile();
                 break;
             case R.id.item_Crear_PDF_asesorados:
-
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    flagPDFAsesorados=true;
+                    flagPDFAsesorias=false;
+                    crearPdfAndroidQ();
+                }
+                else{
+                    flagPDFAsesorados=true;
+                    flagPDFAsesorias=false;
+                    crearPdf();
+                }
                 break;
             case R.id.item_Crear_PDF_asesorias:
-                intent = new Intent(this, AsesoradosActivity.class);
-                startActivity(intent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    flagPDFAsesorados=false;
+                    flagPDFAsesorias=true;
+                    crearPdfAndroidQ();
+                }
+                else{
+                    flagPDFAsesorados=false;
+                    flagPDFAsesorias=true;
+                    crearPdf();
+                }
+                /*intent = new Intent(this, AsesoradosActivity.class);
+                startActivity(intent);*/
                 break;
             case R.id.item_nuevo_semestre:
                 showDialogNewSemester();
@@ -697,7 +755,39 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 {
                     Toast.makeText(MainAdviserActivityApp.this,"Cancelaste escaneo.",Toast.LENGTH_SHORT).show();
                 }
+            }
         }
+
+        if(requestCode==100 && resultCode == RESULT_OK)
+        {
+            Root root = manager.addRoot(getApplicationContext(), StorageManagerCompat.DEF_MAIN_ROOT, data);
+            Log.e("root: ", root.getUri().toString());
+            if (root == null)
+                return;
+            DocumentFile f = root.toRootDirectory(getApplicationContext());
+            if (f == null)
+                return;
+            try {
+                DocumentFile subFolder = DocumentFileCompat.getSubFolder(f, NOMBRE_DIRECTORIO);
+                DocumentFile myFile=null;
+                if(flagPDFAsesorias==true)
+                {
+                    myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO, "");
+                }
+                else if(flagPDFAsesorados==true)
+                {
+                    myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO2, "");
+                }                try {
+                    Document documento = new Document(PageSize.LETTER.rotate());
+                    OutputStream os = getContentResolver().openOutputStream(myFile.getUri());
+                    dibujarPDF(documento, (FileOutputStream) os);
+                    Toast.makeText(MainAdviserActivityApp.this, "Se creo tu archivo pdf", Toast.LENGTH_SHORT).show();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            } catch (OperationFailedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -968,5 +1058,229 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         editTextText_otroLugar.getText().clear();
         editText_URL.getText().clear();
 
+    }
+
+    //Creación de pdfs
+    private void crearPdf() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,}, 1000);
+        } else {
+        }
+        try {
+            Document documento = new Document(PageSize.LETTER.rotate());
+            File f = null;
+            if(flagPDFAsesorias==true)
+            {
+                f = crearFichero(NOMBRE_DOCUMENTO);
+            }
+            else if(flagPDFAsesorados==true)
+            {
+                f = crearFichero(NOMBRE_DOCUMENTO2);
+            }
+            FileOutputStream ficheroPdf = new FileOutputStream(f.getAbsolutePath());
+            dibujarPDF(documento, ficheroPdf);
+            Toast.makeText(MainAdviserActivityApp.this, "Se creo tu archivo pdf", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void crearPdfAndroidQ() {
+        manager = new StorageManagerCompat(getApplicationContext());
+        Root root = manager.getRoot(StorageManagerCompat.DEF_MAIN_ROOT);
+
+        if (root == null || !root.isAccessGranted(getApplicationContext())) {
+            Intent data = manager.requireExternalAccess(getApplicationContext());
+            startActivityForResult(data, 100);
+            Log.e("Root: ", "null");
+        }
+        else
+        {
+            Log.e("Root: ", root.getUri().toString());
+            DocumentFile f = root.toRootDirectory(getApplicationContext());
+            DocumentFile subFolder = DocumentFileCompat.getSubFolder(f, NOMBRE_DIRECTORIO);
+            DocumentFile myFile=null;
+            if(flagPDFAsesorias==true)
+            {
+                myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO, "");
+            }
+            else if(flagPDFAsesorados==true)
+            {
+                myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO2, "");
+            }
+            try {
+                Document documento = new Document(PageSize.LETTER.rotate());
+                OutputStream os = getContentResolver().openOutputStream(myFile.getUri());
+                dibujarPDF(documento, (FileOutputStream) os);
+                Toast.makeText(MainAdviserActivityApp.this, "Se creo tu archivo pdf", Toast.LENGTH_SHORT).show();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    public static File crearFichero(String nombreFichero) throws IOException {
+        File ruta = getRuta();
+        File fichero = null;
+        if (ruta != null)
+            fichero = new File(ruta, nombreFichero);
+        return fichero;
+    }
+
+    public static File getRuta() {
+
+        // El fichero sera almacenado en un directorio dentro del directorio descargas
+        File ruta = null;
+        if (Environment.MEDIA_MOUNTED.equals(Environment
+                .getExternalStorageState())) {
+            ruta = new File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                    NOMBRE_DIRECTORIO);
+
+            if (ruta != null) {
+                if (!ruta.mkdirs()) {
+                    if (!ruta.exists()) {
+                        return null;
+                    }
+                }
+            }
+        } else {
+        }
+
+        return ruta;
+    }
+
+    private void dibujarPDF(Document documento, FileOutputStream ficheroPdf) {
+        try{
+            Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.ciencias_basicas);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            Image imagen = Image.getInstance(stream.toByteArray());
+
+            PdfWriter writer = PdfWriter.getInstance(documento, ficheroPdf);
+            writer.setPageEvent(new WaterMark(imagen));
+
+            Font fontHeaderFooter = FontFactory.getFont(FontFactory.TIMES_ROMAN, 12, Font.BOLD, Color.BLACK);
+            Paragraph paragraphHeader=null;
+            if(flagPDFAsesorias==true) {
+                paragraphHeader = new Paragraph("TECNOLÓGICO NACIONAL DE MÉXICO\n" +
+                        "Instituto Tecnológico Superior de Uruapan\n\n" +
+                        "BITÁCORA DE ASESORES PAR\n\n", fontHeaderFooter);
+            }
+            else if(flagPDFAsesorados==true) {
+                paragraphHeader = new Paragraph("TECNOLÓGICO NACIONAL DE MÉXICO\n" +
+                        "Instituto Tecnológico Superior de Uruapan\n" +
+                        "Formato de Registro De Asesorías\n\n" +
+                        "Nombre del asesor par:________________________________" +
+                        "Carrera:________________________________" +
+                        "Periodo:________________\n\n", fontHeaderFooter);
+            }
+
+            Phrase phraseFooter = new Phrase("_____________________________________\nFirma del asesor\n", fontHeaderFooter);
+
+            HeaderFooter cabecera = new HeaderFooter(new Phrase(paragraphHeader), false);
+            cabecera.setAlignment(Element.ALIGN_CENTER);
+
+            HeaderFooter pie = new HeaderFooter(new Phrase(phraseFooter), false);
+            pie.setAlignment(Element.ALIGN_CENTER);
+
+            documento.setHeader(cabecera);
+            documento.setFooter(pie);
+
+            Phrase numControl = new Phrase("No. Control", fontHeaderFooter);
+            Phrase nombreEstudiante = new Phrase("Nombre del estudiante", fontHeaderFooter);
+            Phrase carrera = new Phrase("Carrera", fontHeaderFooter);
+            Phrase asignatura = new Phrase("Asignatura", fontHeaderFooter);
+            Phrase tema = new Phrase("Tema", fontHeaderFooter);
+            Phrase fecha = new Phrase("Fecha", fontHeaderFooter);
+
+            Phrase nombreAsesor = new Phrase("Nombre del asesor par", fontHeaderFooter);
+            Phrase hora_entrada = new Phrase("Hora de entrada", fontHeaderFooter);
+            Phrase hora_salida = new Phrase("Hora de salida", fontHeaderFooter);
+
+            PdfPCell cellNumControl = new PdfPCell(numControl);
+            cellNumControl.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellNumControl.setBackgroundColor(Color.LIGHT_GRAY);
+
+            PdfPCell cellNombreEstudiante = new PdfPCell(nombreEstudiante);
+            cellNombreEstudiante.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellNombreEstudiante.setBackgroundColor(Color.LIGHT_GRAY);
+
+            PdfPCell cellCarrera = new PdfPCell(carrera);
+            cellCarrera.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellCarrera.setBackgroundColor(Color.LIGHT_GRAY);
+
+            PdfPCell cellAsignatura = new PdfPCell(asignatura);
+            cellAsignatura.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellAsignatura.setBackgroundColor(Color.LIGHT_GRAY);
+
+            PdfPCell cellTema = new PdfPCell(tema);
+            cellTema.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellTema.setBackgroundColor(Color.LIGHT_GRAY);
+
+            PdfPCell cellFecha = new PdfPCell(fecha);
+            cellFecha.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellFecha.setBackgroundColor(Color.LIGHT_GRAY);
+
+            PdfPCell cellNombreAsesor = new PdfPCell(nombreAsesor);
+            cellNombreAsesor.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellNombreAsesor.setBackgroundColor(Color.LIGHT_GRAY);
+
+            PdfPCell cellHoraEntrada = new PdfPCell(hora_entrada);
+            cellHoraEntrada.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellHoraEntrada.setBackgroundColor(Color.LIGHT_GRAY);
+
+            PdfPCell cellHoraSalida = new PdfPCell(hora_salida);
+            cellHoraSalida.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellHoraSalida.setBackgroundColor(Color.LIGHT_GRAY);
+
+            documento.open();
+
+            if(flagPDFAsesorias==true)
+            {
+                PdfPTable tabla = new PdfPTable(5);
+                tabla.addCell(cellNombreAsesor);
+                tabla.addCell(cellAsignatura);
+                tabla.addCell(cellFecha);
+                tabla.addCell(cellHoraEntrada);
+                tabla.addCell(cellHoraSalida);
+                tabla.setHeaderRows(1);
+
+                for (int i = 0; i < 500; i++) {
+                    tabla.addCell("Celda " + i);
+                }
+                tabla.setHorizontalAlignment(Element.ALIGN_CENTER);
+                documento.add(tabla);
+            }
+            else if(flagPDFAsesorados==true)
+            {
+                PdfPTable tabla = new PdfPTable(6);
+                tabla.addCell(cellNumControl);
+                tabla.addCell(cellNombreEstudiante);
+                tabla.addCell(cellCarrera);
+                tabla.addCell(cellAsignatura);
+                tabla.addCell(cellTema);
+                tabla.addCell(cellFecha);
+                tabla.setHeaderRows(1);
+
+                for (int i = 0; i < 500; i++) {
+                    tabla.addCell("Celda " + i);
+                }
+                tabla.setHorizontalAlignment(Element.ALIGN_CENTER);
+                documento.add(tabla);
+            }
+
+        } catch (DocumentException e) {
+            Log.e(ETIQUETA_ERROR, e.getMessage());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            // Cerramos el documento.
+            documento.close();
+        }
     }
 }
