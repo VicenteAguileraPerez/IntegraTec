@@ -102,6 +102,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private EditText editTextText_otroLugar;
 
     private final static int GALLERY_INTENT = 1;
+    private final int REQUEST_CODE_ASK_PERMISSION = 111;
     private File imagen=null;
     private SharedPreferencesHelper sharedPreferencesHelper;
     private TimePickerDialog picker=null;
@@ -765,7 +766,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     Document documento = new Document(PageSize.LETTER.rotate());
                     OutputStream os = getContentResolver().openOutputStream(Objects.requireNonNull(myFile).getUri());
                     dibujarPDF(documento, (FileOutputStream) os);
-                    Toast.makeText(MainAdviserActivityApp.this, "Se creo tu archivo pdf", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainAdviserActivityApp.this, "Se creo tu archivo pdf "+ myFile.getUri().getPath(), Toast.LENGTH_LONG).show();
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -1066,28 +1067,42 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
     //Creación de pdfs
     private void crearPdf() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,}, 1000);
+        if (solicitarPermiso()) {
+            try {
+                Document documento = new Document(PageSize.LETTER.rotate());
+                File f = null;
+                if(flagPDFAsesorias)
+                {
+                    f = crearFichero(NOMBRE_DOCUMENTO);
+                }
+                else if(flagPDFAsesorados)
+                {
+                    f = crearFichero(NOMBRE_DOCUMENTO2);
+                }
+                FileOutputStream ficheroPdf = new FileOutputStream(Objects.requireNonNull(f).getAbsolutePath());
+                dibujarPDF(documento, ficheroPdf);
+                Toast.makeText(MainAdviserActivityApp.this, "Se creo tu archivo pdf en "+ f.getAbsolutePath(), Toast.LENGTH_LONG).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        try {
-            Document documento = new Document(PageSize.LETTER.rotate());
-            File f = null;
-            if(flagPDFAsesorias)
-            {
-                f = crearFichero(NOMBRE_DOCUMENTO);
-            }
-            else if(flagPDFAsesorados)
-            {
-                f = crearFichero(NOMBRE_DOCUMENTO2);
-            }
-            FileOutputStream ficheroPdf = new FileOutputStream(Objects.requireNonNull(f).getAbsolutePath());
-            dibujarPDF(documento, ficheroPdf);
-            Toast.makeText(MainAdviserActivityApp.this, "Se creo tu archivo pdf", Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            e.printStackTrace();
+        else {
+            Toast.makeText(getApplicationContext(),"Para guardar el archivo PDF necesita conceder los permisos.",Toast.LENGTH_LONG).show();
         }
     }
 
+    private boolean solicitarPermiso(){
+        int permiso = ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if(permiso!= PackageManager.PERMISSION_GRANTED){
+            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE_ASK_PERMISSION);
+            }
+                return false;
+        }else {
+            return true;
+        }
+    }
 
    private void crearPdfAndroidQ() {
         manager = new StorageManagerCompat(getApplicationContext());
@@ -1117,7 +1132,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 Document documento = new Document(PageSize.LETTER.rotate());
                 OutputStream os = getContentResolver().openOutputStream(Objects.requireNonNull(myFile).getUri());
                 dibujarPDF(documento, (FileOutputStream) os);
-                Toast.makeText(MainAdviserActivityApp.this, "Se creo tu archivo pdf", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainAdviserActivityApp.this, "Se creo tu archivo pdf "+ myFile.getUri().getPath(), Toast.LENGTH_LONG).show();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
