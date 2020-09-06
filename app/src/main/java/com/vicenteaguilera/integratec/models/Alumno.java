@@ -78,6 +78,6 @@ public class Alumno {
 
     public String getData()
     {
-        return  id +" "+ nombre+" "+ nControl+" "+ carrera+" "+semestre+" "+tema+" "+fecha+" "+materia;
+        return   nombre+" "+ nControl;
     }
 }
