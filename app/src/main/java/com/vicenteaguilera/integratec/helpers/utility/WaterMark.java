@@ -17,7 +17,6 @@ public class WaterMark extends PdfPageEventHelper {
     }
 
     public WaterMark() {}
-
     @Override
     public void onEndPage(PdfWriter writer, Document document) {
         super.onEndPage(writer, document);
