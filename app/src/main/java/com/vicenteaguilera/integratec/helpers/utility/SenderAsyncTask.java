@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
-
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;

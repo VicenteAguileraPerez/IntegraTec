@@ -1,5 +1,8 @@
 package com.vicenteaguilera.integratec.helpers.utility.helpers;
 
+
+
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -30,6 +33,8 @@ public class PropiertiesHelper {
     public static final String CAMPO_TEMA = "tema";
     public static final String CAMPO_FECHA = "fecha";
     public static final String NOMBRE_BD = "bd_asesores";
+
+
 
 
 }

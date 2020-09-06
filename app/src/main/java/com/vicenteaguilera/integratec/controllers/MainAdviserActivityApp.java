@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
@@ -24,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -35,7 +33,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,7 +41,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.documentfile.provider.DocumentFile;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.snackbar.Snackbar;
@@ -64,7 +60,7 @@ import com.lowagie.text.Phrase;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
-import com.vicenteaguilera.integratec.AsesoradosActivity;
+import harmony.java.awt.Color;
 import com.vicenteaguilera.integratec.CreateCodeQRActivity;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.helpers.CaptureActivityPortrait;
@@ -76,13 +72,13 @@ import com.vicenteaguilera.integratec.helpers.flipper.StorageManagerCompat;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseStorageHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
+//import com.vicenteaguilera.integratec.helpers.utility.WaterMark;
 import com.vicenteaguilera.integratec.helpers.utility.WaterMark;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.ImagesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.SharedPreferencesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.StringHelper;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -95,8 +91,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import harmony.java.awt.Color;
+
 import id.zelory.compressor.Compressor;
+
+
 
 public class MainAdviserActivityApp extends AppCompatActivity implements View.OnClickListener, Status {
     private EditText editTextText_otroLugar;
@@ -761,7 +759,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         if(requestCode==100 && resultCode == RESULT_OK)
         {
             Root root = manager.addRoot(getApplicationContext(), StorageManagerCompat.DEF_MAIN_ROOT, data);
-            Log.e("root: ", root.getUri().toString());
+            Log.e("root: ", Objects.requireNonNull(root).getUri().toString());
             if (root == null)
                 return;
             DocumentFile f = root.toRootDirectory(getApplicationContext());
@@ -770,16 +768,16 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             try {
                 DocumentFile subFolder = DocumentFileCompat.getSubFolder(f, NOMBRE_DIRECTORIO);
                 DocumentFile myFile=null;
-                if(flagPDFAsesorias==true)
+                if(flagPDFAsesorias)
                 {
                     myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO, "");
                 }
-                else if(flagPDFAsesorados==true)
+                else if(flagPDFAsesorados)
                 {
                     myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO2, "");
                 }                try {
                     Document documento = new Document(PageSize.LETTER.rotate());
-                    OutputStream os = getContentResolver().openOutputStream(myFile.getUri());
+                    OutputStream os = getContentResolver().openOutputStream(Objects.requireNonNull(myFile).getUri());
                     dibujarPDF(documento, (FileOutputStream) os);
                     Toast.makeText(MainAdviserActivityApp.this, "Se creo tu archivo pdf", Toast.LENGTH_SHORT).show();
                 } catch (FileNotFoundException e) {
@@ -988,6 +986,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void status(String message)
     {
@@ -1064,20 +1063,19 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private void crearPdf() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,}, 1000);
-        } else {
         }
         try {
             Document documento = new Document(PageSize.LETTER.rotate());
             File f = null;
-            if(flagPDFAsesorias==true)
+            if(flagPDFAsesorias)
             {
                 f = crearFichero(NOMBRE_DOCUMENTO);
             }
-            else if(flagPDFAsesorados==true)
+            else if(flagPDFAsesorados)
             {
                 f = crearFichero(NOMBRE_DOCUMENTO2);
             }
-            FileOutputStream ficheroPdf = new FileOutputStream(f.getAbsolutePath());
+            FileOutputStream ficheroPdf = new FileOutputStream(Objects.requireNonNull(f).getAbsolutePath());
             dibujarPDF(documento, ficheroPdf);
             Toast.makeText(MainAdviserActivityApp.this, "Se creo tu archivo pdf", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
@@ -1086,7 +1084,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     }
 
 
-    private void crearPdfAndroidQ() {
+   private void crearPdfAndroidQ() {
         manager = new StorageManagerCompat(getApplicationContext());
         Root root = manager.getRoot(StorageManagerCompat.DEF_MAIN_ROOT);
 
@@ -1097,21 +1095,22 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         }
         else
         {
+
             Log.e("Root: ", root.getUri().toString());
             DocumentFile f = root.toRootDirectory(getApplicationContext());
             DocumentFile subFolder = DocumentFileCompat.getSubFolder(f, NOMBRE_DIRECTORIO);
             DocumentFile myFile=null;
-            if(flagPDFAsesorias==true)
+            if(flagPDFAsesorias)
             {
                 myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO, "");
             }
-            else if(flagPDFAsesorados==true)
+            else if(flagPDFAsesorados)
             {
                 myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO2, "");
             }
             try {
                 Document documento = new Document(PageSize.LETTER.rotate());
-                OutputStream os = getContentResolver().openOutputStream(myFile.getUri());
+                OutputStream os = getContentResolver().openOutputStream(Objects.requireNonNull(myFile).getUri());
                 dibujarPDF(documento, (FileOutputStream) os);
                 Toast.makeText(MainAdviserActivityApp.this, "Se creo tu archivo pdf", Toast.LENGTH_SHORT).show();
             } catch (FileNotFoundException e) {
@@ -1162,7 +1161,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             PdfWriter writer = PdfWriter.getInstance(documento, ficheroPdf);
             writer.setPageEvent(new WaterMark(imagen));
 
-            Font fontHeaderFooter = FontFactory.getFont(FontFactory.TIMES_ROMAN, 12, Font.BOLD, Color.BLACK);
+            Font fontHeaderFooter = FontFactory.getFont(FontFactory.TIMES_ROMAN, FontFactory.defaultEncoding,FontFactory.defaultEmbedding,12, Font.BOLD, Color.BLACK);
             Paragraph paragraphHeader=null;
             if(flagPDFAsesorias==true) {
                 paragraphHeader = new Paragraph("TECNOLÓGICO NACIONAL DE MÉXICO\n" +
@@ -1238,7 +1237,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
             documento.open();
 
-            if(flagPDFAsesorias==true)
+            if(flagPDFAsesorias)
             {
                 PdfPTable tabla = new PdfPTable(5);
                 tabla.addCell(cellNombreAsesor);
@@ -1254,7 +1253,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 tabla.setHorizontalAlignment(Element.ALIGN_CENTER);
                 documento.add(tabla);
             }
-            else if(flagPDFAsesorados==true)
+            else if(flagPDFAsesorados)
             {
                 PdfPTable tabla = new PdfPTable(6);
                 tabla.addCell(cellNumControl);
