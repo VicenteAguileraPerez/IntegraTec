@@ -49,7 +49,7 @@ dependencies {
     implementation files('libs\\activation.jar')
     implementation files('libs\\additionnal.jar')
     implementation files('libs\\mail.jar')
-
+    implementation files('libs\\droidText.0.4.jar')
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
@@ -87,5 +87,4 @@ dependencies {
     implementation 'id.zelory:compressor:2.1.0'
 
     implementation 'androidx.preference:preference:1.1.1'
-
 }
