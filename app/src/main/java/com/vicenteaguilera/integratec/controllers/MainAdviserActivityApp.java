@@ -61,6 +61,8 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import harmony.java.awt.Color;
+
+import com.vicenteaguilera.integratec.AsesoradosActivity;
 import com.vicenteaguilera.integratec.CreateCodeQRActivity;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.helpers.CaptureActivityPortrait;
@@ -295,6 +297,10 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 break;
             case R.id.item_Crear_QR:
                 intent = new Intent(this, CreateCodeQRActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.item_Asesorados:
+                intent = new Intent(this, AsesoradosActivity.class);
                 startActivity(intent);
                 break;
             case R.id.item_EditarPerfil:
@@ -736,27 +742,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 e.printStackTrace();
             }
         }
-        else
-        {
-            result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
-            if(result!=null)
-            {
-                if(result.getContents() != null)
-                {
-                    Toast.makeText(MainAdviserActivityApp.this,result.getContents(),Toast.LENGTH_SHORT).show();
-
-                    String values = result.getContents();
-
-                    showDialogRegistrar(values);
-                }
-                else
-                {
-                    Toast.makeText(MainAdviserActivityApp.this,"Cancelaste escaneo.",Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-
-        if(requestCode==100 && resultCode == RESULT_OK)
+        else if(requestCode==100 && resultCode == RESULT_OK)
         {
             Root root = manager.addRoot(getApplicationContext(), StorageManagerCompat.DEF_MAIN_ROOT, data);
             Log.e("root: ", Objects.requireNonNull(root).getUri().toString());
@@ -785,6 +771,25 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 }
             } catch (OperationFailedException e) {
                 e.printStackTrace();
+            }
+        }
+        else
+        {
+            result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
+            if(result!=null)
+            {
+                if(result.getContents() != null)
+                {
+                    Toast.makeText(MainAdviserActivityApp.this,result.getContents(),Toast.LENGTH_SHORT).show();
+
+                    String values = result.getContents();
+
+                    showDialogRegistrar(values);
+                }
+                else
+                {
+                    Toast.makeText(MainAdviserActivityApp.this,"Cancelaste escaneo.",Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }

@@ -57,7 +57,7 @@ public class ListAdviserActivity extends AppCompatActivity implements ListaAseso
         menu.removeItem(R.id.item_Crear_PDF_asesorias);
         menu.removeItem(R.id.item_Crear_PDF_asesorados);
         menu.removeItem(R.id.item_nuevo_semestre);
-
+        menu.removeItem(R.id.item_Asesorados);
         return true;
     }
     @Override

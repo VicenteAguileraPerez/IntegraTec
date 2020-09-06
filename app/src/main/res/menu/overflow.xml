@@ -26,6 +26,9 @@
         android:id="@+id/item_nuevo_semestre"
         android:title="@string/nuevo_semestre" />
     <item
+        android:id="@+id/item_Asesorados"
+        android:title="@string/mis_asesorados" />
+    <item
         android:id="@+id/item_ActualizarLista"
         android:title="@string/actualizar_lista_de_asesores" />
     <item

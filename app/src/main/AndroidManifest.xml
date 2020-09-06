@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AsesoradosActivity"></activity>
+        <activity android:name=".AsesoradosActivity" android:parentActivityName=".controllers.MainAdviserActivityApp"/>
         <activity android:name=".CreateCodeQRActivity" />
         <activity android:name=".controllers.MainAdviserActivityApp" />
         <activity

@@ -63,7 +63,7 @@
     <string name="registrarse">Registrarse</string>
 
     <!--about -->
-    <string name="acerca_de">Acerca de</string>
+    <string name="acerca_de">Acerca de IntegraTec</string>
     <string name="integraTec">IntegraTec</string>
     <string name="iconoregreso">iconoRegreso</string>
     <string name="confirmar_password">Confirmar Contraseña</string>
@@ -92,6 +92,7 @@
     <string name="registrar">Registrar</string>
     <string name="carrera">Carrera:</string>
     <string name="semestre_dialog">Semestre:</string>
+    <string name="mis_asesorados">Mis asesorados</string>
 
 
 </resources>
