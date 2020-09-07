@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -1013,6 +1014,29 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             @Override
             public void onClick(View view) {
                 firestoreHelper.deleteAsesoriasData();
+                SQLiteDatabase db = helper.getWritableDatabase();
+                db.delete(PropiertiesHelper.NOMBRE_TABLA, null, null);
+
+                AlertDialog.Builder dialogConfirm = new AlertDialog.Builder(MainAdviserActivityApp.this);
+                dialogConfirm.setTitle("Eliminar registros");
+                dialogConfirm.setMessage("¿Seguro de que desea eliminar todos los registros de los alumnos asesorados?");
+                dialogConfirm.setCancelable(false);
+                dialogConfirm.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        firestoreHelper.deleteAsesoriasData();
+                        SQLiteDatabase db = helper.getWritableDatabase();
+                        db.delete(PropiertiesHelper.NOMBRE_TABLA, null, null);
+                        dialogEditProfile.dismiss();
+                    }
+                });
+                dialogConfirm.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                dialogConfirm.show();
             }
         });
 
@@ -1055,6 +1079,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             return 6;
         }else if(FirestoreHelper.asesor.getCarrera().equals("Ingeniería Civil")){
             return 7;
+        }else if(FirestoreHelper.asesor.getCarrera().equals("Ingeniería Electrónica")){
+            return 8;
         }
         return 0;
     }
@@ -1399,5 +1425,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         {
             this.asesoriaList = asesoriaList;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        helper.close();
+        super.onDestroy();
     }
 }

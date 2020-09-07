@@ -6,6 +6,7 @@ import androidx.core.view.MenuItemCompat;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vicenteaguilera.integratec.helpers.DataBaseHelper;
@@ -35,11 +37,14 @@ public class AsesoradosActivity extends AppCompatActivity {
     private ArrayList<Alumno> listaAlumnos;
     private DataBaseHelper helper;
     private ArrayAdapter arrayAdapterListView;
+    private TextView textView_sin_data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_asesorados);
+
+        textView_sin_data = findViewById(R.id.textView_sin_data);
 
         listaAlumnos = new ArrayList<Alumno>();
         listaInformacion = new ArrayList<String>();
@@ -101,13 +106,31 @@ public class AsesoradosActivity extends AppCompatActivity {
         cardview_borrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SQLiteDatabase db = helper.getWritableDatabase();
-                String parametros[] = {String.valueOf(alumno.getId())};
 
-                db.delete(PropiertiesHelper.NOMBRE_TABLA, "id=?", parametros);
-                consultarBD();
-                arrayAdapterListView.notifyDataSetChanged();
-                dialogUpdateDelete.dismiss();
+                AlertDialog.Builder dialogConfirm = new AlertDialog.Builder(AsesoradosActivity.this);
+                dialogConfirm.setTitle("¿Desea eliminar este alumno?");
+                dialogConfirm.setMessage("¿Esta seguro de borrar a "+alumno.getNombre()+"?");
+                dialogConfirm.setCancelable(false);
+                dialogConfirm.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SQLiteDatabase db = helper.getWritableDatabase();
+                        String parametros[] = {String.valueOf(alumno.getId())};
+
+                        db.delete(PropiertiesHelper.NOMBRE_TABLA, "id=?", parametros);
+                        consultarBD();
+                        arrayAdapterListView.notifyDataSetChanged();
+                        dialogUpdateDelete.dismiss();
+                    }
+                });
+                dialogConfirm.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                dialogConfirm.show();
+
             }
         });
 
@@ -149,6 +172,8 @@ public class AsesoradosActivity extends AppCompatActivity {
 
                 if(!editText_Tema.getText().toString().isEmpty() && !editText_Tema.getText().toString().equals("") && editText_Tema.getText().toString()!= null){
                     flag_tema = true;
+                }else {
+                    editText_Tema.setError("Tema requerido");
                 }
 
 
@@ -168,9 +193,10 @@ public class AsesoradosActivity extends AppCompatActivity {
 
                     consultarBD();
                     arrayAdapterListView.notifyDataSetChanged();
+
                     dialogUpdateDelete.dismiss();
                 }else {
-                    Toast.makeText(AsesoradosActivity.this, "Revise los datos que son ingresados, ya que algunos son invalidos", Toast.LENGTH_LONG).show();
+                    Toast.makeText(AsesoradosActivity.this, "Algunos de los datos ingresados son inválidos", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -199,17 +225,28 @@ public class AsesoradosActivity extends AppCompatActivity {
 
             listaAlumnos.add(alumno);
         }
+
         obtenerLista();
     }
 
     private void obtenerLista() {
         listaInformacion.clear();
         int i = 0;
-        for (Alumno alumno : listaAlumnos){
-            Log.e("I: ", (i++)+"");
-            listaInformacion.add("Número de control:"+alumno.getnControl()+"\nNombre del alumno:"+alumno.getNombre()+
-                    "\nCarrera:"+alumno.getCarrera()+"\nSemestre:"+alumno.getSemestre()+"\nMateria:"+alumno.getMateria()+"\nTema:"+alumno.getTema()+"\nFecha:"+alumno.getFecha());
+
+        if(listaAlumnos.size()!=0) {
+            for (Alumno alumno : listaAlumnos) {
+                Log.e("I: ", (i++) + "");
+                listaInformacion.add("Número de control:" + alumno.getnControl() + "\nNombre del alumno:" + alumno.getNombre() +
+                        "\nCarrera:" + alumno.getCarrera() + "\nSemestre:" + alumno.getSemestre() + "\nMateria:" + alumno.getMateria() + "\nTema:" + alumno.getTema() + "\nFecha:" + alumno.getFecha());
+            }
+            listView_BD.setVisibility(View.VISIBLE);
+            textView_sin_data.setVisibility(View.GONE);
+        }else {
+            listView_BD.setVisibility(View.GONE);
+            textView_sin_data.setVisibility(View.VISIBLE);
         }
+
+
     }
 
     private int returnCarrera(String carrera){
@@ -350,4 +387,126 @@ public class AsesoradosActivity extends AppCompatActivity {
         arrayAdapterListView.notifyDataSetChanged();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId()){
+
+            case R.id.item_add_asesorado:
+                showDialogAddAlumno();
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    private void showDialogAddAlumno(){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+
+        View view = inflater.inflate(R.layout.dialog_add_alumno,null);
+        builder.setView(view).
+                setTitle("Registrar alumno asesorado");
+
+        final AlertDialog dialogAdd = builder.create();
+        dialogAdd.setCancelable(false);
+        dialogAdd.show();
+
+
+        final EditText editText_NumeroControl = dialogAdd.findViewById(R.id.editText_numero_control_add);
+        final EditText editText_Nombre = dialogAdd.findViewById(R.id.editText_nombre_add);
+        final EditText editText_Tema = dialogAdd.findViewById(R.id.editTextText_tema_add);
+
+        final Spinner spinner_carrera = dialogAdd.findViewById(R.id.spinner_carrera_add);
+        final Spinner spinner_semestre = dialogAdd.findViewById(R.id.spinner_semestre_add);
+        final Spinner spinner_materia = dialogAdd.findViewById(R.id.spinner_materia_add);
+        final CardView cardview_cancelar = dialogAdd.findViewById(R.id.cardView_cancelar_add);
+        final CardView cardview_add = dialogAdd.findViewById(R.id.cardView_agregar_add);
+
+        ArrayAdapter<String> arrayAdapterCarrera = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
+        spinner_carrera.setAdapter(arrayAdapterCarrera);
+
+        ArrayAdapter<String> arrayAdapterSemestre = new ArrayAdapter<>(this,  R.layout.custom_spinner_item, PropiertiesHelper.SEMESTRES);
+        spinner_semestre.setAdapter(arrayAdapterSemestre);
+
+        ArrayAdapter<String> arrayAdapterMateria = new ArrayAdapter<>(this,  R.layout.custom_spinner_item, PropiertiesHelper.MATERIAS);
+        spinner_materia.setAdapter(arrayAdapterMateria);
+
+        cardview_cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogAdd.dismiss();
+            }
+        });
+
+        cardview_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editText_NumeroControl.setError(null);
+                editText_Nombre.setError(null);
+                editText_Tema.setError(null);
+
+                boolean flag_nControl = false;
+                boolean flag_nombre = false;
+                boolean flag_spinners = false;
+                boolean flag_tema = false;
+
+                if (!editText_NumeroControl.getText().toString().isEmpty() && !editText_NumeroControl.getText().toString().equals("")
+                        && editText_NumeroControl.getText().toString() != null && editText_NumeroControl.getText().toString().length() == 8) {
+                    flag_nControl = true;
+                } else {
+                    editText_NumeroControl.setError("El número de control es invalido");
+                }
+
+                if (!editText_Nombre.getText().toString().isEmpty() && !editText_Nombre.getText().toString().equals("") && editText_Nombre != null) {
+                    flag_nombre = true;
+                } else {
+                    editText_Nombre.setError("Nombre requerido");
+                }
+
+                if (spinner_carrera.getSelectedItemPosition() != 0 && spinner_materia.getSelectedItemPosition() != 0 && spinner_semestre.getSelectedItemPosition() != 0) {
+                    flag_spinners = true;
+                }
+
+                if (!editText_Tema.getText().toString().isEmpty() && !editText_Tema.getText().toString().equals("") && editText_Tema.getText().toString() != null) {
+                    flag_tema = true;
+                } else {
+                    editText_Tema.setError("Tema requerido");
+                }
+
+
+                if (flag_nControl && flag_nombre && flag_spinners && flag_tema) {
+                    SQLiteDatabase db = helper.getWritableDatabase();
+                    ContentValues values = new ContentValues();
+
+                    values.put(PropiertiesHelper.CAMPO_NCONTROL, editText_NumeroControl.getText().toString());
+                    values.put(PropiertiesHelper.CAMPO_NOMBRE, editText_Nombre.getText().toString());
+                    values.put(PropiertiesHelper.CAMPO_CARRERA, spinner_carrera.getSelectedItem().toString());
+                    values.put(PropiertiesHelper.CAMPO_MATERIA, spinner_materia.getSelectedItem().toString());
+                    values.put(PropiertiesHelper.CAMPO_TEMA, editText_Tema.getText().toString());
+                    values.put(PropiertiesHelper.CAMPO_SEMESTRE, spinner_semestre.getSelectedItem().toString());
+                    values.put(PropiertiesHelper.CAMPO_FECHA, PropiertiesHelper.obtenerFecha().substring(0, 10));
+                    db.insert(PropiertiesHelper.NOMBRE_TABLA, "id", values);
+                    Toast.makeText(AsesoradosActivity.this, "Alumno registrado con exito", Toast.LENGTH_LONG).show();
+                    consultarBD();
+                    arrayAdapterListView.notifyDataSetChanged();
+                    dialogAdd.dismiss();
+                } else {
+                    Toast.makeText(AsesoradosActivity.this, "Algunos de los datos ingresados son inválidos", Toast.LENGTH_LONG).show();
+                }
+
+            }
+
+
+
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        helper.close();
+        super.onDestroy();
+    }
 }
