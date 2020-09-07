@@ -236,8 +236,7 @@ public class AsesoradosActivity extends AppCompatActivity {
         if(listaAlumnos.size()!=0) {
             for (Alumno alumno : listaAlumnos) {
                 Log.e("I: ", (i++) + "");
-                listaInformacion.add("Número de control:" + alumno.getnControl() + "\nNombre del alumno:" + alumno.getNombre() +
-                        "\nCarrera:" + alumno.getCarrera() + "\nSemestre:" + alumno.getSemestre() + "\nMateria:" + alumno.getMateria() + "\nTema:" + alumno.getTema() + "\nFecha:" + alumno.getFecha());
+                listaInformacion.add("Número de control:" + alumno.getnControl() + "\nNombre del alumno:" + alumno.getNombre() +"\nFecha:" + alumno.getFecha());
             }
             listView_BD.setVisibility(View.VISIBLE);
             textView_sin_data.setVisibility(View.GONE);
