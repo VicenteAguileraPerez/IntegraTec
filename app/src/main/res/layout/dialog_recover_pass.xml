@@ -19,7 +19,7 @@
         android:inputType="textEmailAddress" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView_Button_Delete"
+        android:id="@+id/cardView_Button_Send"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -52,7 +52,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView_ButtonPublicar"
+        android:id="@+id/cardView_ButtonCancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

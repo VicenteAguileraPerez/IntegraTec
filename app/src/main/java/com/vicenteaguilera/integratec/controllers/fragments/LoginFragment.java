@@ -123,8 +123,8 @@ public class LoginFragment extends Fragment  implements Status{
         dialogRecoverPass.show();
 
         final EditText editText_Email = dialogRecoverPass.findViewById(R.id.textView_email);
-        CardView cardView_ButtonSend = dialogRecoverPass.findViewById(R.id.cardView_Button_Delete);
-        CardView cardView_ButtonCancel = dialogRecoverPass.findViewById(R.id.cardView_ButtonPublicar);
+        CardView cardView_ButtonSend = dialogRecoverPass.findViewById(R.id.cardView_Button_Send);
+        CardView cardView_ButtonCancel = dialogRecoverPass.findViewById(R.id.cardView_ButtonCancel);
 
         cardView_ButtonSend.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -32,7 +32,7 @@
         android:inputType="textCapWords" />
 
     <Spinner
-        android:id="@+id/textView_email"
+        android:id="@+id/spinner_carrera_edit"
         style="@style/Widget.AppCompat.Spinner.Underlined"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
         android:importantForAutofill="no" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView_Button_Delete"
+        android:id="@+id/cardView_Button_Update"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -59,7 +59,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView_ButtonSend"
+                android:id="@+id/textView_ButtonUpdate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -76,7 +76,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView_ButtonPublicar"
+        android:id="@+id/cardView_ButtonClose"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -95,7 +95,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView_ButtonCancel"
+                android:id="@+id/textView_ButtonClose"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"

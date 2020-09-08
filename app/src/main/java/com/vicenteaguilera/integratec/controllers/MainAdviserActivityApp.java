@@ -106,7 +106,6 @@ import id.zelory.compressor.Compressor;
 
 public class MainAdviserActivityApp extends AppCompatActivity implements View.OnClickListener, Status, ListaAsesorias {
     private EditText editTextText_otroLugar;
-
     private final static int GALLERY_INTENT = 1;
     private final int REQUEST_CODE_ASK_PERMISSION = 111;
     private File imagen=null;
@@ -133,18 +132,17 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private int positionPlace=-1;
     private int positionSubject=-1;
     private DataBaseHelper helper;
-
     private List<Asesoria> asesoriaList;
-
     private IntentResult result= null;
-
     private StorageManagerCompat manager;
     private final static String NOMBRE_DIRECTORIO = "PDFsIntegraTec";
     private final static String NOMBRE_DOCUMENTO = "PDF_Asesorias";
     private final static String NOMBRE_DOCUMENTO2 = "PDF_Asesorados";
     private final static String ETIQUETA_ERROR = "ERROR";
-    boolean flagPDFAsesorias=false;
-    boolean flagPDFAsesorados=false;
+    private boolean flagPDFAsesorias=false;
+    private boolean flagPDFAsesorados=false;
+    private boolean flagDeleteData1=false;
+    private boolean flagDeleteData2=false;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -927,9 +925,9 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
         final EditText editText_Name = dialogEditProfile.findViewById(R.id.editText_Name);
         final EditText editText_LastNames = dialogEditProfile.findViewById(R.id.editText_LastNames);
-        final Spinner spinner_career = dialogEditProfile.findViewById(R.id.textView_email);
-        CardView cardView_ButtonUpdate = dialogEditProfile.findViewById(R.id.cardView_Button_Delete);
-        CardView cardView_ButtonCancel = dialogEditProfile.findViewById(R.id.cardView_ButtonPublicar);
+        final Spinner spinner_career = dialogEditProfile.findViewById(R.id.spinner_carrera_edit);
+        CardView cardView_ButtonUpdate = dialogEditProfile.findViewById(R.id.cardView_Button_Update);
+        CardView cardView_ButtonClose = dialogEditProfile.findViewById(R.id.cardView_ButtonClose);
 
         ArrayAdapter<String> arrayAdapterCareer = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
         spinner_career.setAdapter(arrayAdapterCareer);
@@ -979,7 +977,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             }
         });
 
-        cardView_ButtonCancel.setOnClickListener(new View.OnClickListener() {
+        cardView_ButtonClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialogEditProfile.dismiss();
@@ -995,70 +993,103 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         builder.setView(view)
                 .setTitle(R.string.nuevo_semestre);
 
-        final AlertDialog dialogEditProfile =builder.create();
-        dialogEditProfile.setCancelable(false);
-        dialogEditProfile.show();
+        final AlertDialog dialogNewSemester =builder.create();
+        dialogNewSemester.setCancelable(false);
+        dialogNewSemester.show();
 
+        CardView cardView_Button_CreatePDF1= dialogNewSemester.findViewById(R.id.cardView_Button_CreatePDF1);
+        CardView cardView_Button_CreatePDF2= dialogNewSemester.findViewById(R.id.cardView_Button_CreatePDF2);
+        CardView cardView_ButtonDelete= dialogNewSemester.findViewById(R.id.cardView_Button_Delete);
+        CardView cardView_ButtonCancel = dialogNewSemester.findViewById(R.id.cardView_ButtonCancel);
 
-        CardView cardView_ButtonDelete_PDF= dialogEditProfile.findViewById(R.id.cardView_Button_Delete_PDF);
-        CardView cardView_ButtonDelete= dialogEditProfile.findViewById(R.id.cardView_Button_Delete);
-        CardView cardView_ButtonCancel = dialogEditProfile.findViewById(R.id.cardView_ButtonPublicar);
+        cardView_Button_CreatePDF1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    flagPDFAsesorados=false;
+                    flagPDFAsesorias=true;
+                    crearPdfAndroidQ();
+                    flagDeleteData1=true;
+                }
+                else{
+                    flagPDFAsesorados=false;
+                    flagPDFAsesorias=true;
+                    crearPdf();
+                    flagDeleteData1=true;
+                }
+            }
+        });
 
-        cardView_ButtonDelete_PDF.setOnClickListener(new View.OnClickListener() {
+        cardView_Button_CreatePDF2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     flagPDFAsesorados=true;
                     flagPDFAsesorias=false;
                     crearPdfAndroidQ();
-                    flagPDFAsesorados=false;
-                    flagPDFAsesorias=true;
-                    crearPdfAndroidQ();
+                    flagDeleteData2=true;
                 }
                 else{
                     flagPDFAsesorados=true;
                     flagPDFAsesorias=false;
                     crearPdf();
-                    flagPDFAsesorados=false;
-                    flagPDFAsesorias=true;
-                    crearPdf();
+                    flagDeleteData2=true;
                 }
-
-                firestoreHelper.deleteAsesoriasData();
-                deleteDB();
-                dialogEditProfile.dismiss();
             }
         });
+
         cardView_ButtonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(flagDeleteData1 && flagDeleteData2)
+                {
+                    AlertDialog.Builder dialogConfirm = new AlertDialog.Builder(MainAdviserActivityApp.this);
+                    dialogConfirm.setTitle("Eliminar registros");
+                    dialogConfirm.setMessage("¿Seguro de que desea eliminar todos los registros de los alumnos asesorados?");
+                    dialogConfirm.setCancelable(false);
+                    dialogConfirm.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            firestoreHelper.deleteAsesoriasData();
+                            deleteDB();
+                            flagDeleteData1=false;
+                            flagDeleteData2=false;
+                            dialogNewSemester.dismiss();
+                        }
+                    });
+                    dialogConfirm.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-                AlertDialog.Builder dialogConfirm = new AlertDialog.Builder(MainAdviserActivityApp.this);
-                dialogConfirm.setTitle("Eliminar registros");
-                dialogConfirm.setMessage("¿Seguro de que desea eliminar todos los registros de los alumnos asesorados?");
-                dialogConfirm.setCancelable(false);
-                dialogConfirm.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        firestoreHelper.deleteAsesoriasData();
-                        deleteDB();
-                        dialogEditProfile.dismiss();
+                        }
+                    });
+                    dialogConfirm.show();
+                }
+                else
+                {
+                    if(!flagDeleteData1 && !flagDeleteData2)
+                    {
+                        Toast.makeText(MainAdviserActivityApp.this, "Para poder eliminar debes primero dar click en" +
+                                " ‘Crear PDF asesorías’ y posteriormente en ‘Crear PDF asesorados.", Toast.LENGTH_LONG).show();
                     }
-                });
-                dialogConfirm.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
+                    else if(!flagDeleteData1)
+                    {
+                        Toast.makeText(MainAdviserActivityApp.this,"Te falta dar click en ‘Crear PDF asesorías.’",Toast.LENGTH_SHORT).show();
                     }
-                });
-                dialogConfirm.show();
+                    else if(!flagDeleteData2)
+                    {
+                        Toast.makeText(MainAdviserActivityApp.this,"Te falta dar click en ‘Crear PDF asesorados.",Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
 
         cardView_ButtonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialogEditProfile.dismiss();
+                flagDeleteData1=false;
+                flagDeleteData2=false;
+                dialogNewSemester.dismiss();
             }
         });
     }
@@ -1076,7 +1107,6 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         {
            textView_Nombre.setText(FirestoreHelper.asesor.getNombre() + " "+ FirestoreHelper.asesor.getApellidos());
         }
-
         Toast.makeText(MainAdviserActivityApp.this,message,Toast.LENGTH_SHORT).show();
     }
 
