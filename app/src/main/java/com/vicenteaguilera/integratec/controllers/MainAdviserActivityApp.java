@@ -1007,7 +1007,26 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         cardView_ButtonDelete_PDF.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    flagPDFAsesorados=true;
+                    flagPDFAsesorias=false;
+                    crearPdfAndroidQ();
+                    flagPDFAsesorados=false;
+                    flagPDFAsesorias=true;
+                    crearPdfAndroidQ();
+                }
+                else{
+                    flagPDFAsesorados=true;
+                    flagPDFAsesorias=false;
+                    crearPdf();
+                    flagPDFAsesorados=false;
+                    flagPDFAsesorias=true;
+                    crearPdf();
+                }
+
                 firestoreHelper.deleteAsesoriasData();
+                deleteDB();
+                dialogEditProfile.dismiss();
             }
         });
         cardView_ButtonDelete.setOnClickListener(new View.OnClickListener() {
