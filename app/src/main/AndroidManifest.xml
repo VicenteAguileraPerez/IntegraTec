@@ -10,35 +10,36 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_2"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_2_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AsesoradosActivity" android:parentActivityName=".controllers.MainAdviserActivityApp"/>
-        <activity android:name=".CreateCodeQRActivity" />
-        <activity android:name=".controllers.MainAdviserActivityApp" />
+        <activity android:name=".AsesoradosActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".controllers.MainAdviserActivityApp"/>
+        <activity android:name=".CreateCodeQRActivity" android:screenOrientation="portrait" />
+        <activity android:name=".controllers.MainAdviserActivityApp" android:screenOrientation="portrait"/>
         <activity
             android:name=".controllers.ListAdviserActivity"
-            android:parentActivityName=".controllers.mainapp.MainAppActivity" />
-        <activity android:name=".controllers.mainapp.MainAppActivity" />
-        <activity android:name=".controllers.ComplaintSuggestionsActivity" />
-        <activity android:name=".SplashScreenActivity">
+            android:parentActivityName=".controllers.mainapp.MainAppActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".controllers.mainapp.MainAppActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".controllers.ComplaintSuggestionsActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".SplashScreenActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".controllers.OptionsActivity" />
-        <activity android:name=".controllers.AboutActivity"></activity>
+        <activity android:name=".controllers.OptionsActivity" android:screenOrientation="portrait" />
+        <activity android:name=".controllers.AboutActivity" android:screenOrientation="portrait"/>
         <activity
             android:name=".helpers.CaptureActivityPortrait"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:theme="@style/zxing_CaptureTheme"
-            android:windowSoftInputMode="stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="stateAlwaysHidden"/>
     </application>
 
 </manifest>
