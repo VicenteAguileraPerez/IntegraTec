@@ -1013,9 +1013,6 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         cardView_ButtonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                firestoreHelper.deleteAsesoriasData();
-                SQLiteDatabase db = helper.getWritableDatabase();
-                db.delete(PropiertiesHelper.NOMBRE_TABLA, null, null);
 
                 AlertDialog.Builder dialogConfirm = new AlertDialog.Builder(MainAdviserActivityApp.this);
                 dialogConfirm.setTitle("Eliminar registros");
@@ -1025,8 +1022,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         firestoreHelper.deleteAsesoriasData();
-                        SQLiteDatabase db = helper.getWritableDatabase();
-                        db.delete(PropiertiesHelper.NOMBRE_TABLA, null, null);
+                        deleteDB();
                         dialogEditProfile.dismiss();
                     }
                 });
@@ -1046,8 +1042,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 dialogEditProfile.dismiss();
             }
         });
+    }
 
-
+    private void deleteDB(){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.delete(PropiertiesHelper.NOMBRE_TABLA, null, null);
     }
 
     @SuppressLint("SetTextI18n")
