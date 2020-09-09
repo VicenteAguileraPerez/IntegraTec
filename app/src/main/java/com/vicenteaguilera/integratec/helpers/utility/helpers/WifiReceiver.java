@@ -12,6 +12,7 @@ import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
 
 public class WifiReceiver extends BroadcastReceiver {
     ProgressDialog dialog= null;
+    InternetHelper internetHelper = new InternetHelper();
     @Override
     public void onReceive(Context context, Intent intent)
     {
@@ -25,7 +26,7 @@ public class WifiReceiver extends BroadcastReceiver {
         if (activeNetwork != null)
         {
             // connected to the internet
-            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI || activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE)
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI || activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE && internetHelper.isOnlineNet())
             {
                 // connected to wifi
                 dialog.dismiss();
