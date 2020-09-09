@@ -37,9 +37,7 @@ public class WifiReceiver extends BroadcastReceiver {
             }
         } else {
             // not connected to the internet
-
             dialog.show();
-            Toast.makeText(context,"no tengo red",Toast.LENGTH_SHORT).show();
         }
 
     }
