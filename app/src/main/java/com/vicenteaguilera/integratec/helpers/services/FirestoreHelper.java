@@ -25,6 +25,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
 import com.vicenteaguilera.integratec.controllers.OptionsActivity;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.InternetHelper;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesores;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesorias;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
@@ -234,6 +235,7 @@ public class FirestoreHelper
         }
         else
         {
+
 
             AsesoriaPublicaCollection.document(asesor.getUid())
                     .delete()

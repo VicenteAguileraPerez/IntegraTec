@@ -67,6 +67,7 @@ import harmony.java.awt.Color;
 import com.vicenteaguilera.integratec.AsesoradosActivity;
 import com.vicenteaguilera.integratec.CreateCodeQRActivity;
 import com.vicenteaguilera.integratec.R;
+import com.vicenteaguilera.integratec.controllers.mainapp.MainAppActivity;
 import com.vicenteaguilera.integratec.helpers.CaptureActivityPortrait;
 import com.vicenteaguilera.integratec.helpers.DataBaseHelper;
 import com.vicenteaguilera.integratec.helpers.flipper.DocumentFileCompat;
@@ -79,6 +80,7 @@ import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
 //import com.vicenteaguilera.integratec.helpers.utility.WaterMark;
 import com.vicenteaguilera.integratec.helpers.utility.WaterMark;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.ImagesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.InternetHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.SharedPreferencesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesorias;
@@ -129,6 +131,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private FirebaseAuthHelper firebaseAuthHelper = new FirebaseAuthHelper();
     private  FirestoreHelper firestoreHelper = new FirestoreHelper();
     private FirebaseStorageHelper firebaseStorageHelper = new FirebaseStorageHelper();
+    private InternetHelper internetHelper = new InternetHelper();
     private int positionPlace=-1;
     private int positionSubject=-1;
     private DataBaseHelper helper;
@@ -463,56 +466,77 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 }
 
 
-
-                if(((flag_radioButton || flag_otherPlace)) && flag_spinnerMateria && flag_TimeStar && flag_TimeEnd)
+            if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
+            {
+                final Calendar cldr = Calendar.getInstance();
+                final int hour = cldr.get(Calendar.HOUR_OF_DAY);
+                int minutes = cldr.get(Calendar.MINUTE);
+                int horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2));
+                int minutesInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(3,5));
+                // 8 8     8 7                                     55     55                55        50+5
+                if((hour==horaInicio || hour==horaInicio+1) && (minutes==minutesInicio || minutes>=minutesInicio+5))
                 {
-                    if(getRangoValidoHoras())
+                    if(((flag_radioButton || flag_otherPlace)) && flag_spinnerMateria && flag_TimeStar && flag_TimeEnd)
                     {
-                        if(sharedPreferencesHelper.hasData() || switchEstado.isChecked())
+                        if(getRangoValidoHoras())
                         {
-                            Map<String, Object> asesor = new HashMap<>();
-                            if (radioBAPresencial.isChecked()) {
-                                asesor.put("URL", "");
-                                if (spinner_lugares.getSelectedItemPosition() == PropiertiesHelper.LUGARES.length - 1) {
-                                    asesor.put("lugar", editTextText_otroLugar.getText().toString());
+                            if(sharedPreferencesHelper.hasData() || switchEstado.isChecked())
+                            {
+                                Map<String, Object> asesor = new HashMap<>();
+                                if (radioBAPresencial.isChecked()) {
+                                    asesor.put("URL", "");
+                                    if (spinner_lugares.getSelectedItemPosition() == PropiertiesHelper.LUGARES.length - 1) {
+                                        asesor.put("lugar", editTextText_otroLugar.getText().toString());
+                                    } else {
+                                        asesor.put("lugar", spinner_lugares.getSelectedItem().toString());
+                                    }
                                 } else {
-                                    asesor.put("lugar", spinner_lugares.getSelectedItem().toString());
+                                    asesor.put("URL", editText_URL.getText().toString());
+                                    asesor.put("lugar", "");
+
                                 }
-                            } else {
-                                asesor.put("URL", editText_URL.getText().toString());
-                                asesor.put("lugar", "");
 
+                                asesor.put("nombre", FirestoreHelper.asesor.getNombre() + " " + FirestoreHelper.asesor.getApellidos());
+                                asesor.put("image_asesor", FirestoreHelper.asesor.getuRI_image());
+                                asesor.put("materia", spinner_materias.getSelectedItem().toString());
+                                asesor.put("h_inicio", editText_HoraInicio.getText().toString());
+                                asesor.put("h_final", editText_HoraFinalizacion.getText().toString());
+                                asesor.put("informacion", editTextTextMultiLine.getText().toString());
+                                asesor.put("fecha", PropiertiesHelper.obtenerFecha().substring(0, 10));
+
+
+
+                                //firebase
+                                ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
+                                        switchEstado.isChecked() ? "Publicando asesoría..." : "Terminando asesoría..", true);
+                                dialog.show();
+                                firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, asesor, switchEstado.isChecked());
+                                Toast.makeText(this, getResources().getText(R.string.publicando) + "...", Toast.LENGTH_SHORT).show();
+                                //shared preferences
+                                if (switchEstado.isChecked()) {
+                                    sharedPreferencesHelper.addPreferences(dataToSave());
+                                } else {
+                                    clear();
+                                    sharedPreferencesHelper.deletePreferences();
+                                }
                             }
-
-                            asesor.put("nombre", FirestoreHelper.asesor.getNombre() + " " + FirestoreHelper.asesor.getApellidos());
-                            asesor.put("image_asesor", FirestoreHelper.asesor.getuRI_image());
-                            asesor.put("materia", spinner_materias.getSelectedItem().toString());
-                            asesor.put("h_inicio", editText_HoraInicio.getText().toString());
-                            asesor.put("h_final", editText_HoraFinalizacion.getText().toString());
-                            asesor.put("informacion", editTextTextMultiLine.getText().toString());
-                            asesor.put("fecha", PropiertiesHelper.obtenerFecha().substring(0, 10));
-
-
-                            //firebase
-                            ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
-                                    switchEstado.isChecked() ? "Publicando asesoría..." : "Terminando asesoría..", true);
-                            dialog.show();
-                            firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, asesor, switchEstado.isChecked());
-                            Toast.makeText(this, getResources().getText(R.string.publicando) + "...", Toast.LENGTH_SHORT).show();
-                            //shared preferences
-                            if (switchEstado.isChecked()) {
-                                sharedPreferencesHelper.addPreferences(dataToSave());
-                            } else {
-                                clear();
-                                sharedPreferencesHelper.deletePreferences();
+                            else
+                            {
+                                Snackbar.make(cardView_ButtonPublicar.getRootView(),"Debes de poner estado en activo para crear una asesoría, actualmente no tienes ninguna.",Snackbar.LENGTH_SHORT).show();
                             }
-                        }
-                        else
-                        {
-                            Snackbar.make(cardView_ButtonPublicar.getRootView(),"Debes de poner estado en activo para crear una asesoría, actualmente no tienes ninguna.",Snackbar.LENGTH_SHORT).show();
                         }
                     }
                 }
+                else
+                {
+                    Toast.makeText(MainAdviserActivityApp.this,"la hora de inicio debe ser igual o menor a 5 min a la hora actual", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+            else
+            {
+                Toast.makeText(MainAdviserActivityApp.this,"Error no puede continuar hasta que habilite la hora automática en su dispositivo", Toast.LENGTH_SHORT).show();
+            }
         }
         else if(idView==R.id.switch_Estado)
         {
@@ -636,29 +660,26 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         int minutes = cldr.get(Calendar.MINUTE);
         // time picker dialog
 
-
         TimePickerDialog.OnTimeSetListener timePicker = new TimePickerDialog.OnTimeSetListener() {
 
             @Override
             public void onTimeSet(TimePicker timePicker, int hrs, int min) {
-                Toast.makeText(MainAdviserActivityApp.this, hrs + ":" + min, Toast.LENGTH_SHORT).show();
-                String aux="am";
-                if(hrs>12)
-                {
-                    hrs=hrs-12;
-                    aux="pm";
-                }
-                else if (hrs==12)
-                {
-                    aux="pm";
-                }
-                else if (hrs==0)
-                {
-                    hrs=12;
-                }
-                String horas = hrs < 10 ? "0" + hrs : hrs + "";
-                String minutos = min < 10 ? "0" + min : min + "";
-                view.setText(horas + ":" + minutos + " "+aux);
+
+
+                    Toast.makeText(MainAdviserActivityApp.this, hrs + ":" + min, Toast.LENGTH_SHORT).show();
+                    String aux = "am";
+                    if (hrs > 12) {
+                        hrs = hrs - 12;
+                        aux = "pm";
+                    } else if (hrs == 12) {
+                        aux = "pm";
+                    } else if (hrs == 0) {
+                        hrs = 12;
+                    }
+                    String horas = hrs < 10 ? "0" + hrs : hrs + "";
+                    String minutos = min < 10 ? "0" + min : min + "";
+                    view.setText(horas + ":" + minutos + " " + aux);
+
             }
         };
         if (picker == null) {
