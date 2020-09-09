@@ -3,6 +3,7 @@ package com.vicenteaguilera.integratec.controllers.mainapp;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
@@ -17,12 +18,14 @@ import com.vicenteaguilera.integratec.SplashScreenActivity;
 import com.vicenteaguilera.integratec.controllers.ListAdviserActivity;
 import com.vicenteaguilera.integratec.controllers.OptionsActivity;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
+import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.InternetHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
+import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
 
 import java.util.Objects;
 
-public class MainAppActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainAppActivity extends AppCompatActivity implements View.OnClickListener, Status {
 
     private final InternetHelper internetHelper = new InternetHelper();
     private CardView button_asesores_disponibles,button_sesion_asesor;
@@ -55,14 +58,23 @@ public class MainAppActivity extends AppCompatActivity implements View.OnClickLi
             switch (id)
             {
                 case R.id.button_asesores_disponibles:
-                    Snackbar.make(view,"Asesores Disponibles",Snackbar.LENGTH_SHORT).show();
+
                     intent = new Intent(MainAppActivity.this, ListAdviserActivity.class);
                     startActivity(intent);
                     break;
                 case R.id.button_sesion_asesores:
-                    Snackbar.make(view,"Sesión Asesores",Snackbar.LENGTH_SHORT).show();
-                    intent = new Intent(MainAppActivity.this, OptionsActivity.class);
-                    startActivity(intent);
+                    if(FirebaseAuthHelper.getCurrentUser()!=null)
+                    {
+                        ProgressDialog dialog = ProgressDialog.show(MainAppActivity.this, "",
+                                "Ingresando... ", true);
+                        dialog.show();
+                        new FirestoreHelper().getData(FirebaseAuthHelper.getCurrentUser().getUid(),dialog,MainAppActivity.this,MainAppActivity.this);
+                    }
+                    else
+                    {
+                        intent = new Intent(MainAppActivity.this, OptionsActivity.class);
+                        startActivity(intent);
+                    }
                     break;
 
             }
@@ -74,5 +86,10 @@ public class MainAppActivity extends AppCompatActivity implements View.OnClickLi
         }
 
 
+    }
+    @Override
+    public void status(String message)
+    {
+        Toast.makeText(MainAppActivity.this,message,Toast.LENGTH_SHORT).show();
     }
 }
