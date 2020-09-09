@@ -14,6 +14,15 @@ public class PropiertiesHelper {
         String formattedDate = df.format(c.getTime());
         return formattedDate;
     }
+    public static String getHora(String strFormato) {
+
+        Calendar objCalendar = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(strFormato);
+
+        String strHora = simpleDateFormat.format(objCalendar.getTime());
+        return strHora;
+
+    }
 
     public static final String [] MATERIAS  ={"Seleccione una materia...","Álgebra", "Álgebra lineal", "Cálculo diferencial", "Cálculo integral", "Cálculo vectorial", "Ecuaciones diferenciales", "Química", "Física"};
     public static final String [] LUGARES ={"Seleccione un lugar...","Biblioteca", "Telemática", "Edificio A", "Edificio F","Otro(Especifique)"};

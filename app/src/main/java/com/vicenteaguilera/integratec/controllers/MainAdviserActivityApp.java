@@ -8,11 +8,13 @@ import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -83,6 +85,7 @@ import com.vicenteaguilera.integratec.helpers.utility.helpers.ImagesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.InternetHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.SharedPreferencesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesorias;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.StringHelper;
@@ -146,11 +149,20 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private boolean flagPDFAsesorados=false;
     private boolean flagDeleteData1=false;
     private boolean flagDeleteData2=false;
+    private WifiReceiver wifiReceiver = new WifiReceiver();
 
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(wifiReceiver);
+    }
     @SuppressLint("SetTextI18n")
     @Override
     protected void onStart() {
         super.onStart();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(wifiReceiver,intentFilter);
         clear();
         setData(sharedPreferencesHelper.getPreferences());
         firebaseAuthHelper.setContext(MainAdviserActivityApp.this);

@@ -3,9 +3,11 @@ package com.vicenteaguilera.integratec;
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
 
 import net.glxn.qrgen.android.QRCode;
 
@@ -47,7 +50,20 @@ public class CreateCodeQRActivity extends AppCompatActivity {
     private CardView cardView_BtnCrearQR;
     private CardView cardView_ButtonGuardarQR;
     private Bitmap bitmap;
+    private WifiReceiver wifiReceiver = new WifiReceiver();
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(wifiReceiver,intentFilter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(wifiReceiver);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

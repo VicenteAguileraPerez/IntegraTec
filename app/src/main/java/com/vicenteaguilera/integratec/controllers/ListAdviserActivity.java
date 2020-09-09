@@ -3,6 +3,8 @@ package com.vicenteaguilera.integratec.controllers;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,10 +18,14 @@ import com.vicenteaguilera.integratec.CreateCodeQRActivity;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.adapters.AsesoriaRealtimeAdapter;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.InternetHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesores;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
 import com.vicenteaguilera.integratec.models.RealtimeAsesoria;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListAdviserActivity extends AppCompatActivity implements ListaAsesores, Status {
@@ -28,7 +34,8 @@ public class ListAdviserActivity extends AppCompatActivity implements ListaAseso
     private ListView listView_asesores;
     private AsesoriaRealtimeAdapter asesoriaRealtimeAdapter;
     private TextView textView_no_asesores;
-
+    private WifiReceiver wifiReceiver = new WifiReceiver();
+    private InternetHelper internetHelper = new InternetHelper();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,12 +47,40 @@ public class ListAdviserActivity extends AppCompatActivity implements ListaAseso
 
     }
 
+
     @Override
     protected void onStart()
     {
-        new FirestoreHelper().listenAsesorias(this);
+        if(internetHelper.timeAutomatically(getContentResolver()))
+        {
+            int hora = Integer.parseInt(PropiertiesHelper.getHora("HH:mm").substring(0,2));
+            if(hora>7 && hora<20)
+            {
+                new FirestoreHelper().listenAsesorias(this);
+            }
+            else
+            {
+                textView_no_asesores.setText("Las asesorías estarán disponibles entre 8:00 am y las 8:00 pm");
+            }
+        }
+        else
+        {
+            getAsesoresRealtime(new ArrayList<RealtimeAsesoria>());
+            status("No podrás ver las asesorías disponibles hasta que actives la hora automática en tu dispositivo");
+
+        }
+
         super.onStart();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(wifiReceiver,intentFilter);
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(wifiReceiver);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)

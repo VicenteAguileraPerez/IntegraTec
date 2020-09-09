@@ -7,8 +7,10 @@ import androidx.core.view.MenuItemCompat;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +29,7 @@ import android.widget.Toast;
 
 import com.vicenteaguilera.integratec.helpers.DataBaseHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
 import com.vicenteaguilera.integratec.models.Alumno;
 
 import java.util.ArrayList;
@@ -38,7 +41,19 @@ public class AsesoradosActivity extends AppCompatActivity {
     private DataBaseHelper helper;
     private ArrayAdapter arrayAdapterListView;
     private TextView textView_sin_data;
+    private WifiReceiver wifiReceiver = new WifiReceiver();
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(wifiReceiver,intentFilter);
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(wifiReceiver);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

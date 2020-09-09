@@ -29,6 +29,7 @@ public class MainAppActivity extends AppCompatActivity implements View.OnClickLi
 
     private final InternetHelper internetHelper = new InternetHelper();
     private CardView button_asesores_disponibles,button_sesion_asesor;
+    private WifiReceiver wifiReceiver = new WifiReceiver();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,8 +45,15 @@ public class MainAppActivity extends AppCompatActivity implements View.OnClickLi
     protected void onStart() {
         super.onStart();
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(new WifiReceiver(),intentFilter);
+        registerReceiver(wifiReceiver,intentFilter);
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(wifiReceiver);
+    }
+
     @Override
     public void onClick(View view)
     {

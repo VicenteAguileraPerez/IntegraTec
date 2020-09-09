@@ -30,9 +30,20 @@ public class SplashScreenActivity extends AppCompatActivity  implements Status
     private ImageView imageView_Splash_Screen;
     private final FirestoreHelper firestoreHelper = new FirestoreHelper();
     private final InternetHelper internetHelper = new InternetHelper();
+    private WifiReceiver wifiReceiver = new WifiReceiver();
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(wifiReceiver,intentFilter);
+    }
 
-
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(wifiReceiver);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

@@ -1,6 +1,8 @@
 package com.vicenteaguilera.integratec.controllers;
 
 import android.content.Context;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -15,6 +17,7 @@ import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.SenderAsyncTask;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.StringHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
 
 import java.util.Properties;
 
@@ -23,6 +26,7 @@ import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 
 public class ComplaintSuggestionsActivity extends AppCompatActivity implements View.OnClickListener {
+    String topic="queja";
     private CardView cardView_ButtonEnviar;
     private RadioButton radioButton_queja,radioButton_sugerencia;
     private RadioGroup radioGroup_topic;
@@ -30,7 +34,21 @@ public class ComplaintSuggestionsActivity extends AppCompatActivity implements V
     private EditText editText_mensaje;
     private EditText editText_nombre;
 
-    String topic="queja";
+
+    private WifiReceiver wifiReceiver = new WifiReceiver();
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(wifiReceiver,intentFilter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(wifiReceiver);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
