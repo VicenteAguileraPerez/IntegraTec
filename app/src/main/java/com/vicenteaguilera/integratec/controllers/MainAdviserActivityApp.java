@@ -163,6 +163,9 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         super.onStart();
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(wifiReceiver,intentFilter);
+
+        cancelarAsesoriaDespuesDeHora();
+
         clear();
         setData(sharedPreferencesHelper.getPreferences());
         firebaseAuthHelper.setContext(MainAdviserActivityApp.this);
@@ -170,6 +173,37 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         firebaseStorageHelper.setStatusListener(this);
         firestoreHelper.listenGetAsesoriasData(this);
         textView_Nombre.setText(FirestoreHelper.asesor.getNombre() +  " " + FirestoreHelper.asesor.getApellidos());
+    }
+
+    private void cancelarAsesoriaDespuesDeHora()
+    {
+        if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver())) {
+            Calendar cldr = Calendar.getInstance();
+            int hour = cldr.get(Calendar.HOUR_OF_DAY);
+
+            if(hour>=8 && hour<=20) {
+                editText_HoraInicio.setEnabled(true);
+                editText_HoraFinalizacion.setEnabled(true);
+                cardView_ButtonPublicar.setEnabled(true);
+            }
+            else {
+                if(sharedPreferencesHelper.hasData())
+                {
+                    ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "", "Terminando asesoría...", true);
+                    dialog.show();
+                    firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesor(), false);
+                    Toast.makeText(MainAdviserActivityApp.this,"Cancelamos la asesoria por que ya pasa de las horas hábiles de asesorias.", Toast.LENGTH_SHORT).show();
+                }
+                editText_HoraInicio.setEnabled(false);
+                editText_HoraFinalizacion.setEnabled(false);
+                cardView_ButtonPublicar.setEnabled(false);
+                sharedPreferencesHelper.deletePreferences();
+                clear();
+            }
+        }
+        else {
+            Toast.makeText(MainAdviserActivityApp.this,"Error no puede continuar hasta que habilite la hora automática en su dispositivo", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setData(Map<String, Object> preferences)
@@ -483,10 +517,18 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 final Calendar cldr = Calendar.getInstance();
                 final int hour = cldr.get(Calendar.HOUR_OF_DAY);
                 int minutes = cldr.get(Calendar.MINUTE);
-                int horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2));
+                int horaInicio;
+                if(editText_HoraInicio.getText().toString().substring(6).equals("pm"))
+                {
+                     horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2))+12;
+                }
+                else
+                {
+                     horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2));
+                }
                 int minutesInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(3,5));
-                // 8 8     8 7                                     55     55                55        50+5
-                if((hour==horaInicio || hour==horaInicio+1) && (minutes==minutesInicio || minutes>=minutesInicio+5))
+
+                if((hour==horaInicio && (minutes==minutesInicio || (minutes-minutesInicio<=5 && minutes-minutesInicio>0))) || (hour==horaInicio+1 && (((60-minutesInicio)+minutes)>0 && ((60-minutesInicio)+minutes)<=5)) )
                 {
                     if(((flag_radioButton || flag_otherPlace)) && flag_spinnerMateria && flag_TimeStar && flag_TimeEnd)
                     {
@@ -494,35 +536,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                         {
                             if(sharedPreferencesHelper.hasData() || switchEstado.isChecked())
                             {
-                                Map<String, Object> asesor = new HashMap<>();
-                                if (radioBAPresencial.isChecked()) {
-                                    asesor.put("URL", "");
-                                    if (spinner_lugares.getSelectedItemPosition() == PropiertiesHelper.LUGARES.length - 1) {
-                                        asesor.put("lugar", editTextText_otroLugar.getText().toString());
-                                    } else {
-                                        asesor.put("lugar", spinner_lugares.getSelectedItem().toString());
-                                    }
-                                } else {
-                                    asesor.put("URL", editText_URL.getText().toString());
-                                    asesor.put("lugar", "");
-
-                                }
-
-                                asesor.put("nombre", FirestoreHelper.asesor.getNombre() + " " + FirestoreHelper.asesor.getApellidos());
-                                asesor.put("image_asesor", FirestoreHelper.asesor.getuRI_image());
-                                asesor.put("materia", spinner_materias.getSelectedItem().toString());
-                                asesor.put("h_inicio", editText_HoraInicio.getText().toString());
-                                asesor.put("h_final", editText_HoraFinalizacion.getText().toString());
-                                asesor.put("informacion", editTextTextMultiLine.getText().toString());
-                                asesor.put("fecha", PropiertiesHelper.obtenerFecha().substring(0, 10));
-
-
-
                                 //firebase
                                 ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
                                         switchEstado.isChecked() ? "Publicando asesoría..." : "Terminando asesoría..", true);
                                 dialog.show();
-                                firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, asesor, switchEstado.isChecked());
+                                firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesor(), switchEstado.isChecked());
                                 Toast.makeText(this, getResources().getText(R.string.publicando) + "...", Toast.LENGTH_SHORT).show();
                                 //shared preferences
                                 if (switchEstado.isChecked()) {
@@ -560,6 +578,31 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 textView_Estado.setText(R.string.inactivo);
             }
         }
+    }
+
+    private Map<String, Object> returnAsesor()
+    {
+        Map<String, Object> asesor = new HashMap<>();
+        if (radioBAPresencial.isChecked()) {
+            asesor.put("URL", "");
+            if (spinner_lugares.getSelectedItemPosition() == PropiertiesHelper.LUGARES.length - 1) {
+                asesor.put("lugar", editTextText_otroLugar.getText().toString());
+            } else {
+                asesor.put("lugar", spinner_lugares.getSelectedItem().toString());
+            }
+        } else {
+            asesor.put("URL", editText_URL.getText().toString());
+            asesor.put("lugar", "");
+
+        }
+        asesor.put("nombre", FirestoreHelper.asesor.getNombre() + " " + FirestoreHelper.asesor.getApellidos());
+        asesor.put("image_asesor", FirestoreHelper.asesor.getuRI_image());
+        asesor.put("materia", spinner_materias.getSelectedItem().toString());
+        asesor.put("h_inicio", editText_HoraInicio.getText().toString());
+        asesor.put("h_final", editText_HoraFinalizacion.getText().toString());
+        asesor.put("informacion", editTextTextMultiLine.getText().toString());
+        asesor.put("fecha", PropiertiesHelper.obtenerFecha().substring(0, 10));
+        return asesor;
     }
 
     private void editTextFocusListener()
