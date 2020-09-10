@@ -511,7 +511,6 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     editText_HoraFinalizacion.setError("Seleccionar hora de finalización.");
                 }
 
-
             if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
             {
                 final Calendar cldr = Calendar.getInstance();
