@@ -2,6 +2,7 @@ package com.vicenteaguilera.integratec.controllers;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
@@ -81,6 +82,7 @@ import com.vicenteaguilera.integratec.helpers.services.FirebaseStorageHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
 //import com.vicenteaguilera.integratec.helpers.utility.WaterMark;
 import com.vicenteaguilera.integratec.helpers.utility.WaterMark;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.AlertDialogTimeOff;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.ImagesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.InternetHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
@@ -177,7 +179,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
     private void cancelarAsesoriaDespuesDeHora()
     {
-        if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver())) {
+        if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
+        {
             Calendar cldr = Calendar.getInstance();
             int hour = cldr.get(Calendar.HOUR_OF_DAY);
 
@@ -192,16 +195,26 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "", "Terminando asesoría...", true);
                     dialog.show();
                     firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesor(), false);
-                    Toast.makeText(MainAdviserActivityApp.this,"Cancelamos la asesoria por que ya pasa de las horas hábiles de asesorias.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainAdviserActivityApp.this,"Terminamos la asesoría porque ya pasa de las horas hábiles de asesorias.", Toast.LENGTH_SHORT).show();
+                    new AlertDialogTimeOff().alertDialogInformacion("No puede crear asesorías hasta las horas hábiles de 8:00 am a 8:00 pm y terminamos la asesoría publicada.",MainAdviserActivityApp.this);
+                }
+                else
+                {
+                    new AlertDialogTimeOff().alertDialogInformacion("No puede crear asesorías hasta las horas hábiles de 8:00 am a 8:00pm",MainAdviserActivityApp.this);
                 }
                 editText_HoraInicio.setEnabled(false);
                 editText_HoraFinalizacion.setEnabled(false);
                 cardView_ButtonPublicar.setEnabled(false);
                 sharedPreferencesHelper.deletePreferences();
                 clear();
+
             }
         }
         else {
+            Intent intent = new Intent(MainAdviserActivityApp.this,MainAppActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
             Toast.makeText(MainAdviserActivityApp.this,"Error no puede continuar hasta que habilite la hora automática en su dispositivo", Toast.LENGTH_SHORT).show();
         }
     }
@@ -294,10 +307,38 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                startActivityForResult(Intent.createChooser(intent,"Selecciona una imagen"),GALLERY_INTENT);
-            }
+                final AlertDialog.Builder  alertDialogBuilder = new AlertDialog.Builder(MainAdviserActivityApp.this);
+                alertDialogBuilder.setTitle("Opciones");
+                alertDialogBuilder.setMessage("Elige una opción a realizar, sino da click fuera del recuadro.");
+                alertDialogBuilder.setPositiveButton("Modificar foto",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface alertDialog, int i)
+                            {
+                                Intent intent = new Intent(Intent.ACTION_PICK);
+                                intent.setType("image/*");
+                                startActivityForResult(Intent.createChooser(intent,"Selecciona una imagen"),GALLERY_INTENT);
+                                alertDialog.cancel();
+                            }
+                        });
+                alertDialogBuilder.setNegativeButton("Eliminar foto actual", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface alertDialog, int i)
+                    {
+                        if(!FirestoreHelper.asesor.getuRI_image().equals(""))
+                        {
+                            firebaseStorageHelper.deleteImage(FirestoreHelper.asesor.getUid());
+                        }
+                        else
+                        {
+                            status("No tienes ninguna foto agregada al sistema.");
+                        }
+                        alertDialog.cancel();
+                    }
+                });
+                alertDialogBuilder.show();
+                     }
         });
         Bitmap placeholder = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.user);
         RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), placeholder);
@@ -1558,4 +1599,5 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         helper.close();
         super.onDestroy();
     }
+
 }

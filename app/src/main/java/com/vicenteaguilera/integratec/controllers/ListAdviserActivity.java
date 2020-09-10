@@ -18,6 +18,7 @@ import com.vicenteaguilera.integratec.CreateCodeQRActivity;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.adapters.AsesoriaRealtimeAdapter;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.AlertDialogTimeOff;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.InternetHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
@@ -62,13 +63,15 @@ public class ListAdviserActivity extends AppCompatActivity implements ListaAseso
             {
                 progressBar.setVisibility(View.INVISIBLE);
                 textView_no_asesores.setVisibility(View.VISIBLE);
-                textView_no_asesores.setText("Las asesorías estarán disponibles entre 8:00 am y las 8:00 pm");
+                textView_no_asesores.setText("No hay asesores por ahora.");
+                new AlertDialogTimeOff().alertDialogInformacion("Las asesorías estarán disponibles entre 8:00 am y las 8:00 pm.",ListAdviserActivity.this);
+
             }
         }
         else
         {
             getAsesoresRealtime(new ArrayList<RealtimeAsesoria>());
-            status("No podrás ver las asesorías disponibles hasta que actives la hora automática en tu dispositivo");
+            status("No podrás ver las asesorías disponibles hasta que actives la hora automática en tu dispositivo.");
         }
 
         super.onStart();
