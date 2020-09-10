@@ -60,6 +60,8 @@ public class ListAdviserActivity extends AppCompatActivity implements ListaAseso
             }
             else
             {
+                progressBar.setVisibility(View.INVISIBLE);
+                textView_no_asesores.setVisibility(View.VISIBLE);
                 textView_no_asesores.setText("Las asesorías estarán disponibles entre 8:00 am y las 8:00 pm");
             }
         }
@@ -67,7 +69,6 @@ public class ListAdviserActivity extends AppCompatActivity implements ListaAseso
         {
             getAsesoresRealtime(new ArrayList<RealtimeAsesoria>());
             status("No podrás ver las asesorías disponibles hasta que actives la hora automática en tu dispositivo");
-
         }
 
         super.onStart();

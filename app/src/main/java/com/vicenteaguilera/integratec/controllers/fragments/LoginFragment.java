@@ -146,6 +146,7 @@ public class LoginFragment extends Fragment  implements Status{
                 if(flag_Email)
                 {
                     new FirebaseQueryHelper().BuscarCredenciales(editText_Email.getText().toString(),getActivity());
+                    dialogRecoverPass.dismiss();
                 }
             }
         });

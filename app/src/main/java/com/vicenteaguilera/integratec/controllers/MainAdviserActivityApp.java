@@ -541,8 +541,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 }
                 else
                 {
-                    Toast.makeText(MainAdviserActivityApp.this,"la hora de inicio debe ser igual o menor a 5 min a la hora actual", Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(MainAdviserActivityApp.this,"La hora de inicio debe ser igual o menor a 5 min a la hora actual", Toast.LENGTH_SHORT).show();
                 }
             }
             else
