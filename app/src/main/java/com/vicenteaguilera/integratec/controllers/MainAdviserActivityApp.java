@@ -560,8 +560,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 textView_Estado.setText(R.string.inactivo);
             }
         }
-
     }
+
     private void editTextFocusListener()
     {
         editText_HoraInicio.setOnFocusChangeListener(new View.OnFocusChangeListener() {
