@@ -47,6 +47,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.documentfile.provider.DocumentFile;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -200,7 +201,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 }
                 else
                 {
-                    new AlertDialogTimeOff().alertDialogInformacion("No puede crear asesorías hasta las horas hábiles de 8:00 am a 8:00pm",MainAdviserActivityApp.this);
+                    new AlertDialogTimeOff().alertDialogInformacion("No puede crear asesorías hasta las horas hábiles de 8:00 am a 8:00 pm",MainAdviserActivityApp.this);
                 }
                 editText_HoraInicio.setEnabled(false);
                 editText_HoraFinalizacion.setEnabled(false);
@@ -329,6 +330,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                         if(!FirestoreHelper.asesor.getuRI_image().equals(""))
                         {
                             firebaseStorageHelper.deleteImage(FirestoreHelper.asesor.getUid());
+                            setImage("");
                         }
                         else
                         {
@@ -340,17 +342,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 alertDialogBuilder.show();
                      }
         });
-        Bitmap placeholder = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.user);
-        RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), placeholder);
-        circularBitmapDrawable.setCircular(true);
-        Glide.with(getApplicationContext())
-                .load(FirestoreHelper.asesor.getuRI_image())
-                .placeholder(circularBitmapDrawable)
-                .fitCenter()
-                .centerCrop()
-                .apply(RequestOptions.circleCropTransform())
-                //.apply(RequestOptions.bitmapTransform(new RoundedCorners(16)))
-                .into(imageView_perfil);
+        setImage(FirestoreHelper.asesor.getuRI_image());
         sharedPreferencesHelper = new SharedPreferencesHelper(MainAdviserActivityApp.this);
 
         helper = new DataBaseHelper(this, PropiertiesHelper.NOMBRE_BD , null, 1);
@@ -850,13 +842,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 imagen = ImagesHelper.from(getApplicationContext(),uri);
                 imagen= new Compressor(getApplicationContext()).compressToFile(imagen);
 
-                Glide.with(getApplicationContext())
-                        .load(imagen)
-                        .fitCenter()
-                        .centerCrop()
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(imageView_perfil);
 
+                setImage(imagen);
                 firebaseStorageHelper.deleteImage(FirestoreHelper.asesor.getUid());
                 firebaseStorageHelper.addImage(FirestoreHelper.asesor.getUid(),Uri.fromFile(imagen));
 
@@ -1600,4 +1587,40 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         super.onDestroy();
     }
 
+    private void setImage(String image_url)
+    {
+        RequestManager rm =  Glide.with(getApplicationContext());
+        if(image_url.equals(""))
+        {
+            Bitmap placeholder = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.user);
+            RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), placeholder);
+            circularBitmapDrawable.setCircular(true);
+                    rm.load(FirestoreHelper.asesor.getuRI_image())
+                    .placeholder(circularBitmapDrawable)
+                    .fitCenter()
+                    .centerCrop()
+                    .apply(RequestOptions.circleCropTransform())
+                    //.apply(RequestOptions.bitmapTransform(new RoundedCorners(16)))
+                    .into(imageView_perfil);
+        }
+        else
+        {
+            rm.load(FirestoreHelper.asesor.getuRI_image())
+                    .fitCenter()
+                    .centerCrop()
+                    .apply(RequestOptions.circleCropTransform())
+                    //.apply(RequestOptions.bitmapTransform(new RoundedCorners(16)))
+                    .into(imageView_perfil);
+        }
+
+    }
+    private void setImage(File file)
+    {
+        Glide.with(getApplicationContext())
+                .load(file)
+                .fitCenter()
+                .centerCrop()
+                .apply(RequestOptions.circleCropTransform())
+                .into(imageView_perfil);
+    }
 }
