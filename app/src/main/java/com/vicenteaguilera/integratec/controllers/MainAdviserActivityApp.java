@@ -1444,6 +1444,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             if(flagPDFAsesorias)
             {
                 PdfPTable tabla = new PdfPTable(5);
+                tabla.setWidthPercentage(100);
+                tabla.setWidths(new float[] {(float) 31.25, (float) 31.25, (float) 12.5, (float) 12.5, (float) 12.5});
                 tabla.addCell(cellNombreAsesor);
                 tabla.addCell(cellAsignatura);
                 tabla.addCell(cellFecha);
@@ -1464,6 +1466,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             else if(flagPDFAsesorados)
             {
                 PdfPTable tabla = new PdfPTable(6);
+                tabla.setWidthPercentage(100);
+                tabla.setWidths(new float[] {(float) 12.5, 20, 19, 18, 18, (float) 12.5});
                 tabla.addCell(cellNumControl);
                 tabla.addCell(cellNombreEstudiante);
                 tabla.addCell(cellCarrera);
