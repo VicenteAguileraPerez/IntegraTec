@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
-import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
-
 public class AlertDialogTimeOff
 {
     public void alertDialogInformacion(String message, Context context)

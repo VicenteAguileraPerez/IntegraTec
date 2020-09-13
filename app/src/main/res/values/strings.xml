@@ -23,7 +23,8 @@
     <string name="timeFinalizacion">Hora Finalización</string>
     <string name="infoExtra">Información extra</string>
     <string name="imageViewAsesor">Foto de asesor par.</string>
-    <string name="publicar">Publicar/Terminar asesoría</string>
+    <string name="publicar">Publicar asesoría</string>
+    <string name="terminar">Terminar asesoría</string>
     <string name="publicando">Publicando</string>
     <string name="hora_fin">Hora Fin</string>
     <string name="hora_inicio">Hora Inicio</string>

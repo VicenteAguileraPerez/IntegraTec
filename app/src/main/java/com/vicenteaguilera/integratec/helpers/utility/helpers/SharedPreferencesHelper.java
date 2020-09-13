@@ -25,7 +25,6 @@ public class SharedPreferencesHelper
         Map<String,Object> saveAsesoria = new HashMap<>();
 
         SharedPreferences sharedPref = ((Activity)context).getPreferences(Context.MODE_PRIVATE);
-        saveAsesoria.put("estado",sharedPref.getString("estado", null));
         saveAsesoria.put("tipo",sharedPref.getString("tipo", null));
         saveAsesoria.put("lugar",sharedPref.getString("lugar", null));
         saveAsesoria.put("lugar2",sharedPref.getString("lugar2", null));
@@ -35,7 +34,8 @@ public class SharedPreferencesHelper
         saveAsesoria.put("h_fin",sharedPref.getString("h_fin", null));
         saveAsesoria.put("info",sharedPref.getString("info", null));
 
-        return  saveAsesoria;
+
+        return  hasData()?saveAsesoria:null;
     }
     public void deletePreferences()
     {
@@ -46,7 +46,6 @@ public class SharedPreferencesHelper
     {
         SharedPreferences sharedPref = ((Activity)context).getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("estado", String.valueOf( saveAsesoria.get("estado")));
         editor.putString("tipo",String.valueOf(saveAsesoria.get("tipo")));
         editor.putString("lugar2",String.valueOf(saveAsesoria.get("lugar2")));
         editor.putString("lugar",String.valueOf(saveAsesoria.get("lugar")));
@@ -60,7 +59,7 @@ public class SharedPreferencesHelper
     public boolean hasData()
     {
         SharedPreferences sharedPref = ((Activity)context).getPreferences(Context.MODE_PRIVATE);
-        String estado = sharedPref.getString("estado", "");
+        String estado = sharedPref.getString("tipo", "");
         return !Objects.requireNonNull(estado).isEmpty();
     }
 }

@@ -223,7 +223,7 @@ public class FirestoreHelper
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                status.status("asesoría pública...");
+                                status.status("asesoría ajustada y publicada para los alumnos");
                                 dialog.dismiss();
                             } else {
                                 dialog.dismiss();
@@ -235,7 +235,6 @@ public class FirestoreHelper
         }
         else
         {
-
 
             AsesoriaPublicaCollection.document(asesor.getUid())
                     .delete()

@@ -117,6 +117,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private final static int GALLERY_INTENT = 1;
     private final int REQUEST_CODE_ASK_PERMISSION = 111;
     private File imagen=null;
+    private static boolean status=true;
     private SharedPreferencesHelper sharedPreferencesHelper;
     private TimePickerDialog picker=null;
     private Spinner spinner_materias;
@@ -128,9 +129,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private CardView cardView_ButtonPublicar;
     private ImageButton imageButton_edit_image;
     private EditText editTextTextMultiLine;
-    private TextView textView_Estado;
+    TextView textView_button_publicar;
     private TextView textView_Nombre;
-    private SwitchMaterial switchEstado;
     private ImageView imageView_perfil;
     private RadioButton radioButton_AOnline;
     private RadioButton radioBAPresencial;
@@ -170,6 +170,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         cancelarAsesoriaDespuesDeHora();
 
         clear();
+        //sharedPreferencesHelper.deletePreferences();
         setData(sharedPreferencesHelper.getPreferences());
         firebaseAuthHelper.setContext(MainAdviserActivityApp.this);
         firebaseAuthHelper.setOnStatusListener(this);
@@ -222,18 +223,30 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
     private void setData(Map<String, Object> preferences)
     {
-        Boolean estado = Boolean.parseBoolean(String.valueOf(preferences.get("estado")));
-        Boolean tipo =  Boolean.parseBoolean(String.valueOf(preferences.get("tipo")));
-        String url = (String) preferences.get("url");
-        String lugar2 = (String) preferences.get("lugar2");
-        String h_inicio = (String) preferences.get("h_inicio");
-        String h_final = (String) preferences.get("h_fin");
-        String info = (String) preferences.get("info");
-        int pos;
-        if(estado)
+        if(preferences!=null)
         {
-            switchEstado.setChecked(estado);
 
+            status=false;
+            editText_HoraInicio.setEnabled(false);
+            editText_HoraInicio.setFocusable(false);
+            editText_HoraInicio.setActivated(false);
+            editText_HoraInicio.setClickable(false);
+            editText_HoraInicio.setInputType(InputType.TYPE_NULL);
+
+            editText_HoraFinalizacion.setEnabled(false);
+            editText_HoraFinalizacion.setFocusable(false);
+            editText_HoraFinalizacion.setActivated(false);
+            editText_HoraFinalizacion.setClickable(false);
+            editText_HoraFinalizacion.setInputType(InputType.TYPE_NULL);
+
+            textView_button_publicar.setText("Actualizar asesoría");
+            Boolean tipo =  Boolean.parseBoolean(String.valueOf(preferences.get("tipo")));
+            String url = (String) preferences.get("url");
+            String lugar2 = (String) preferences.get("lugar2");
+            String h_inicio = (String) preferences.get("h_inicio");
+            String h_final = (String) preferences.get("h_fin");
+            String info = (String) preferences.get("info");
+            int pos;
             if (tipo) {
                 radioBAPresencial.setChecked(true);
                 pos=Integer.parseInt(String.valueOf(preferences.get("lugar")));
@@ -259,6 +272,24 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 editTextTextMultiLine.setText("");
             }
         }
+        else
+        {
+            status=true;
+            editText_HoraInicio.setEnabled(true);
+            editText_HoraInicio.setFocusable(true);
+            editText_HoraInicio.setActivated(true);
+            editText_HoraInicio.setClickable(true);
+            editText_HoraInicio.setInputType(InputType.TYPE_CLASS_TEXT);
+
+            editText_HoraFinalizacion.setEnabled(true);
+            editText_HoraFinalizacion.setFocusable(true);
+            editText_HoraFinalizacion.setActivated(true);
+            editText_HoraFinalizacion.setClickable(true);
+            editText_HoraFinalizacion.setInputType(InputType.TYPE_CLASS_TEXT);
+            textView_button_publicar.setText("Publicar asesoría");
+        }
+
+
 
     }
 
@@ -278,9 +309,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         radioGroup = findViewById(R.id.radioGroup);
         editText_URL = findViewById(R.id.editView_URL);
         editTextTextMultiLine = findViewById(R.id.editTextTextMultiLine);
-        switchEstado = findViewById(R.id.switch_Estado);
         cardView_ButtonPublicar = findViewById(R.id.cardView_ButtonPublicar);
-        textView_Estado = findViewById(R.id.textView_Estado);
         textView_Nombre = findViewById(R.id.textView_Nombre);
         radioButton_AOnline = findViewById(R.id.radioButton_AOnline);
         radioBAPresencial = findViewById(R.id.radioButton_APresencial);
@@ -289,11 +318,10 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         editText_HoraInicio.setInputType(InputType.TYPE_NULL);
         editText_HoraFinalizacion = findViewById(R.id.editText_HoraFin);
         editText_HoraFinalizacion.setInputType(InputType.TYPE_NULL);
-
+        textView_button_publicar = findViewById(R.id.textView_ButtonPublicar);
         editText_HoraInicio.setOnClickListener(this);
         editText_HoraFinalizacion.setOnClickListener(this);
         cardView_ButtonPublicar.setOnClickListener(this);
-        switchEstado.setOnClickListener(this);
 
         editText_URL.requestFocus();
         editTextFocusListener();
@@ -443,120 +471,244 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         }
         else if(idView==R.id.cardView_ButtonPublicar)
         {
+           if(status)
+           {
+               publicarAsesoria(view);
+
+           }
+           else
+           {
+               actualizarAsesoría(view);
+           }
+        }
+        else if(idView==R.id.cardView_ButtonTerminar)
+        {
+            if(sharedPreferencesHelper.hasData())
+            {
+                ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
+                        "Terminando asesoría..", true);
+                dialog.show();
+                firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesor(), false);
+                clear();
+                sharedPreferencesHelper.deletePreferences();
+
+                textView_button_publicar.setText("Publicar asesoría");
+                editText_HoraInicio.setEnabled(true);
+                editText_HoraInicio.setFocusable(true);
+                editText_HoraInicio.setActivated(true);
+                editText_HoraInicio.setClickable(true);
+                editText_HoraInicio.setInputType(InputType.TYPE_CLASS_TEXT);
+
+                editText_HoraFinalizacion.setEnabled(true);
+                editText_HoraFinalizacion.setFocusable(true);
+                editText_HoraFinalizacion.setActivated(true);
+                editText_HoraFinalizacion.setClickable(true);
+                editText_HoraFinalizacion.setInputType(InputType.TYPE_CLASS_TEXT);
+                status=true;
+            }
+            else
+            {
+                Snackbar.make(cardView_ButtonPublicar.getRootView(),"Debes de crear una asesoría antes de eliminarla",Snackbar.LENGTH_SHORT).show();
+            }
+
+        }
+
+    }
+
+    private void actualizarAsesoría(View view)
+    {
+        boolean flag_radioButton = false;
+        boolean flag_spinnerMateria = false;
+        boolean flag_otherPlace = false;
+
+        editText_URL.setError(null);
+        editText_HoraInicio.setError(null);
+        editText_HoraFinalizacion.setError(null);
+        editTextText_otroLugar.setError(null);
 
 
-                boolean flag_radioButton = false;
-                boolean flag_spinnerMateria = false;
-                boolean flag_TimeStar=false;
-                boolean flag_TimeEnd=false;
-                boolean flag_otherPlace = false;
+        if(radioBAPresencial.isChecked())
+        {
+            if(spinner_lugares.getSelectedItemPosition()>0)
+            {
+                if(spinner_lugares.getSelectedItem().toString().equals("Otro(Especifique)"))
+                {
+                    if(!editTextText_otroLugar.getText().toString().isEmpty()) {
+                        flag_otherPlace=true;
+                    }
+                    else {
+                        editTextText_otroLugar.setError("Es necesario llenar este campo.");
+                    }
+                }
+                else {
+                    flag_radioButton=true;
+                }
+            }
+            else {
+                Snackbar.make(view, "Seleccionar un lugar para la asesoría.", Snackbar.LENGTH_SHORT).show();
+            }
+        }
+        else if(radioButton_AOnline.isChecked())
+        {
+            if(!editText_URL.getText().toString().isEmpty())
+            {
+                if(new StringHelper().validateURL(editText_URL.getText().toString()))
+                {
+                    flag_radioButton=true;
+                }
+                else
+                {
+                    editText_URL.setError("El texto que se ingreso no es una URL. Ejemplo URL: https://integratec.my.webex.com/ ");
+                }
+            }
+            else
+            {
+                editText_URL.setError("Ingresar url para la asesoría online.");
+            }
+        }
 
-                editText_URL.setError(null);
-                editText_HoraInicio.setError(null);
-                editText_HoraFinalizacion.setError(null);
-                editTextText_otroLugar.setError(null);
+        if(spinner_materias.getSelectedItemPosition()>0)
+        {
+            flag_spinnerMateria=true;
+        }
+        else
+        {
+            Snackbar.make(view, "Seleccionar materia de asesoría.", Snackbar.LENGTH_SHORT).show();
+        }
+        if(((flag_radioButton || flag_otherPlace)) && flag_spinnerMateria )
+        {
+
+                //firebase
+                ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
+                        "Actualizando asesoría..." , true);
+                dialog.show();
+                firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesor(), true);
+
+                //shared preferences
+                sharedPreferencesHelper.addPreferences(dataToSave());
+
+        }
+
+
+    }
+
+    private void publicarAsesoria(View view)
+    {
+
+            boolean flag_radioButton = false;
+            boolean flag_spinnerMateria = false;
+            boolean flag_TimeStar=false;
+            boolean flag_TimeEnd=false;
+            boolean flag_otherPlace = false;
+
+            editText_URL.setError(null);
+            editText_HoraInicio.setError(null);
+            editText_HoraFinalizacion.setError(null);
+            editTextText_otroLugar.setError(null);
 
 
             if(radioBAPresencial.isChecked())
+            {
+                if(spinner_lugares.getSelectedItemPosition()>0)
                 {
-                    if(spinner_lugares.getSelectedItemPosition()>0)
+                    if(spinner_lugares.getSelectedItem().toString().equals("Otro(Especifique)"))
                     {
-                        if(spinner_lugares.getSelectedItem().toString().equals("Otro(Especifique)"))
-                        {
-                            if(!editTextText_otroLugar.getText().toString().isEmpty()) {
-                                flag_otherPlace=true;
-                            }
-                            else {
-                                editTextText_otroLugar.setError("Es necesario llenar este campo.");
-                            }
+                        if(!editTextText_otroLugar.getText().toString().isEmpty()) {
+                            flag_otherPlace=true;
                         }
                         else {
-                            flag_radioButton=true;
+                            editTextText_otroLugar.setError("Es necesario llenar este campo.");
                         }
                     }
                     else {
-                        Snackbar.make(view, "Seleccionar un lugar para la asesoría.", Snackbar.LENGTH_SHORT).show();
+                        flag_radioButton=true;
                     }
                 }
-                else if(radioButton_AOnline.isChecked())
-                {
-                    if(!editText_URL.getText().toString().isEmpty())
-                    {
-                        if(new StringHelper().validateURL(editText_URL.getText().toString()))
-                        {
-                            flag_radioButton=true;
-                        }
-                        else
-                        {
-                            editText_URL.setError("El texto que se ingreso no es una URL. Ejemplo URL: https://integratec.my.webex.com/ ");
-                        }
-                    }
-                    else
-                    {
-                        editText_URL.setError("Ingresar url para la asesoría online.");
-                    }
+                else {
+                    Snackbar.make(view, "Seleccionar un lugar para la asesoría.", Snackbar.LENGTH_SHORT).show();
                 }
-
-                if(spinner_materias.getSelectedItemPosition()>0)
+            }
+            else if(radioButton_AOnline.isChecked())
+            {
+                if(!editText_URL.getText().toString().isEmpty())
                 {
-                    flag_spinnerMateria=true;
-                }
-                else
-                {
-                    Snackbar.make(view, "Seleccionar materia de asesoría.", Snackbar.LENGTH_SHORT).show();
-                }
-
-                if(!editText_HoraInicio.getText().toString().isEmpty())
-                {
-                    int horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2));
-                    String aux = editText_HoraInicio.getText().toString().substring(6,8);
-                    if((((horaInicio>=1 && horaInicio<=8) || horaInicio==12) && aux.equals("pm")) || ((horaInicio>=8 && horaInicio<=11) && aux.equals("am")))
+                    if(new StringHelper().validateURL(editText_URL.getText().toString()))
                     {
-
-                        flag_TimeStar=true;
+                        flag_radioButton=true;
                     }
                     else
                     {
-                        editText_HoraInicio.setError("La hora de inicio debe estar entre las 8:00am y 8:00pm");
+                        editText_URL.setError("El texto que se ingreso no es una URL. Ejemplo URL: https://integratec.my.webex.com/ ");
                     }
                 }
                 else
                 {
-                    editText_HoraInicio.setError("Seleccionar hora de inicio.");
+                    editText_URL.setError("Ingresar url para la asesoría online.");
                 }
+            }
+
+            if(spinner_materias.getSelectedItemPosition()>0)
+            {
+                flag_spinnerMateria=true;
+            }
+            else
+            {
+                Snackbar.make(view, "Seleccionar materia de asesoría.", Snackbar.LENGTH_SHORT).show();
+            }
 
 
-                if(!editText_HoraFinalizacion.getText().toString().isEmpty())
+            if(!editText_HoraInicio.getText().toString().isEmpty())
+            {
+                int horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2));
+                String aux = editText_HoraInicio.getText().toString().substring(6,8);
+                if((((horaInicio>=1 && horaInicio<=8) || horaInicio==12) && aux.equals("pm")) || ((horaInicio>=8 && horaInicio<=11) && aux.equals("am")))
                 {
-                    int horaFin = Integer.parseInt(editText_HoraFinalizacion.getText().toString().substring(0,2));
-                    String aux = editText_HoraFinalizacion.getText().toString().substring(6,8);
-                    if((((horaFin>=1 && horaFin<=8) || horaFin==12) && aux.equals("pm")) || ((horaFin>=8 && horaFin<=11) && aux.equals("am")))
-                    {
-                        flag_TimeEnd=true;
-                    }
-                    else
-                    {
-                        editText_HoraFinalizacion.setError("La hora de fin debe estar entre las 8:00am y 8:00pm");
-                    }
+
+                    flag_TimeStar=true;
                 }
                 else
                 {
-                    editText_HoraFinalizacion.setError("Seleccionar hora de finalización.");
+                    editText_HoraInicio.setError("La hora de inicio debe estar entre las 8:00am y 8:00pm");
                 }
+            }
+            else
+            {
+                editText_HoraInicio.setError("Seleccionar hora de inicio.");
+            }
+
+
+            if(!editText_HoraFinalizacion.getText().toString().isEmpty())
+            {
+                int horaFin = Integer.parseInt(editText_HoraFinalizacion.getText().toString().substring(0,2));
+                String aux = editText_HoraFinalizacion.getText().toString().substring(6,8);
+                if((((horaFin>=1 && horaFin<=8) || horaFin==12) && aux.equals("pm")) || ((horaFin>=8 && horaFin<=11) && aux.equals("am")))
+                {
+                    flag_TimeEnd=true;
+                }
+                else
+                {
+                    editText_HoraFinalizacion.setError("La hora de fin debe estar entre las 8:00am y 8:00pm");
+                }
+            }
+            else
+            {
+                editText_HoraFinalizacion.setError("Seleccionar hora de finalización.");
+            }
 
             if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
             {
                 final Calendar cldr = Calendar.getInstance();
                 final int hour = cldr.get(Calendar.HOUR_OF_DAY);
                 int minutes = cldr.get(Calendar.MINUTE);
+
                 int horaInicio;
                 if(editText_HoraInicio.getText().toString().substring(6).equals("pm"))
                 {
-                     horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2))+12;
+                    horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2))+12;
                 }
                 else
                 {
-                     horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2));
+                    horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2));
                 }
                 int minutesInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(3,5));
 
@@ -566,26 +718,33 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     {
                         if(getRangoValidoHoras())
                         {
-                            if(sharedPreferencesHelper.hasData() || switchEstado.isChecked())
-                            {
-                                //firebase
-                                ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
-                                        switchEstado.isChecked() ? "Publicando asesoría..." : "Terminando asesoría..", true);
-                                dialog.show();
-                                firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesor(), switchEstado.isChecked());
-                                Toast.makeText(this, getResources().getText(R.string.publicando) + "...", Toast.LENGTH_SHORT).show();
-                                //shared preferences
-                                if (switchEstado.isChecked()) {
-                                    sharedPreferencesHelper.addPreferences(dataToSave());
-                                } else {
-                                    clear();
-                                    sharedPreferencesHelper.deletePreferences();
-                                }
-                            }
-                            else
-                            {
-                                Snackbar.make(cardView_ButtonPublicar.getRootView(),"Debes de poner estado en activo para crear una asesoría, actualmente no tienes ninguna.",Snackbar.LENGTH_SHORT).show();
-                            }
+
+                            //firebase
+                            ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
+                                    "Actualizando asesoría..." , true);
+                            dialog.show();
+                            firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesor(), true);
+                            status=false;
+                            //shared preferences
+                            sharedPreferencesHelper.addPreferences(dataToSave());
+
+                            textView_button_publicar = findViewById(R.id.textView_ButtonPublicar);
+                            textView_button_publicar.setText("Actualizar asesoría");
+                            new AlertDialogTimeOff().alertDialogInformacion("Para actualizar su asesoría, se le informa que no podrá cambiar la hora de inicio ni de fin por seguridad y para proporcionar servicios se asesoría reales para los asesorados y evitar datos falso.\n" +
+                                    "Gracias por su compresión.",MainAdviserActivityApp.this);
+                            editText_HoraInicio.setEnabled(false);
+                            editText_HoraInicio.setFocusable(false);
+                            editText_HoraInicio.setActivated(false);
+                            editText_HoraInicio.setClickable(false);
+                            editText_HoraInicio.setInputType(InputType.TYPE_NULL);
+
+                            editText_HoraFinalizacion.setEnabled(false);
+                            editText_HoraFinalizacion.setFocusable(false);
+                            editText_HoraFinalizacion.setActivated(false);
+                            editText_HoraFinalizacion.setClickable(false);
+                            editText_HoraFinalizacion.setInputType(InputType.TYPE_NULL);
+
+
                         }
                     }
                 }
@@ -598,18 +757,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             {
                 Toast.makeText(MainAdviserActivityApp.this,"Error no puede continuar hasta que habilite la hora automática en su dispositivo", Toast.LENGTH_SHORT).show();
             }
-        }
-        else if(idView==R.id.switch_Estado)
-        {
-            if(switchEstado.isChecked())
-            {
-                textView_Estado.setText(R.string.activo);
-            }
-            else
-            {
-                textView_Estado.setText(R.string.inactivo);
-            }
-        }
+
     }
 
     private Map<String, Object> returnAsesor()
@@ -718,18 +866,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) { }
         });
-        switchEstado.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean status)
-            {
-                if (status) {
-                    textView_Estado.setText(R.string.activo);
 
-                } else {
-                    textView_Estado.setText(R.string.inactivo);
-                }
-            }
-        });
     }
 
     private void getHora(final EditText view) {
@@ -1237,7 +1374,6 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     public Map<String,Object> dataToSave()
     {
         Map<String,Object> data = new HashMap<>();
-        data.put("estado",switchEstado.isChecked());
         data.put("tipo",radioBAPresencial.isChecked());
         if(radioBAPresencial.isChecked()) {
             if (spinner_lugares.getSelectedItemPosition() == PropiertiesHelper.LUGARES.length - 1) {
