@@ -987,6 +987,17 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                         return  false;
                     }
                 }
+                else if(horaFin-horaInicio>1) {
+                    flag_TimeValid = true;
+                }
+                else
+                {
+                    Toast.makeText(MainAdviserActivityApp.this, "Hora de inicio es mayor que hora final", Toast.LENGTH_SHORT).show();
+                    editText_HoraInicio.setError("Hora invalida");
+                    editText_HoraFinalizacion.setError("Hora invalida");
+                    editText_HoraInicio.getText().clear();
+                    editText_HoraFinalizacion.getText().clear();
+                }
             }
             else {
                 Toast.makeText(MainAdviserActivityApp.this, "Hora de inicio es mayor que hora final", Toast.LENGTH_SHORT).show();
