@@ -101,7 +101,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -196,7 +200,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 {
                     ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "", "Terminando asesoría...", true);
                     dialog.show();
-                    firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesor(), false);
+                    firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesoria(), false);
                     Toast.makeText(MainAdviserActivityApp.this,"Terminamos la asesoría porque ya pasa de las horas hábiles de asesorias.", Toast.LENGTH_SHORT).show();
                     new AlertDialogTimeOff().alertDialogInformacion("No puede crear asesorías hasta las horas hábiles de 8:00 am a 8:00 pm y terminamos la asesoría publicada.",MainAdviserActivityApp.this);
                 }
@@ -488,7 +492,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
                         "Terminando asesoría..", true);
                 dialog.show();
-                firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesor(), false);
+                firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesoria(), false);
                 clear();
                 sharedPreferencesHelper.deletePreferences();
 
@@ -582,7 +586,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
                         "Actualizando asesoría..." , true);
                 dialog.show();
-                firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesor(), true);
+                firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesoria(), true);
 
                 //shared preferences
                 sharedPreferencesHelper.addPreferences(dataToSave());
@@ -723,7 +727,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                             ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
                                     "Actualizando asesoría..." , true);
                             dialog.show();
-                            firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesor(), true);
+                            firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesoria(), true);
                             status=false;
                             //shared preferences
                             sharedPreferencesHelper.addPreferences(dataToSave());
@@ -760,7 +764,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
     }
 
-    private Map<String, Object> returnAsesor()
+    private Map<String, Object> returnAsesoria()
     {
         Map<String, Object> asesor = new HashMap<>();
         if (radioBAPresencial.isChecked()) {
@@ -781,7 +785,10 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         asesor.put("h_inicio", editText_HoraInicio.getText().toString());
         asesor.put("h_final", editText_HoraFinalizacion.getText().toString());
         asesor.put("informacion", editTextTextMultiLine.getText().toString());
-        asesor.put("fecha", PropiertiesHelper.obtenerFecha().substring(0, 10));
+        String fecha = PropiertiesHelper.obtenerFecha().substring(0, 10);
+        String f[] = fecha.split("-");
+        asesor.put("fecha", f[2]+"-"+f[1]+"-"+f[0]);
+        Log.e("Fecha: ", f[2]+"-"+f[1]+"-"+f[0]);
         return asesor;
     }
 
@@ -1661,7 +1668,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 for (int i = 0; i < asesoriaList.size(); i++) {
                     tabla.addCell(asesoriaList.get(i).getNombre());
                     tabla.addCell(asesoriaList.get(i).getMateria());
-                    tabla.addCell(asesoriaList.get(i).getFecha());
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                    tabla.addCell(dateFormat.format(asesoriaList.get(i).getFecha()));
                     tabla.addCell(asesoriaList.get(i).getH_inicio());
                     tabla.addCell(asesoriaList.get(i).getH_final());
                 }
@@ -1714,6 +1722,12 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         if(asesoriaList.size()!=0)
         {
             this.asesoriaList = asesoriaList;
+            Collections.sort(this.asesoriaList, new Comparator<Asesoria>() {
+                @Override
+                public int compare(Asesoria a1, Asesoria a2) {
+                    return Long.valueOf(a1.getFecha().getTime()).compareTo(a2.getFecha().getTime());
+                }
+            });
         }
     }
 

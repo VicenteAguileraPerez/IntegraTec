@@ -1,12 +1,15 @@
 package com.vicenteaguilera.integratec.models;
 
+import java.util.Date;
+
 public class Asesoria
 {
-    private String idAsesor, nombre, materia, fecha, h_inicio, h_final;
+    private String idAsesor, nombre, materia, h_inicio, h_final;
+    private Date fecha;
 
     public Asesoria(){}
 
-    public Asesoria(String idAsesor, String nombre, String materia, String fecha, String h_inicio, String h_final) {
+    public Asesoria(String idAsesor, String nombre, String materia, Date fecha, String h_inicio, String h_final) {
         this.idAsesor = idAsesor;
         this.nombre = nombre;
         this.materia = materia;
@@ -39,11 +42,11 @@ public class Asesoria
         this.materia = materia;
     }
 
-    public String getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
-    public void setFecha(String fecha) {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
 

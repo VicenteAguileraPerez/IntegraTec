@@ -33,7 +33,10 @@ import com.vicenteaguilera.integratec.models.Asesor;
 import com.vicenteaguilera.integratec.models.Asesoria;
 import com.vicenteaguilera.integratec.models.RealtimeAsesoria;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -322,8 +325,14 @@ public class FirestoreHelper
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 final Map<String,Object> asesoria_add =  document.getData();
+                                Date date = null;
+                                try {
+                                     date = new SimpleDateFormat("dd-MM-yyyy").parse(asesoria_add.get("fecha").toString());
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
                                 asesorias[0] = new Asesoria(asesoria_add.get("asesor").toString(), asesoria_add.get("nombre").toString(),
-                                        asesoria_add.get("materia").toString(), asesoria_add.get("fecha").toString(),
+                                        asesoria_add.get("materia").toString(), date,
                                         asesoria_add.get("h_inicio").toString(), asesoria_add.get("h_final").toString());
                                 asesoriaList.add(asesorias[0]);
                             }
