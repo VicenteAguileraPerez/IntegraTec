@@ -229,7 +229,7 @@
                     android:ems="10"
                     android:hint="@string/hora_inicio"
                     android:importantForAutofill="no"
-                    android:inputType="text"
+                    android:inputType="time"
                     android:textSize="18sp"
                     tools:ignore="NestedWeights" />
 
@@ -243,7 +243,7 @@
                     android:ems="10"
                     android:hint="@string/hora_fin"
                     android:importantForAutofill="no"
-                    android:inputType="text"
+                    android:inputType="time"
                     android:textSize="18sp" />
             </LinearLayout>
 

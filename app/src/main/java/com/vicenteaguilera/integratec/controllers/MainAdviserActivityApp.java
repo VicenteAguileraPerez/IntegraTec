@@ -209,9 +209,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     new AlertDialogTimeOff().alertDialogInformacion("No puede crear asesorías hasta las horas hábiles de 8:00 am a 8:00 pm",MainAdviserActivityApp.this);
                 }
 
-                editText_HoraInicio.setEnabled(false);
-                editText_HoraFinalizacion.setEnabled(false);
-                cardView_ButtonPublicar.setEnabled(false);
+                disableEditTextHoras();
                 sharedPreferencesHelper.deletePreferences();
                 Log.e("EditText H_Inicio is: ", editText_HoraInicio.isEnabled()+"");
                 Log.e("EditText H_Fin is: ", editText_HoraFinalizacion.isEnabled()+"");
@@ -223,8 +221,38 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
+
             Toast.makeText(MainAdviserActivityApp.this,"Error no puede continuar hasta que habilite la hora automática en su dispositivo", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void disableEditTextHoras()
+    {
+        editText_HoraInicio.setEnabled(false);
+        editText_HoraInicio.setFocusable(false);
+        editText_HoraInicio.setActivated(false);
+        editText_HoraInicio.setClickable(false);
+        editText_HoraInicio.setInputType(InputType.TYPE_NULL);
+
+        editText_HoraFinalizacion.setEnabled(false);
+        editText_HoraFinalizacion.setFocusable(false);
+        editText_HoraFinalizacion.setActivated(false);
+        editText_HoraFinalizacion.setClickable(false);
+        editText_HoraFinalizacion.setInputType(InputType.TYPE_NULL);
+    }
+    private void enableEditTextHoras()
+    {
+        editText_HoraInicio.setEnabled(true);
+        editText_HoraInicio.setFocusable(true);
+        editText_HoraInicio.setActivated(true);
+        editText_HoraInicio.setClickable(true);
+        editText_HoraInicio.setInputType(InputType.TYPE_CLASS_TEXT);
+
+        editText_HoraFinalizacion.setEnabled(true);
+        editText_HoraFinalizacion.setFocusable(true);
+        editText_HoraFinalizacion.setActivated(true);
+        editText_HoraFinalizacion.setClickable(true);
+        editText_HoraFinalizacion.setInputType(InputType.TYPE_CLASS_TEXT);
     }
 
     private void setData(Map<String, Object> preferences)
@@ -233,18 +261,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         {
 
             status=false;
-            editText_HoraInicio.setEnabled(false);
-            editText_HoraInicio.setFocusable(false);
-            editText_HoraInicio.setActivated(false);
-            editText_HoraInicio.setClickable(false);
-            editText_HoraInicio.setInputType(InputType.TYPE_NULL);
-
-            editText_HoraFinalizacion.setEnabled(false);
-            editText_HoraFinalizacion.setFocusable(false);
-            editText_HoraFinalizacion.setActivated(false);
-            editText_HoraFinalizacion.setClickable(false);
-            editText_HoraFinalizacion.setInputType(InputType.TYPE_NULL);
-
+            disableEditTextHoras();
             textView_button_publicar.setText("Actualizar asesoría");
             Boolean tipo =  Boolean.parseBoolean(String.valueOf(preferences.get("tipo")));
             String url = (String) preferences.get("url");
@@ -281,17 +298,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         else
         {
             status=true;
-            editText_HoraInicio.setEnabled(true);
-            editText_HoraInicio.setFocusable(true);
-            editText_HoraInicio.setActivated(true);
-            editText_HoraInicio.setClickable(true);
-            editText_HoraInicio.setInputType(InputType.TYPE_CLASS_TEXT);
-
-            editText_HoraFinalizacion.setEnabled(true);
-            editText_HoraFinalizacion.setFocusable(true);
-            editText_HoraFinalizacion.setActivated(true);
-            editText_HoraFinalizacion.setClickable(true);
-            editText_HoraFinalizacion.setInputType(InputType.TYPE_CLASS_TEXT);
+            enableEditTextHoras();
             textView_button_publicar.setText("Publicar asesoría");
         }
 
@@ -321,9 +328,10 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         radioBAPresencial = findViewById(R.id.radioButton_APresencial);
 
         editText_HoraInicio = findViewById(R.id.editText_HoraInicio);
-        editText_HoraInicio.setInputType(InputType.TYPE_NULL);
+        editText_HoraInicio.setLongClickable(false);
+
         editText_HoraFinalizacion = findViewById(R.id.editText_HoraFin);
-        editText_HoraFinalizacion.setInputType(InputType.TYPE_NULL);
+        editText_HoraFinalizacion.setLongClickable(false);
         textView_button_publicar = findViewById(R.id.textView_ButtonPublicar);
         editText_HoraInicio.setOnClickListener(this);
         editText_HoraFinalizacion.setOnClickListener(this);
@@ -491,26 +499,62 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         {
             if(sharedPreferencesHelper.hasData())
             {
-                ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
-                        "Terminando asesoría..", true);
-                dialog.show();
-                firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesoria(), false);
-                clear();
-                sharedPreferencesHelper.deletePreferences();
+                if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
+                {
+                    final Calendar cldr = Calendar.getInstance();
+                    final int hour = cldr.get(Calendar.HOUR_OF_DAY);
+                    int minutes = cldr.get(Calendar.MINUTE);
+                    int horaFin = Integer.parseInt(editText_HoraFinalizacion.getText().toString().substring(0, 2));
+                    int minfin = Integer.parseInt(editText_HoraFinalizacion.getText().toString().substring(3, 5));
+                    boolean isTarde = editText_HoraFinalizacion.getText().toString().substring(6).equals("pm");
+                    if(isTarde)
+                    {
+                        horaFin+=12;
 
-                textView_button_publicar.setText("Publicar asesoría");
-                editText_HoraInicio.setEnabled(true);
-                editText_HoraInicio.setFocusable(true);
-                editText_HoraInicio.setActivated(true);
-                editText_HoraInicio.setClickable(true);
-                editText_HoraInicio.setInputType(InputType.TYPE_CLASS_TEXT);
+                        if(horaFin>=hour && minfin>= minutes)
+                        {
+                            ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
+                                    "Terminando asesoría..", true);
+                            dialog.show();
+                            firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesoria(), false);
+                            clear();
+                            sharedPreferencesHelper.deletePreferences();
 
-                editText_HoraFinalizacion.setEnabled(true);
-                editText_HoraFinalizacion.setFocusable(true);
-                editText_HoraFinalizacion.setActivated(true);
-                editText_HoraFinalizacion.setClickable(true);
-                editText_HoraFinalizacion.setInputType(InputType.TYPE_CLASS_TEXT);
-                status=true;
+                            textView_button_publicar.setText("Publicar asesoría");
+                            enableEditTextHoras();
+                            status = true;
+                        }
+                        else
+                        {
+                            Toast.makeText(MainAdviserActivityApp.this,"Falta tiempo para terminar la asesoría", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    else
+                    {
+                        if(horaFin>=hour && minfin>= minutes)
+                        {
+                            ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
+                                    "Terminando asesoría..", true);
+                            dialog.show();
+                            firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesoria(), false);
+                            clear();
+                            sharedPreferencesHelper.deletePreferences();
+
+                            textView_button_publicar.setText("Publicar asesoría");
+                            enableEditTextHoras();
+                            status = true;
+                        }
+                        else
+                        {
+                            Toast.makeText(MainAdviserActivityApp.this,"Falta tiempo para terminar la asesoría", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                }
+                else
+                {
+                    Toast.makeText(MainAdviserActivityApp.this,"Error no puede continuar hasta que habilite la hora automática en su dispositivo", Toast.LENGTH_SHORT).show();
+                }
             }
             else
             {
@@ -720,7 +764,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                         }
 
                         int minutesInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(3,5));
-                        if((hour==horaInicio && (minutes==minutesInicio || (minutes-minutesInicio<=5 && minutes-minutesInicio>0))) || (hour==horaInicio+1 && (((60-minutesInicio)+minutes)>0 && ((60-minutesInicio)+minutes)<=5)) )
+                        if((hour==horaInicio && (minutes==minutesInicio || (minutes-minutesInicio<=5 && minutes-minutesInicio>0)))
+                                || (hour==horaInicio+1 && (((60-minutesInicio)+minutes)>0 && ((60-minutesInicio)+minutes)<=5)) )
                         {
                             if (getRangoValidoHoras()) {
 
@@ -737,17 +782,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                                 textView_button_publicar.setText("Actualizar asesoría");
                                 new AlertDialogTimeOff().alertDialogInformacion("Para actualizar su asesoría, se le informa que no podrá cambiar la hora de inicio ni de fin por seguridad y para proporcionar servicios se asesoría reales para los asesorados y evitar datos falso.\n" +
                                         "Gracias por su compresión.", MainAdviserActivityApp.this);
-                                editText_HoraInicio.setEnabled(false);
-                                editText_HoraInicio.setFocusable(false);
-                                editText_HoraInicio.setActivated(false);
-                                editText_HoraInicio.setClickable(false);
-                                editText_HoraInicio.setInputType(InputType.TYPE_NULL);
-
-                                editText_HoraFinalizacion.setEnabled(false);
-                                editText_HoraFinalizacion.setFocusable(false);
-                                editText_HoraFinalizacion.setActivated(false);
-                                editText_HoraFinalizacion.setClickable(false);
-                                editText_HoraFinalizacion.setInputType(InputType.TYPE_NULL);
+                                disableEditTextHoras();
 
 
                             }
