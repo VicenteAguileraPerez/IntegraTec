@@ -84,6 +84,7 @@ import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
 //import com.vicenteaguilera.integratec.helpers.utility.WaterMark;
 import com.vicenteaguilera.integratec.helpers.utility.WaterMark;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.AlertDialogTimeOff;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.ImagesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.InternetHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
@@ -131,6 +132,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private EditText editText_HoraInicio;
     private EditText editText_HoraFinalizacion;
     private CardView cardView_ButtonPublicar;
+    private CardView cardView_ButtonTerminar;
     private ImageButton imageButton_edit_image;
     private EditText editTextTextMultiLine;
     TextView textView_button_publicar;
@@ -157,7 +159,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private boolean flagDeleteData1=false;
     private boolean flagDeleteData2=false;
     private WifiReceiver wifiReceiver = new WifiReceiver();
-
+    private ButtonHelper buttonHelper = new ButtonHelper();
 
     @Override
     protected void onStop() {
@@ -191,8 +193,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             int hour = cldr.get(Calendar.HOUR_OF_DAY);
             Log.e("Hour: ", hour+"");
             if(hour>=8 && hour<20) {
-                editText_HoraInicio.setEnabled(true);
-                editText_HoraFinalizacion.setEnabled(true);
+                enableEditTextHoras();
                 cardView_ButtonPublicar.setEnabled(true);
             }
             else {
@@ -210,6 +211,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 }
 
                 disableEditTextHoras();
+                cardView_ButtonPublicar.setEnabled(false);
                 sharedPreferencesHelper.deletePreferences();
                 Log.e("EditText H_Inicio is: ", editText_HoraInicio.isEnabled()+"");
                 Log.e("EditText H_Fin is: ", editText_HoraFinalizacion.isEnabled()+"");
@@ -323,6 +325,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         editText_URL = findViewById(R.id.editView_URL);
         editTextTextMultiLine = findViewById(R.id.editTextTextMultiLine);
         cardView_ButtonPublicar = findViewById(R.id.cardView_ButtonPublicar);
+        cardView_ButtonTerminar = findViewById(R.id.cardView_ButtonTerminar);
         textView_Nombre = findViewById(R.id.textView_Nombre);
         radioButton_AOnline = findViewById(R.id.radioButton_AOnline);
         radioBAPresencial = findViewById(R.id.radioButton_APresencial);
@@ -336,6 +339,9 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         editText_HoraInicio.setOnClickListener(this);
         editText_HoraFinalizacion.setOnClickListener(this);
         cardView_ButtonPublicar.setOnClickListener(this);
+
+        buttonHelper.actionClickButton(cardView_ButtonPublicar, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
+        buttonHelper.actionClickButton(cardView_ButtonTerminar, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
 
         editText_URL.requestFocus();
         editTextFocusListener();
@@ -719,6 +725,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 else
                 {
                     editText_HoraInicio.setError("La hora de inicio debe estar entre las 8:00am y 8:00pm");
+                    Toast.makeText(MainAdviserActivityApp.this, "La hora de inicio debe estar entre las 8:00am y 8:00pm", Toast.LENGTH_SHORT).show();
                 }
             }
             else
@@ -738,6 +745,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 else
                 {
                     editText_HoraFinalizacion.setError("La hora de fin debe estar entre las 8:00am y 8:00pm");
+                    Toast.makeText(MainAdviserActivityApp.this, "La hora de fin debe estar entre las 8:00am y 8:00pm", Toast.LENGTH_SHORT).show();
                 }
             }
             else
@@ -756,7 +764,14 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                         int horaInicio;
                         if(editText_HoraInicio.getText().toString().substring(6).equals("pm"))
                         {
-                            horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2))+12;
+                            if(editText_HoraInicio.getText().toString().substring(0,2).equals("12"))
+                            {
+                                horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2));
+                            }
+                            else
+                            {
+                                horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2))+12;
+                            }
                         }
                         else
                         {
@@ -932,7 +947,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             public void onTimeSet(TimePicker timePicker, int hrs, int min) {
 
 
-                    Toast.makeText(MainAdviserActivityApp.this, hrs + ":" + min, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MainAdviserActivityApp.this, hrs + ":" + min, Toast.LENGTH_SHORT).show();
                     String aux = "am";
                     if (hrs > 12) {
                         hrs = hrs - 12;
@@ -1244,6 +1259,9 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         CardView cardView_ButtonUpdate = dialogEditProfile.findViewById(R.id.cardView_Button_Update);
         CardView cardView_ButtonClose = dialogEditProfile.findViewById(R.id.cardView_ButtonClose);
 
+        buttonHelper.actionClickButton(cardView_ButtonUpdate, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
+        buttonHelper.actionClickButton(cardView_ButtonClose, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
+
         ArrayAdapter<String> arrayAdapterCareer = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
         spinner_career.setAdapter(arrayAdapterCareer);
 
@@ -1286,7 +1304,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     dialog.show();
                     firestoreHelper.updateDataAsesor(editText_Name.getText().toString(), editText_LastNames.getText().toString(),
                             String.valueOf(spinner_career.getSelectedItem()),dialog,MainAdviserActivityApp.this);
-
+                    dialogEditProfile.dismiss();
                    // Toast.makeText(MainAdviserActivityApp.this, "Actualizando datos...", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -1316,6 +1334,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         CardView cardView_Button_CreatePDF2= dialogNewSemester.findViewById(R.id.cardView_Button_CreatePDF2);
         CardView cardView_ButtonDelete= dialogNewSemester.findViewById(R.id.cardView_Button_Delete);
         CardView cardView_ButtonCancel = dialogNewSemester.findViewById(R.id.cardView_ButtonCancel);
+
+        buttonHelper.actionClickButton(cardView_Button_CreatePDF1, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
+        buttonHelper.actionClickButton(cardView_Button_CreatePDF2, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
+        buttonHelper.actionClickButton(cardView_ButtonDelete, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
+        buttonHelper.actionClickButton(cardView_ButtonCancel, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
 
         cardView_Button_CreatePDF1.setOnClickListener(new View.OnClickListener() {
             @Override

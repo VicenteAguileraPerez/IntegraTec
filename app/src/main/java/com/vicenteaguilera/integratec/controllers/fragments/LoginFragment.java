@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseQueryHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.StringHelper;
 
@@ -28,10 +29,11 @@ public class LoginFragment extends Fragment  implements Status{
 
     private CardView cardView_ButtonRegistrarse;
     private CardView cardView_ButtonIniciarSesion;
-    //private CardView cardView_ButtonOlvidastePass;
+    private CardView cardView_OlvidastePass;
     private EditText editText_email,editText_password;
     private FirebaseAuthHelper firebaseAuthHelper = new FirebaseAuthHelper();
     private StringHelper stringHelper = new StringHelper();
+    private ButtonHelper buttonHelper = new ButtonHelper();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,8 +57,10 @@ public class LoginFragment extends Fragment  implements Status{
 
         editText_email= view.findViewById(R.id.editText_nombre);
         editText_password = view.findViewById(R.id.editText_apellidos);
-
         cardView_ButtonRegistrarse = view.findViewById(R.id.cardView_ButtonRegistrarse);
+        cardView_ButtonIniciarSesion = view.findViewById(R.id.cardView_ButtonIniciarSesion);
+        cardView_OlvidastePass = view.findViewById(R.id.cardView_OlvidastePass);
+
         cardView_ButtonRegistrarse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,7 +68,6 @@ public class LoginFragment extends Fragment  implements Status{
             }
         });
 
-        cardView_ButtonIniciarSesion = view.findViewById(R.id.cardView_ButtonIniciarSesion);
         cardView_ButtonIniciarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,14 +102,16 @@ public class LoginFragment extends Fragment  implements Status{
             }
         });
 
-        view.findViewById(R.id.cardView_OlvidastePass)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showDialogRecoverPass();
-                    }
-                });
+        cardView_OlvidastePass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialogRecoverPass();
+            }
+        });
 
+        buttonHelper.actionClickButton(cardView_ButtonIniciarSesion, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
+        buttonHelper.actionClickButton(cardView_ButtonRegistrarse, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
+        buttonHelper.actionClickButton(cardView_OlvidastePass, getResources().getColor(R.color.gray), getResources().getColor(R.color.white));
     }
 
     private void showDialogRecoverPass() {
@@ -125,6 +130,9 @@ public class LoginFragment extends Fragment  implements Status{
         final EditText editText_Email = dialogRecoverPass.findViewById(R.id.textView_email);
         CardView cardView_ButtonSend = dialogRecoverPass.findViewById(R.id.cardView_Button_Send);
         CardView cardView_ButtonCancel = dialogRecoverPass.findViewById(R.id.cardView_ButtonCancel);
+
+        buttonHelper.actionClickButton(cardView_ButtonSend, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
+        buttonHelper.actionClickButton(cardView_ButtonCancel, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
 
         cardView_ButtonSend.setOnClickListener(new View.OnClickListener() {
             @Override

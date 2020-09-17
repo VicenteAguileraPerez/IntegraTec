@@ -19,6 +19,7 @@ import com.vicenteaguilera.integratec.controllers.ListAdviserActivity;
 import com.vicenteaguilera.integratec.controllers.OptionsActivity;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.InternetHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
@@ -30,6 +31,8 @@ public class MainAppActivity extends AppCompatActivity implements View.OnClickLi
     private final InternetHelper internetHelper = new InternetHelper();
     private CardView button_asesores_disponibles,button_sesion_asesor;
     private WifiReceiver wifiReceiver = new WifiReceiver();
+    private ButtonHelper buttonHelper = new ButtonHelper();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +43,8 @@ public class MainAppActivity extends AppCompatActivity implements View.OnClickLi
         button_sesion_asesor = findViewById(R.id.button_sesion_asesores);
         button_sesion_asesor.setOnClickListener(this);
         button_asesores_disponibles.setOnClickListener(this);
+        buttonHelper.actionClickButton(button_sesion_asesor, getResources().getColor(R.color.color_blue1_light), getResources().getColor(R.color.color_blue1));
+        buttonHelper.actionClickButton(button_asesores_disponibles, getResources().getColor(R.color.color_blue1_light), getResources().getColor(R.color.color_blue1));
     }
     @Override
     protected void onStart() {

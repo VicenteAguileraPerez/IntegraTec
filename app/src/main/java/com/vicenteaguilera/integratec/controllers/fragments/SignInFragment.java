@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.vicenteaguilera.integratec.R;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.StringHelper;
 
@@ -27,7 +28,7 @@ public class SignInFragment extends Fragment  {
     private ImageButton imageButton;
     private EditText editText_email,editText_password,editText_password_confirm,editText_codigo;
     private StringHelper stringHelper = new StringHelper();
-
+    private ButtonHelper buttonHelper = new ButtonHelper();
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -54,6 +55,7 @@ public class SignInFragment extends Fragment  {
         editText_password_confirm = view.findViewById(R.id.editText_password_confirm);
         editText_codigo = view.findViewById(R.id.editText_codigo);
 
+        buttonHelper.actionClickButton(cardView_ButtonSiguiente, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
 
         cardView_ButtonSiguiente.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -26,6 +26,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
 
@@ -51,6 +52,7 @@ public class CreateCodeQRActivity extends AppCompatActivity {
     private CardView cardView_ButtonGuardarQR;
     private Bitmap bitmap;
     private WifiReceiver wifiReceiver = new WifiReceiver();
+    private ButtonHelper buttonHelper = new ButtonHelper();
 
     @Override
     protected void onStart() {
@@ -118,6 +120,8 @@ public class CreateCodeQRActivity extends AppCompatActivity {
                 }
             }
         });
+        buttonHelper.actionClickButton(cardView_ButtonGuardarQR, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
+        buttonHelper.actionClickButton(cardView_BtnCrearQR, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
     }
 
 

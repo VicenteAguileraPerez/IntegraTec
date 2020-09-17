@@ -19,6 +19,7 @@ import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.adapters.AsesoriaRealtimeAdapter;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.AlertDialogTimeOff;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.InternetHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
@@ -37,6 +38,7 @@ public class ListAdviserActivity extends AppCompatActivity implements ListaAseso
     private TextView textView_no_asesores;
     private WifiReceiver wifiReceiver = new WifiReceiver();
     private InternetHelper internetHelper = new InternetHelper();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

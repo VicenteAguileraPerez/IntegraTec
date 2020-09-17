@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.google.android.material.snackbar.Snackbar;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
 
@@ -33,7 +34,7 @@ public class SignInTwoFragment extends Fragment implements Status {
     private EditText editText_nombre,editText_apellidos;
     private  String email, password;
     private FirebaseAuthHelper firebaseAuthHelper = new FirebaseAuthHelper();
-
+    private ButtonHelper buttonHelper = new ButtonHelper();
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -77,6 +78,7 @@ public class SignInTwoFragment extends Fragment implements Status {
         editText_apellidos = view.findViewById(R.id.editText_apellidos);
 
         cardView_ButtonRegistrarse = view.findViewById(R.id.cardView_ButtonRegistrarse);
+        buttonHelper.actionClickButton(cardView_ButtonRegistrarse, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
         cardView_ButtonRegistrarse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -14,6 +14,7 @@ import androidx.cardview.widget.CardView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.vicenteaguilera.integratec.R;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.SenderAsyncTask;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.StringHelper;
@@ -33,7 +34,7 @@ public class ComplaintSuggestionsActivity extends AppCompatActivity implements V
     private EditText editText_email;
     private EditText editText_mensaje;
     private EditText editText_nombre;
-
+    private ButtonHelper buttonHelper = new ButtonHelper();
 
     private WifiReceiver wifiReceiver = new WifiReceiver();
 
@@ -65,6 +66,7 @@ public class ComplaintSuggestionsActivity extends AppCompatActivity implements V
         radioGroup_topic = findViewById(R.id.radioGroup_topic);
         cardView_ButtonEnviar = findViewById(R.id.cardView_ButtonEnviar);
         cardView_ButtonEnviar.setOnClickListener(this);
+        buttonHelper.actionClickButton(cardView_ButtonEnviar, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
         radioButtonListener();
     }
 
