@@ -173,7 +173,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(wifiReceiver,intentFilter);
 
-        cancelarAsesoriaDespuesDeHora();
+        //cancelarAsesoriaDespuesDeHora();
 
         clear();
         //sharedPreferencesHelper.deletePreferences();
@@ -505,8 +505,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         {
             if(sharedPreferencesHelper.hasData())
             {
-                if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
-                {
+                //if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
+                //{
                     final Calendar cldr = Calendar.getInstance();
                     final int hour = cldr.get(Calendar.HOUR_OF_DAY);
                     int minutes = cldr.get(Calendar.MINUTE);
@@ -515,9 +515,12 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     boolean isTarde = editText_HoraFinalizacion.getText().toString().substring(6).equals("pm");
                     if(isTarde)
                     {
-                        horaFin+=12;
+                        if(horaFin!=12)
+                        {
+                            horaFin+=12;
+                        }
 
-                        if(horaFin>=hour && minfin>= minutes)
+                        if((horaFin<=hour && minutes-minfin>=0) || hour-horaFin>=2)
                         {
                             ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
                                     "Terminando asesoría..", true);
@@ -537,7 +540,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     }
                     else
                     {
-                        if(horaFin>=hour && minfin>= minutes)
+                        if((horaFin<=hour && minutes-minfin>=0) || hour-horaFin>=2)
                         {
                             ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
                                     "Terminando asesoría..", true);
@@ -556,11 +559,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                         }
                     }
 
-                }
-                else
+                //}
+                /*else
                 {
                     Toast.makeText(MainAdviserActivityApp.this,"Error no puede continuar hasta que habilite la hora automática en su dispositivo", Toast.LENGTH_SHORT).show();
-                }
+                }*/
             }
             else
             {
@@ -753,35 +756,10 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 editText_HoraFinalizacion.setError("Seleccionar hora de finalización.");
             }
 
-            if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
-            {
+            //if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
+            //{
                     if(((flag_radioButton || flag_otherPlace)) && flag_spinnerMateria && flag_TimeStar && flag_TimeEnd)
                     {
-                        final Calendar cldr = Calendar.getInstance();
-                        final int hour = cldr.get(Calendar.HOUR_OF_DAY);
-                        int minutes = cldr.get(Calendar.MINUTE);
-
-                        int horaInicio;
-                        if(editText_HoraInicio.getText().toString().substring(6).equals("pm"))
-                        {
-                            if(editText_HoraInicio.getText().toString().substring(0,2).equals("12"))
-                            {
-                                horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2));
-                            }
-                            else
-                            {
-                                horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2))+12;
-                            }
-                        }
-                        else
-                        {
-                            horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2));
-                        }
-
-                        int minutesInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(3,5));
-                        if((hour==horaInicio && (minutes==minutesInicio || (minutes-minutesInicio<=5 && minutes-minutesInicio>0)))
-                                || (hour==horaInicio+1 && (((60-minutesInicio)+minutes)>0 && ((60-minutesInicio)+minutes)<=5)) )
-                        {
                             if (getRangoValidoHoras()) {
 
                                 //firebase
@@ -801,17 +779,12 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
 
                             }
-                        }
-                        else
-                        {
-                            Toast.makeText(MainAdviserActivityApp.this,"La hora de inicio debe ser igual o menor a 5 min a la hora actual", Toast.LENGTH_SHORT).show();
-                        }
                     }
-            }
-            else
+            //}
+            /*else
             {
                 Toast.makeText(MainAdviserActivityApp.this,"Error no puede continuar hasta que habilite la hora automática en su dispositivo", Toast.LENGTH_SHORT).show();
-            }
+            }*/
 
     }
 
@@ -970,95 +943,84 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     }
     private boolean getRangoValidoHoras()
     {
-       boolean  flag_TimeValid=false;
+        boolean  flag_TimeValid=false;
 
-        if((editText_HoraInicio.getText().toString().substring(6).equals("pm") && editText_HoraFinalizacion.getText().toString().substring(6).equals("pm")) || (editText_HoraInicio.getText().toString().substring(6).equals("am") && editText_HoraFinalizacion.getText().toString().substring(6).equals("am") ))
-        {
-            int horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2));
-            int horaFin = Integer.parseInt(editText_HoraFinalizacion.getText().toString().substring(0,2));
-            Log.e("if",horaInicio+" "+horaFin);
-            //evalua horas para calcular que si sea una hora min
-            if(horaInicio<horaFin)
-            {
-                //evalua min
-                horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(3,5));
-                horaFin = Integer.parseInt(editText_HoraFinalizacion.getText().toString().substring(3,5));
-                if((horaInicio-horaFin)<=0)
-                {
-                    flag_TimeValid = true;
-                }
-                else
-                {
-                    Toast.makeText(MainAdviserActivityApp.this,"Las asesorías deben durar 1 hora.", Toast.LENGTH_SHORT).show();
-                    editText_HoraInicio.setError("Hora inválida.");
-                    editText_HoraFinalizacion.setError("Hora inválida.");
-                    editText_HoraInicio.getText().clear();
-                    editText_HoraFinalizacion.getText().clear();
-                }
+        final Calendar cldr = Calendar.getInstance();
+        final int hour = cldr.get(Calendar.HOUR_OF_DAY);
+        int minutes = cldr.get(Calendar.MINUTE);
+
+        int horaInicio;
+        int horaFin;
+        int minutesInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(3,5));
+        int minutesFin = Integer.parseInt(editText_HoraFinalizacion.getText().toString().substring(3,5));
+
+        if(editText_HoraInicio.getText().toString().substring(6).equals("pm")) {
+            if(editText_HoraInicio.getText().toString().substring(0,2).equals("12")) {
+                horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2));
             }
-            else if(horaInicio==horaFin)
-            {
-                Toast.makeText(MainAdviserActivityApp.this,"Las asesorías deben durar 1 hora.", Toast.LENGTH_SHORT).show();
-                editText_HoraInicio.setError("Hora inválida.");
-                editText_HoraFinalizacion.setError("Hora inválida.");
-                editText_HoraInicio.getText().clear();
-                editText_HoraFinalizacion.getText().clear();
-            }
-            else
-            {
-                Toast.makeText(MainAdviserActivityApp.this,"Hora de inicio es mayor que hora final.", Toast.LENGTH_SHORT).show();
-                editText_HoraInicio.setError("Hora inválida.");
-                editText_HoraFinalizacion.setError("Hora inválida.");
-                editText_HoraInicio.getText().clear();
-                editText_HoraFinalizacion.getText().clear();
+            else {
+                horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2))+12;
             }
         }
-        else
-        {
-            if((editText_HoraInicio.getText().toString().substring(6).equals("am") && editText_HoraFinalizacion.getText().toString().substring(6).equals("pm")))
+        else {
+            horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2));
+        }
+
+        if(editText_HoraFinalizacion.getText().toString().substring(6).equals("pm")) {
+            if(editText_HoraFinalizacion.getText().toString().substring(0,2).equals("12")) {
+                horaFin = Integer.parseInt(editText_HoraFinalizacion.getText().toString().substring(0,2));
+            }
+            else {
+                horaFin = Integer.parseInt(editText_HoraFinalizacion.getText().toString().substring(0,2))+12;
+            }
+        }
+        else {
+            horaFin = Integer.parseInt(editText_HoraFinalizacion.getText().toString().substring(0,2));
+        }
+
+        if((hour==horaInicio && (minutes==minutesInicio || (minutes-minutesInicio<=5 && minutes-minutesInicio>0)))
+                || (hour==horaInicio+1 && (((60-minutesInicio)+minutes)>0 && ((60-minutesInicio)+minutes)<=5)) ) {
+
+            if((editText_HoraInicio.getText().toString().substring(6).equals("am") && editText_HoraFinalizacion.getText().toString().substring(6).equals("am") || (editText_HoraInicio.getText().toString().substring(6).equals("pm") && editText_HoraFinalizacion.getText().toString().substring(6).equals("pm")) || (editText_HoraInicio.getText().toString().substring(6).equals("am") && editText_HoraFinalizacion.getText().toString().substring(6).equals("pm"))))
             {
-                int horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0,2));
-                int horaFin = Integer.parseInt(editText_HoraFinalizacion.getText().toString().substring(0,2));
                 if(horaFin-horaInicio==1)
                 {
-                    horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(3,5));
-                    horaFin = Integer.parseInt(editText_HoraFinalizacion.getText().toString().substring(3,5));
-                    if((horaInicio-horaFin)<=0)
+                    //evalua min
+                    if((minutesInicio-minutesFin)<=0)
                     {
                         flag_TimeValid = true;
                     }
                     else
                     {
-                        Toast.makeText(MainAdviserActivityApp.this,"Las asesorías deben durar 1 hora.", Toast.LENGTH_SHORT).show();
-                        editText_HoraInicio.setError("Hora inválida.");
-                        editText_HoraFinalizacion.setError("Hora inválida.");
-                        editText_HoraInicio.getText().clear();
-                        editText_HoraFinalizacion.getText().clear();
-                        return  false;
+                        clearAndShowMessage("Las asesorías deben durar 1 hora.");
                     }
                 }
-                else if(horaFin-horaInicio>1) {
+                else if(horaFin-horaInicio>1)
+                {
                     flag_TimeValid = true;
                 }
-                else
+                else if(horaInicio==horaFin)
                 {
-                    Toast.makeText(MainAdviserActivityApp.this, "Hora de inicio es mayor que hora final", Toast.LENGTH_SHORT).show();
-                    editText_HoraInicio.setError("Hora invalida");
-                    editText_HoraFinalizacion.setError("Hora invalida");
-                    editText_HoraInicio.getText().clear();
-                    editText_HoraFinalizacion.getText().clear();
+                    clearAndShowMessage("Las asesorías deben durar 1 hora.");
                 }
             }
-            else {
-                Toast.makeText(MainAdviserActivityApp.this, "Hora de inicio es mayor que hora final", Toast.LENGTH_SHORT).show();
-                editText_HoraInicio.setError("Hora invalida");
-                editText_HoraFinalizacion.setError("Hora invalida");
-                editText_HoraInicio.getText().clear();
-                editText_HoraFinalizacion.getText().clear();
-            }
+        }
+        else
+        {
+             clearAndShowMessage("La hora de inicio debe ser igual o menor a 5 min a la hora actual.");
         }
         return flag_TimeValid;
     }
+
+    private void clearAndShowMessage(String message)
+    {
+        Toast.makeText(MainAdviserActivityApp.this,message, Toast.LENGTH_SHORT).show();
+        editText_HoraInicio.setError("Hora inválida.");
+        editText_HoraFinalizacion.setError("Hora inválida.");
+        editText_HoraInicio.getText().clear();
+        editText_HoraFinalizacion.getText().clear();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
