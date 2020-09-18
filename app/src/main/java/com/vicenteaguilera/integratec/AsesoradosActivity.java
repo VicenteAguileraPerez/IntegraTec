@@ -68,6 +68,7 @@ public class AsesoradosActivity extends AppCompatActivity {
         listaInformacion = new ArrayList<String>();
         listView_BD = findViewById(R.id.listView_BD);
 
+
         helper = new DataBaseHelper(AsesoradosActivity.this, PropiertiesHelper.NOMBRE_BD, null, 1);
 
         consultarBD();
@@ -364,6 +365,7 @@ public class AsesoradosActivity extends AppCompatActivity {
         menuInflater.inflate(R.menu.menu_crud_activity, menu);
         MenuItem menuItem = menu.findItem(R.id.item_buscar);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        searchView.setQueryHint(getResources().getString(R.string.buscar));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -411,9 +413,11 @@ public class AsesoradosActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+
         switch (item.getItemId()){
 
             case R.id.item_add_asesorado:
+
                 showDialogAddAlumno();
                 break;
 

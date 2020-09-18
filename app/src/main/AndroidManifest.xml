@@ -21,7 +21,9 @@
         android:theme="@style/AppTheme">
         <activity android:name=".AsesoradosActivity"
             android:screenOrientation="portrait"
+
             android:parentActivityName=".controllers.MainAdviserActivityApp"/>
+
         <activity android:name=".CreateCodeQRActivity" android:screenOrientation="portrait" />
         <activity android:name=".controllers.MainAdviserActivityApp" android:screenOrientation="portrait"/>
         <activity

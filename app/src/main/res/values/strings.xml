@@ -93,6 +93,9 @@
     <string name="carrera">Carrera:</string>
     <string name="semestre_dialog">Semestre:</string>
     <string name="mis_asesorados">Mis asesorados</string>
+    <string name="buscar">Buscar por nombre o número de control</string>
+    <string name="agregar_asesorado">Agregar asesorado</string>
+    <string name="sin_registros_para_mostrar">Sin registros para mostrar</string>
 
 
 </resources>

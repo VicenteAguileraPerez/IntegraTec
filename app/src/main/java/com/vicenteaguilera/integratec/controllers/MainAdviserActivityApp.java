@@ -1143,7 +1143,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             final TextView textView_Tema = dialogRegistrar.findViewById(R.id.textView_Tema);
             final TextView textView_Fecha = dialogRegistrar.findViewById(R.id.textView_Fecha);
 
-            textView_NumeroControl.setText("Número de contro:"+array[0]);
+            textView_NumeroControl.setText("Número de control:"+array[0]);
             textView_Nombre.setText("Nombre completo:"+array[1]);
             textView_Carrera.setText("Carrera:"+array[2]);
             textView_Materia.setText("Materia:"+array[3]);
