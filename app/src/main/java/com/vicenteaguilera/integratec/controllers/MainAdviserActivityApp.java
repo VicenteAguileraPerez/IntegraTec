@@ -567,7 +567,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             }
             else
             {
-                Snackbar.make(cardView_ButtonPublicar.getRootView(),"Debes de crear una asesoría antes de eliminarla",Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(view,"Debes de crear una asesoría antes de eliminarla",Snackbar.LENGTH_SHORT).show();
             }
 
         }
@@ -740,8 +740,9 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             if(!editText_HoraFinalizacion.getText().toString().isEmpty())
             {
                 int horaFin = Integer.parseInt(editText_HoraFinalizacion.getText().toString().substring(0,2));
+                String minFin = editText_HoraFinalizacion.getText().toString().substring(3,5);
                 String aux = editText_HoraFinalizacion.getText().toString().substring(6,8);
-                if((((horaFin>=1 && horaFin<8) || horaFin==12) && aux.equals("pm")) || ((horaFin>=8 && horaFin<=11) && aux.equals("am")))
+                if(((((horaFin>=1 && horaFin<8) || (horaFin>=1 && horaFin<=8 && minFin.equals("00"))) || horaFin==12) && aux.equals("pm")) || ((horaFin>=8 && horaFin<=11) && aux.equals("am")))
                 {
                     flag_TimeEnd=true;
                 }
