@@ -190,24 +190,49 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
         {
             Calendar cldr = Calendar.getInstance();
-            int hour = cldr.get(Calendar.HOUR_OF_DAY);
-            Log.e("Hour: ", hour+"");
-            if(hour>=8 && hour<20) {
-                enableEditTextHoras();
-                cardView_ButtonPublicar.setEnabled(true);
+            if(cldr.get(Calendar.DAY_OF_WEEK)>=Calendar.MONDAY && cldr.get(Calendar.DAY_OF_WEEK)>=Calendar.FRIDAY)
+            {
+                int hour = cldr.get(Calendar.HOUR_OF_DAY);
+                Log.e("Hour: ", hour+"");
+                if(hour>=8 && hour<20) {
+                    enableEditTextHoras();
+                    cardView_ButtonPublicar.setEnabled(true);
+                }
+                else {
+                    if(sharedPreferencesHelper.hasData())
+                    {
+                        ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "", "Terminando asesoría...", true);
+                        dialog.show();
+                        firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesoria(), false);
+                        Toast.makeText(MainAdviserActivityApp.this,"Terminamos la asesoría porque ya pasa de las horas hábiles de asesorias.", Toast.LENGTH_SHORT).show();
+                        new AlertDialogTimeOff().alertDialogInformacion("No puede crear asesorías hasta las horas hábiles de 8:00 am a 8:00 pm y terminamos la asesoría publicada.",MainAdviserActivityApp.this);
+                    }
+                    else
+                    {
+                        new AlertDialogTimeOff().alertDialogInformacion("No puede crear asesorías hasta las horas hábiles de 8:00 am a 8:00 pm",MainAdviserActivityApp.this);
+                    }
+
+                    disableEditTextHoras();
+                    cardView_ButtonPublicar.setEnabled(false);
+                    sharedPreferencesHelper.deletePreferences();
+                    Log.e("EditText H_Inicio is: ", editText_HoraInicio.isEnabled()+"");
+                    Log.e("EditText H_Fin is: ", editText_HoraFinalizacion.isEnabled()+"");
+                    clear();
+                }
             }
-            else {
+            else
+            {
                 if(sharedPreferencesHelper.hasData())
                 {
                     ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "", "Terminando asesoría...", true);
                     dialog.show();
                     firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesoria(), false);
                     Toast.makeText(MainAdviserActivityApp.this,"Terminamos la asesoría porque ya pasa de las horas hábiles de asesorias.", Toast.LENGTH_SHORT).show();
-                    new AlertDialogTimeOff().alertDialogInformacion("No puede crear asesorías hasta las horas hábiles de 8:00 am a 8:00 pm y terminamos la asesoría publicada.",MainAdviserActivityApp.this);
+                    new AlertDialogTimeOff().alertDialogInformacion("No puede crear asesorías solo de Lunes a Viernes y terminamos la asesoría publicada.",MainAdviserActivityApp.this);
                 }
                 else
                 {
-                    new AlertDialogTimeOff().alertDialogInformacion("No puede crear asesorías hasta las horas hábiles de 8:00 am a 8:00 pm",MainAdviserActivityApp.this);
+                    new AlertDialogTimeOff().alertDialogInformacion("No puede crear asesorías, solo de Lunes a Viernes",MainAdviserActivityApp.this);
                 }
 
                 disableEditTextHoras();
@@ -217,6 +242,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 Log.e("EditText H_Fin is: ", editText_HoraFinalizacion.isEnabled()+"");
                 clear();
             }
+
         }
         else {
             Intent intent = new Intent(MainAdviserActivityApp.this,MainAppActivity.class);
