@@ -173,7 +173,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(wifiReceiver,intentFilter);
 
-        //cancelarAsesoriaDespuesDeHora();
+        cancelarAsesoriaDespuesDeHora();
 
         clear();
         //sharedPreferencesHelper.deletePreferences();
@@ -303,9 +303,6 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             enableEditTextHoras();
             textView_button_publicar.setText("Publicar asesoría");
         }
-
-
-
     }
 
     @Override
@@ -433,17 +430,21 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             case R.id.item_Leer_QR:
                 escanearQR();
                 break;
+
             case R.id.item_Crear_QR:
                 intent = new Intent(this, CreateCodeQRActivity.class);
                 startActivity(intent);
                 break;
+
             case R.id.item_Asesorados:
                 intent = new Intent(this, AsesoradosActivity.class);
                 startActivity(intent);
                 break;
+
             case R.id.item_EditarPerfil:
                 showDialogEditProfile();
                 break;
+
             case R.id.item_Crear_PDF_asesorados:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     flagPDFAsesorados=true;
@@ -456,6 +457,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     crearPdf();
                 }
                 break;
+
             case R.id.item_Crear_PDF_asesorias:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     flagPDFAsesorados=false;
@@ -470,6 +472,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 /*intent = new Intent(this, AsesoradosActivity.class);
                 startActivity(intent);*/
                 break;
+
             case R.id.item_nuevo_semestre:
                 showDialogNewSemester();
                 break;
@@ -494,7 +497,6 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
            if(status)
            {
                publicarAsesoria(view);
-
            }
            else
            {
@@ -505,8 +507,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         {
             if(sharedPreferencesHelper.hasData())
             {
-                //if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
-                //{
+                if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
+                {
                     final Calendar cldr = Calendar.getInstance();
                     final int hour = cldr.get(Calendar.HOUR_OF_DAY);
                     int minutes = cldr.get(Calendar.MINUTE);
@@ -559,19 +561,17 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                         }
                     }
 
-                //}
-                /*else
+                }
+                else
                 {
                     Toast.makeText(MainAdviserActivityApp.this,"Error no puede continuar hasta que habilite la hora automática en su dispositivo", Toast.LENGTH_SHORT).show();
-                }*/
+                }
             }
             else
             {
                 Snackbar.make(view,"Debes de crear una asesoría antes de eliminarla",Snackbar.LENGTH_SHORT).show();
             }
-
         }
-
     }
 
     private void actualizarAsesoría(View view)
@@ -584,7 +584,6 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         editText_HoraInicio.setError(null);
         editText_HoraFinalizacion.setError(null);
         editTextText_otroLugar.setError(null);
-
 
         if(radioBAPresencial.isChecked())
         {
@@ -636,7 +635,6 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         }
         if(((flag_radioButton || flag_otherPlace)) && flag_spinnerMateria )
         {
-
                 //firebase
                 ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
                         "Actualizando asesoría..." , true);
@@ -645,15 +643,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
                 //shared preferences
                 sharedPreferencesHelper.addPreferences(dataToSave());
-
         }
-
-
     }
 
     private void publicarAsesoria(View view)
     {
-
             boolean flag_radioButton = false;
             boolean flag_spinnerMateria = false;
             boolean flag_TimeStar=false;
@@ -664,7 +658,6 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             editText_HoraInicio.setError(null);
             editText_HoraFinalizacion.setError(null);
             editTextText_otroLugar.setError(null);
-
 
             if(radioBAPresencial.isChecked())
             {
@@ -757,8 +750,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 editText_HoraFinalizacion.setError("Seleccionar hora de finalización.");
             }
 
-            //if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
-            //{
+            if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
+            {
                     if(((flag_radioButton || flag_otherPlace)) && flag_spinnerMateria && flag_TimeStar && flag_TimeEnd)
                     {
                             if (getRangoValidoHoras()) {
@@ -777,16 +770,13 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                                 new AlertDialogTimeOff().alertDialogInformacion("Para actualizar su asesoría, se le informa que no podrá cambiar la hora de inicio ni de fin por seguridad y para proporcionar servicios se asesoría reales para los asesorados y evitar datos falso.\n" +
                                         "Gracias por su compresión.", MainAdviserActivityApp.this);
                                 disableEditTextHoras();
-
-
                             }
                     }
-            //}
-            /*else
+            }
+            else
             {
                 Toast.makeText(MainAdviserActivityApp.this,"Error no puede continuar hasta que habilite la hora automática en su dispositivo", Toast.LENGTH_SHORT).show();
-            }*/
-
+            }
     }
 
     private Map<String, Object> returnAsesoria()
@@ -840,6 +830,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             }
         });
     }
+
     private void radioButtonListener()
     {
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
@@ -898,7 +889,6 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) { }
         });
-
     }
 
     private void getHora(final EditText view) {
@@ -919,7 +909,6 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
             @Override
             public void onTimeSet(TimePicker timePicker, int hrs, int min) {
-
 
                     //Toast.makeText(MainAdviserActivityApp.this, hrs + ":" + min, Toast.LENGTH_SHORT).show();
                     String aux = "am";
@@ -942,6 +931,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         }
         picker.show();
     }
+
     private boolean getRangoValidoHoras()
     {
         boolean  flag_TimeValid=false;
@@ -1033,12 +1023,9 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 imagen = ImagesHelper.from(getApplicationContext(),uri);
                 imagen= new Compressor(getApplicationContext()).compressToFile(imagen);
 
-
                 setImage(imagen);
                 firebaseStorageHelper.deleteImage(FirestoreHelper.asesor.getUid());
                 firebaseStorageHelper.addImage(FirestoreHelper.asesor.getUid(),Uri.fromFile(imagen));
-
-
             } catch (IOException | NullPointerException e) {
                 e.printStackTrace();
             }
@@ -1280,6 +1267,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             }
         });
     }
+
     public void showDialogNewSemester()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
