@@ -28,6 +28,7 @@ import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
 import com.vicenteaguilera.integratec.models.RealtimeAsesoria;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class ListAdviserActivity extends AppCompatActivity implements ListaAsesores, Status {
@@ -56,17 +57,27 @@ public class ListAdviserActivity extends AppCompatActivity implements ListaAseso
     {
         if(internetHelper.timeAutomatically(getContentResolver()))
         {
-            int hora = Integer.parseInt(PropiertiesHelper.getHora("HH:mm").substring(0,2));
-            if(hora>7 && hora<20)
+            int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+            if(day >= Calendar.MONDAY && day <= Calendar.FRIDAY)
             {
-                new FirestoreHelper().listenAsesorias(this);
+                int hora = Integer.parseInt(PropiertiesHelper.getHora("HH:mm").substring(0, 2));
+                if (hora > 7 && hora < 20) {
+                    new FirestoreHelper().listenAsesorias(this);
+                }
+                else {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    textView_no_asesores.setVisibility(View.VISIBLE);
+                    textView_no_asesores.setText("No hay asesores por ahora.");
+                    new AlertDialogTimeOff().alertDialogInformacion("Las asesorías estarán disponibles entre 8:00 am y las 8:00 pm.", ListAdviserActivity.this);
+
+                }
             }
             else
             {
                 progressBar.setVisibility(View.INVISIBLE);
                 textView_no_asesores.setVisibility(View.VISIBLE);
                 textView_no_asesores.setText("No hay asesores por ahora.");
-                new AlertDialogTimeOff().alertDialogInformacion("Las asesorías estarán disponibles entre 8:00 am y las 8:00 pm.",ListAdviserActivity.this);
+                new AlertDialogTimeOff().alertDialogInformacion("Las asesorías están disponibles de Lunes a Viernes", ListAdviserActivity.this);
 
             }
         }
