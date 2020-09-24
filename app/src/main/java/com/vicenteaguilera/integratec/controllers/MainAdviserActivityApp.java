@@ -190,7 +190,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
         {
             Calendar cldr = Calendar.getInstance();
-            if(cldr.get(Calendar.DAY_OF_WEEK)>=Calendar.MONDAY && cldr.get(Calendar.DAY_OF_WEEK)>=Calendar.FRIDAY)
+            if(cldr.get(Calendar.DAY_OF_WEEK)>=Calendar.MONDAY && cldr.get(Calendar.DAY_OF_WEEK)<=Calendar.FRIDAY)
             {
                 int hour = cldr.get(Calendar.HOUR_OF_DAY);
                 Log.e("Hour: ", hour+"");
