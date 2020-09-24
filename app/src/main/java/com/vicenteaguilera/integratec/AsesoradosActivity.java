@@ -351,10 +351,14 @@ public class AsesoradosActivity extends AppCompatActivity {
             return 5;
         }else if(materia.equals("Ecuaciones diferenciales")){
             return 6;
-        }else if(materia.equals("Química")){
+        }else if(materia.equals("Probabilidad y estadística")){
             return 7;
-        }else if(materia.equals("Física")){
+        }else if(materia.equals("Métodos numéricos")){
             return 8;
+        }else if(materia.equals("Química")){
+            return 9;
+        }else if(materia.equals("Física")){
+            return 10;
         }
         return 0;
     }
