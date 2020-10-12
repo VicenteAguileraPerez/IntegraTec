@@ -4,7 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
-public class AlertDialogTimeOff
+public class AlertDialogPersonalized
 {
     public void alertDialogInformacion(String message, Context context)
     {

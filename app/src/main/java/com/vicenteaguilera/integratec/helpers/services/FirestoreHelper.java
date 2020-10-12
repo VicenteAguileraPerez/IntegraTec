@@ -1,8 +1,10 @@
 package com.vicenteaguilera.integratec.helpers.services;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 
@@ -25,6 +27,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
 import com.vicenteaguilera.integratec.controllers.OptionsActivity;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.AlertDialogPersonalized;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.InternetHelper;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesores;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesorias;
@@ -95,17 +98,42 @@ public class FirestoreHelper
                        @Override
                        public void onComplete(@NonNull Task<Void> task)
                        {
+
+                           dialog.dismiss();
                            if(task.isSuccessful())
                            {
-                               status.status("Registrado comuníquese con el administrador para habilitar su cuenta...");
-                               Intent intent = new Intent(context, OptionsActivity.class);
-                               context.startActivity(intent);
+
+                               final AlertDialog.Builder  alertDialogBuilder = new AlertDialog.Builder(context);
+                               alertDialogBuilder.setCancelable(false);
+                               alertDialogBuilder.setTitle("Aviso");
+                               alertDialogBuilder.setMessage("Registrado comuníquese con el administrador para habilitar su cuenta...");
+                               alertDialogBuilder.setPositiveButton("Aceptar",
+                                       new DialogInterface.OnClickListener() {
+                                           @Override
+                                           public void onClick(DialogInterface alertDialog, int i)
+                                           {
+
+                                               Intent intent = new Intent(context, OptionsActivity.class);
+                                               context.startActivity(intent);
+                                               ((Activity) context).finish();
+                                               alertDialog.dismiss();
+                                           }
+                                       }
+                               );
+
+                               alertDialogBuilder.show();
+
+
+
                            }
                            else
                            {
-                               status.status("Error del registro de los datos. Inténtelo de nuevo");
+                               status.status("Error del registros de los datos. Inténtelo de nuevo");
+                               Intent intent = new Intent(context, OptionsActivity.class);
+                               context.startActivity(intent);
+                               ((Activity) context).finish();
                            }
-                           dialog.dismiss();
+
                        }
                });
    }
@@ -132,29 +160,72 @@ public class FirestoreHelper
                         }
                         else
                         {
-                            if(!(((Activity)context) instanceof OptionsActivity))
-                            {
 
-                                status.status("Usted se ha registrado, comuníquese con el administrador para habilitar su cuenta...");
-                                Intent intent = new Intent(context, OptionsActivity.class);
-                                context.startActivity(intent);
-                                ((Activity) context).finish();
+                            if(!(context instanceof OptionsActivity))
+                            {
+                                final AlertDialog.Builder  alertDialogBuilder = new AlertDialog.Builder(context);
+                                alertDialogBuilder.setCancelable(false);
+                                alertDialogBuilder.setTitle("Aviso");
+                                alertDialogBuilder.setMessage("Registrado comuníquese con el administrador para habilitar su cuenta...");
+                                alertDialogBuilder.setPositiveButton("Aceptar",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface alertDialog, int i)
+                                            {
+
+                                                Intent intent = new Intent(context, OptionsActivity.class);
+                                                context.startActivity(intent);
+                                                ((Activity) context).finish();
+                                                alertDialog.cancel();
+                                            }
+                                        }
+                                );
+
+                                alertDialogBuilder.show();
+
+
+
                             }
                             else{
-                                status.status("Usted se ha registrado, comuníquese con el administrador para habilitar su cuenta...");
+                                final AlertDialog.Builder  alertDialogBuilder = new AlertDialog.Builder(context);
+                                alertDialogBuilder.setTitle("Aviso");
+                                alertDialogBuilder.setMessage("Registrado comuníquese con el administrador para habilitar su cuenta...");
+                                alertDialogBuilder.setPositiveButton("Aceptar",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface alertDialog, int i)
+                                            {
+                                                alertDialog.cancel();
+                                            }
+                                        }
+                                );
+
+                                alertDialogBuilder.show();
                             }
                         }
                     }
                     else
                     {
                         status.status("No existe esa cuenta");
+                        Intent intent = new Intent(context, OptionsActivity.class);
+                        context.startActivity(intent);
+                        ((Activity) context).finish();
+
+
                     }
                 }
                 else
                 {
+
                     status.status("Error, verifique su conexión a Internet, si los problemas continuan contacte al administrado");
+                    Intent intent = new Intent(context, OptionsActivity.class);
+                    context.startActivity(intent);
+                    ((Activity) context).finish();
+
+
                 }
                 dialog.dismiss();
+
             }
         });
 

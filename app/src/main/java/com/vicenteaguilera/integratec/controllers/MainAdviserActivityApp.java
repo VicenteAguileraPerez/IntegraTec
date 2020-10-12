@@ -83,7 +83,7 @@ import com.vicenteaguilera.integratec.helpers.services.FirebaseStorageHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
 //import com.vicenteaguilera.integratec.helpers.utility.WaterMark;
 import com.vicenteaguilera.integratec.helpers.utility.WaterMark;
-import com.vicenteaguilera.integratec.helpers.utility.helpers.AlertDialogTimeOff;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.AlertDialogPersonalized;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.ImagesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.InternetHelper;
@@ -205,11 +205,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                         dialog.show();
                         firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesoria(), false);
                         Toast.makeText(MainAdviserActivityApp.this,"Terminamos la asesoría porque ya pasa de las horas hábiles de asesorias.", Toast.LENGTH_SHORT).show();
-                        new AlertDialogTimeOff().alertDialogInformacion("No puede crear asesorías hasta las horas hábiles de 8:00 am a 8:00 pm y terminamos la asesoría publicada.",MainAdviserActivityApp.this);
+                        new AlertDialogPersonalized().alertDialogInformacion("No puede crear asesorías hasta las horas hábiles de 8:00 am a 8:00 pm y terminamos la asesoría publicada.",MainAdviserActivityApp.this);
                     }
                     else
                     {
-                        new AlertDialogTimeOff().alertDialogInformacion("No puede crear asesorías hasta las horas hábiles de 8:00 am a 8:00 pm",MainAdviserActivityApp.this);
+                        new AlertDialogPersonalized().alertDialogInformacion("No puede crear asesorías hasta las horas hábiles de 8:00 am a 8:00 pm",MainAdviserActivityApp.this);
                     }
 
                     disableEditTextHoras();
@@ -228,11 +228,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     dialog.show();
                     firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesoria(), false);
                     Toast.makeText(MainAdviserActivityApp.this,"Terminamos la asesoría porque ya pasa de las horas hábiles de asesorias.", Toast.LENGTH_SHORT).show();
-                    new AlertDialogTimeOff().alertDialogInformacion("No puede crear asesorías solo de Lunes a Viernes y terminamos la asesoría publicada.",MainAdviserActivityApp.this);
+                    new AlertDialogPersonalized().alertDialogInformacion("No puede crear asesorías solo de Lunes a Viernes y terminamos la asesoría publicada.",MainAdviserActivityApp.this);
                 }
                 else
                 {
-                    new AlertDialogTimeOff().alertDialogInformacion("No puede crear asesorías, solo de Lunes a Viernes",MainAdviserActivityApp.this);
+                    new AlertDialogPersonalized().alertDialogInformacion("No puede crear asesorías, solo de Lunes a Viernes",MainAdviserActivityApp.this);
                 }
 
                 disableEditTextHoras();
@@ -435,6 +435,10 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             case R.id.item_AcercaDe:
                 Toast.makeText(MainAdviserActivityApp.this, getResources().getText(R.string.acerca_de)+"...", Toast.LENGTH_SHORT).show();
                 intent = new Intent(this, AboutActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.item_Horarios:
+                intent = new Intent(this, HorarioActivity.class);
                 startActivity(intent);
                 break;
 
@@ -793,7 +797,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
                                 textView_button_publicar = findViewById(R.id.textView_ButtonPublicar);
                                 textView_button_publicar.setText("Actualizar asesoría");
-                                new AlertDialogTimeOff().alertDialogInformacion("Para actualizar su asesoría, se le informa que no podrá cambiar la hora de inicio ni de fin por seguridad y para proporcionar servicios se asesoría reales para los asesorados y evitar datos falso.\n" +
+                                new AlertDialogPersonalized().alertDialogInformacion("Para actualizar su asesoría, se le informa que no podrá cambiar la hora de inicio ni de fin por seguridad y para proporcionar servicios se asesoría reales para los asesorados y evitar datos falso.\n" +
                                         "Gracias por su compresión.", MainAdviserActivityApp.this);
                                 disableEditTextHoras();
                             }

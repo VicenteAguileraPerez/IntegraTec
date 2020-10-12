@@ -18,15 +18,13 @@ import com.vicenteaguilera.integratec.CreateCodeQRActivity;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.adapters.AsesoriaRealtimeAdapter;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
-import com.vicenteaguilera.integratec.helpers.utility.helpers.AlertDialogTimeOff;
-import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.AlertDialogPersonalized;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.InternetHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesores;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
 import com.vicenteaguilera.integratec.models.RealtimeAsesoria;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -68,7 +66,7 @@ public class ListAdviserActivity extends AppCompatActivity implements ListaAseso
                     progressBar.setVisibility(View.INVISIBLE);
                     textView_no_asesores.setVisibility(View.VISIBLE);
                     textView_no_asesores.setText("No hay asesores por ahora.");
-                    new AlertDialogTimeOff().alertDialogInformacion("Las asesorías estarán disponibles entre 8:00 am y las 8:00 pm.", ListAdviserActivity.this);
+                    new AlertDialogPersonalized().alertDialogInformacion("Las asesorías estarán disponibles entre 8:00 am y las 8:00 pm.", ListAdviserActivity.this);
 
                 }
             }
@@ -77,7 +75,7 @@ public class ListAdviserActivity extends AppCompatActivity implements ListaAseso
                 progressBar.setVisibility(View.INVISIBLE);
                 textView_no_asesores.setVisibility(View.VISIBLE);
                 textView_no_asesores.setText("No hay asesores por ahora.");
-                new AlertDialogTimeOff().alertDialogInformacion("Las asesorías están disponibles de Lunes a Viernes", ListAdviserActivity.this);
+                new AlertDialogPersonalized().alertDialogInformacion("Las asesorías están disponibles de Lunes a Viernes", ListAdviserActivity.this);
 
             }
         }
@@ -121,6 +119,11 @@ public class ListAdviserActivity extends AppCompatActivity implements ListaAseso
             case R.id.item_AcercaDe:
                 Toast.makeText(ListAdviserActivity.this, getResources().getText(R.string.acerca_de)+"...", Toast.LENGTH_SHORT).show();
                 intent = new Intent(this, AboutActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.item_Horarios:
+
+                intent = new Intent(this, HorarioActivity.class);
                 startActivity(intent);
                 break;
 

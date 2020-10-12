@@ -5,6 +5,9 @@
         android:id="@+id/item_AcercaDe"
         android:title="@string/acerca_de" />
     <item
+        android:id="@+id/item_Horarios"
+        android:title="@string/horario2" />
+    <item
         android:id="@+id/item_QuejasSugerencias"
         android:title="@string/quejasSugerencias" />
     <item
@@ -34,6 +37,7 @@
     <item
         android:id="@+id/item_CerrarSesion"
         android:title="@string/cerrarSesion" />
+
 
 
 </menu>
