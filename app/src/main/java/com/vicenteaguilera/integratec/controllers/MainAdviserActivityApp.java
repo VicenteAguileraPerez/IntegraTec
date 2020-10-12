@@ -363,8 +363,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         editText_HoraFinalizacion.setOnClickListener(this);
         cardView_ButtonPublicar.setOnClickListener(this);
 
-        buttonHelper.actionClickButton(cardView_ButtonPublicar, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
-        buttonHelper.actionClickButton(cardView_ButtonTerminar, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
+        buttonHelper.actionClickButton(cardView_ButtonPublicar, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
+        buttonHelper.actionClickButton(cardView_ButtonTerminar, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
 
         editText_URL.requestFocus();
         editTextFocusListener();
@@ -1239,8 +1239,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         CardView cardView_ButtonUpdate = dialogEditProfile.findViewById(R.id.cardView_Button_Update);
         CardView cardView_ButtonClose = dialogEditProfile.findViewById(R.id.cardView_ButtonClose);
 
-        buttonHelper.actionClickButton(cardView_ButtonUpdate, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
-        buttonHelper.actionClickButton(cardView_ButtonClose, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
+        buttonHelper.actionClickButton(cardView_ButtonUpdate, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
+        buttonHelper.actionClickButton(cardView_ButtonClose, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
 
         ArrayAdapter<String> arrayAdapterCareer = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
         spinner_career.setAdapter(arrayAdapterCareer);
@@ -1316,10 +1316,10 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         CardView cardView_ButtonDelete= dialogNewSemester.findViewById(R.id.cardView_Button_Delete);
         CardView cardView_ButtonCancel = dialogNewSemester.findViewById(R.id.cardView_ButtonCancel);
 
-        buttonHelper.actionClickButton(cardView_Button_CreatePDF1, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
-        buttonHelper.actionClickButton(cardView_Button_CreatePDF2, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
-        buttonHelper.actionClickButton(cardView_ButtonDelete, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
-        buttonHelper.actionClickButton(cardView_ButtonCancel, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
+        buttonHelper.actionClickButton(cardView_Button_CreatePDF1, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
+        buttonHelper.actionClickButton(cardView_Button_CreatePDF2, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
+        buttonHelper.actionClickButton(cardView_ButtonDelete, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
+        buttonHelper.actionClickButton(cardView_ButtonCancel, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
 
         cardView_Button_CreatePDF1.setOnClickListener(new View.OnClickListener() {
             @Override

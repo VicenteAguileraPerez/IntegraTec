@@ -106,9 +106,9 @@ public class AsesoradosActivity extends AppCompatActivity {
         final CardView cardview_borrar = dialogUpdateDelete.findViewById(R.id.cardview_borrar_d);
         final CardView cardview_modificar = dialogUpdateDelete.findViewById(R.id.cardview_modificar_d);
 
-        buttonHelper.actionClickButton(cardview_cancelar, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
-        buttonHelper.actionClickButton(cardview_borrar, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
-        buttonHelper.actionClickButton(cardview_modificar, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
+        buttonHelper.actionClickButton(cardview_cancelar, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
+        buttonHelper.actionClickButton(cardview_borrar, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
+        buttonHelper.actionClickButton(cardview_modificar, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
 
         ArrayAdapter<String> arrayAdapterCarrera = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
         spinner_carrera.setAdapter(arrayAdapterCarrera);
@@ -454,8 +454,8 @@ public class AsesoradosActivity extends AppCompatActivity {
         final CardView cardview_cancelar = dialogAdd.findViewById(R.id.cardView_cancelar_add);
         final CardView cardview_add = dialogAdd.findViewById(R.id.cardView_agregar_add);
 
-        buttonHelper.actionClickButton(cardview_cancelar, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
-        buttonHelper.actionClickButton(cardview_add, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
+        buttonHelper.actionClickButton(cardview_cancelar, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
+        buttonHelper.actionClickButton(cardview_add, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
 
         ArrayAdapter<String> arrayAdapterCarrera = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
         spinner_carrera.setAdapter(arrayAdapterCarrera);

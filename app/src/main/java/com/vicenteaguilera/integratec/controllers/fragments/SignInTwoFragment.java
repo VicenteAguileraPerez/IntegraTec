@@ -78,7 +78,7 @@ public class SignInTwoFragment extends Fragment implements Status {
         editText_apellidos = view.findViewById(R.id.editText_apellidos);
 
         cardView_ButtonRegistrarse = view.findViewById(R.id.cardView_ButtonRegistrarse);
-        buttonHelper.actionClickButton(cardView_ButtonRegistrarse, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
+        buttonHelper.actionClickButton(cardView_ButtonRegistrarse, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
         cardView_ButtonRegistrarse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

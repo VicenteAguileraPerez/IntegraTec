@@ -66,7 +66,7 @@ public class ComplaintSuggestionsActivity extends AppCompatActivity implements V
         radioGroup_topic = findViewById(R.id.radioGroup_topic);
         cardView_ButtonEnviar = findViewById(R.id.cardView_ButtonEnviar);
         cardView_ButtonEnviar.setOnClickListener(this);
-        buttonHelper.actionClickButton(cardView_ButtonEnviar, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
+        buttonHelper.actionClickButton(cardView_ButtonEnviar, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
         radioButtonListener();
     }
 

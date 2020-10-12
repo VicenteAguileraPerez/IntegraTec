@@ -55,7 +55,7 @@ public class SignInFragment extends Fragment  {
         editText_password_confirm = view.findViewById(R.id.editText_password_confirm);
         editText_codigo = view.findViewById(R.id.editText_codigo);
 
-        buttonHelper.actionClickButton(cardView_ButtonSiguiente, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
+        buttonHelper.actionClickButton(cardView_ButtonSiguiente, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
 
         cardView_ButtonSiguiente.setOnClickListener(new View.OnClickListener() {
             @Override

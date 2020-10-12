@@ -120,8 +120,8 @@ public class CreateCodeQRActivity extends AppCompatActivity {
                 }
             }
         });
-        buttonHelper.actionClickButton(cardView_ButtonGuardarQR, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
-        buttonHelper.actionClickButton(cardView_BtnCrearQR, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
+        buttonHelper.actionClickButton(cardView_ButtonGuardarQR, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
+        buttonHelper.actionClickButton(cardView_BtnCrearQR, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
     }
 
 

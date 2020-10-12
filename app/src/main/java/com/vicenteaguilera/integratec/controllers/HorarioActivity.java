@@ -2,9 +2,12 @@ package com.vicenteaguilera.integratec.controllers;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -18,9 +21,21 @@ public class HorarioActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_horario);
         setTitle(R.string.acerca_de);
+        getSupportActionBar().hide();
         WebView webView = findViewById(R.id.webView);
+        webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl("file:///android_asset/horarios/index.html");
-        webView.setWebViewClient( new WebViewClient());
+        webView.setWebViewClient( new WebViewClient() {
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (url.startsWith("tel:+52")) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
+                    startActivity(intent);
+                    return true;
+                }
+                return false;
+            }
+        });
+
     }
     private WifiReceiver wifiReceiver = new WifiReceiver();
 

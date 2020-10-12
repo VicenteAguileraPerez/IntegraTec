@@ -109,8 +109,8 @@ public class LoginFragment extends Fragment  implements Status{
             }
         });
 
-        buttonHelper.actionClickButton(cardView_ButtonIniciarSesion, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
-        buttonHelper.actionClickButton(cardView_ButtonRegistrarse, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
+        buttonHelper.actionClickButton(cardView_ButtonIniciarSesion, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
+        buttonHelper.actionClickButton(cardView_ButtonRegistrarse, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
         buttonHelper.actionClickButton(cardView_OlvidastePass, getResources().getColor(R.color.gray), getResources().getColor(R.color.white));
     }
 
@@ -131,8 +131,8 @@ public class LoginFragment extends Fragment  implements Status{
         CardView cardView_ButtonSend = dialogRecoverPass.findViewById(R.id.cardView_Button_Send);
         CardView cardView_ButtonCancel = dialogRecoverPass.findViewById(R.id.cardView_ButtonCancel);
 
-        buttonHelper.actionClickButton(cardView_ButtonSend, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
-        buttonHelper.actionClickButton(cardView_ButtonCancel, getResources().getColor(R.color.background_red_light), getResources().getColor(R.color.background_red));
+        buttonHelper.actionClickButton(cardView_ButtonSend, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
+        buttonHelper.actionClickButton(cardView_ButtonCancel, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
 
         cardView_ButtonSend.setOnClickListener(new View.OnClickListener() {
             @Override
