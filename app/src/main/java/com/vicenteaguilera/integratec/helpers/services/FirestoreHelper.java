@@ -260,7 +260,7 @@ public class FirestoreHelper
     public void updateImageAsesor(final String uri_image, final Status status)
     {
         Map<String,Object> asesor = new HashMap<>();
-        asesor.put("uri_image", uri_image);
+        asesor.put("image", uri_image);
 
         AsesoresCollection.document(FirestoreHelper.asesor.getUid()).update(asesor)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

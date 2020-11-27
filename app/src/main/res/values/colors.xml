@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#343669</color>
-    <color name="colorPrimaryDark">#343669</color>
-    <color name="colorAccent">#343669</color>
+    <color name="colorPrimary">#0047BA</color>
+    <color name="colorPrimaryDark">#0047BA</color>
+    <color name="colorAccent">#0047BA</color>
 
     <!--
     <color name="colorPrimary">#343669</color>
@@ -18,11 +18,11 @@
     <color name="background_red">#EA2925</color>
     <color name="background_red_light">#FA5858</color>
     -->
-    <color name="color_blue1">#EA2925</color>
-    <color name="color_blue1_light">#E94A47</color>
+    <color name="color_blue1">#7D9DD0</color>
+    <color name="color_blue1_light">#7D9DD0</color>
     <color name="white">#FFFFFF</color>
     <color name="gray">#D8D8D8</color>
-    <color name="background_green">#EA2925</color>
-    <color name="background_green_black">#E94A47</color>
+    <color name="background_green">#7D9DD0</color>
+    <color name="background_green_black">#7D9DD0</color>
 
 </resources>

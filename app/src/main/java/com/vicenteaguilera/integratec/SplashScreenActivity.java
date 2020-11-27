@@ -1,7 +1,5 @@
 package com.vicenteaguilera.integratec;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -13,6 +11,8 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.vicenteaguilera.integratec.controllers.mainapp.MainAppActivity;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
