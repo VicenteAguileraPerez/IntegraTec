@@ -24,7 +24,7 @@ public class HorarioActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         WebView webView = findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl("https://integra-tec-web.web.app/"/*"file:///android_asset/horarios/index.html"*/);
+        webView.loadUrl("https://tecuruapan.edu.mx/asesores-par/"/*"file:///android_asset/horarios/index.html"*/);
         webView.setWebViewClient( new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url.startsWith("tel:+52")) {
