@@ -552,7 +552,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                             horaFin+=12;
                         }
 
-                        if((horaFin<=hour && minutes-minfin>=0) || hour-horaFin>=2)
+                        if((horaFin==hour && minutes-minfin>=0) || hour>horaFin)
                         {
                             ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
                                     "Terminando asesoría..", true);
@@ -572,7 +572,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     }
                     else
                     {
-                        if((horaFin<=hour && minutes-minfin>=0) || hour-horaFin>=2)
+                        if((horaFin==hour && minutes-minfin>=0) || hour>horaFin)
                         {
                             ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
                                     "Terminando asesoría..", true);
@@ -781,7 +781,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             }
 
             if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
-            {
+             {
                     if(((flag_radioButton || flag_otherPlace)) && flag_spinnerMateria && flag_TimeStar && flag_TimeEnd)
                     {
                             if (getRangoValidoHoras()) {
