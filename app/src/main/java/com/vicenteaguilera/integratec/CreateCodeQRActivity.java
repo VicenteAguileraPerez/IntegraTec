@@ -124,7 +124,6 @@ public class CreateCodeQRActivity extends AppCompatActivity {
                     if(Objects.requireNonNull(spinner_Carrera.getEditText()).getText().length() != 0) {
                                 String texto = editText_NumeroControl.getEditText().getText().toString() + "_" + editText_Nombre.getEditText().getText().toString() + "_"
                                         + spinner_Carrera.getEditText().getText() + "_"+PropiertiesHelper.obtenerFecha().substring(0,10);
-
                                 bitmap = QRCode.from(texto).withSize(400, 400).bitmap();
                                 imageView.setImageBitmap(bitmap);
                                 imageView.setVisibility(View.VISIBLE);
