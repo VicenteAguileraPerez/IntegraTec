@@ -9,7 +9,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
-        android:layout_height="450dp"
+        android:layout_height="550dp"
         android:layout_margin="25dp"
         app:cardCornerRadius="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -31,92 +31,93 @@
                 android:contentDescription="@string/logo2"
                 android:src="@drawable/colaboracion" />
 
-            <EditText
-                android:id="@+id/editText_nombre"
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editText_correo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="30dp"
-                android:autofillHints=""
-                android:backgroundTint="@android:color/black"
-                android:ems="10"
                 android:hint="@string/email"
-                android:inputType="textEmailAddress" />
+                android:backgroundTint="@color/colorPrimaryDark"
+                app:errorEnabled="true"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-            <EditText
-                android:id="@+id/editText_apellidos"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editText_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="30dp"
-                android:backgroundTint="@android:color/black"
-                android:ems="10"
                 android:hint="@string/password"
-                android:importantForAutofill="no"
-                android:inputType="textPassword" />
+                android:backgroundTint="@color/colorPrimaryDark"
+                app:errorEnabled="true"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView_ButtonIniciarSesion"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginEnd="30dp"
-                app:cardBackgroundColor="@color/background_green"
-                app:cardCornerRadius="20dp">
-
-                <LinearLayout
+                <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    />
 
-                    <TextView
-                        android:id="@+id/textView_ButtonIniciarSesion"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:gravity="center"
-                        android:text="@string/iniciarSesion"
-                        android:textColor="@color/white" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView_ButtonRegistrarse"
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button"
+                android:id="@+id/button_iniciarsesion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="30dp"
-                app:cardBackgroundColor="@color/background_green"
-                app:cardCornerRadius="20dp">
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:text="@string/iniciarSesion"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                app:cornerRadius="15dp"
+                app:backgroundTint="@color/background_green"
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                />
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button"
+                android:id="@+id/button_registrarse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:text="@string/registrarse"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                app:cornerRadius="15dp"
+                app:backgroundTint="@color/background_green"
 
-                    <TextView
-                        android:id="@+id/textView_ButtonRegistrarse"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:gravity="center"
-                        android:text="@string/registrarse"
-                        android:textColor="@color/white" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                />
+
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView_OlvidastePass"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="30dp"
                 android:layout_marginBottom="10dp"
                 app:cardBackgroundColor="@color/white"

@@ -73,65 +73,57 @@
                 </androidx.cardview.widget.CardView>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="250dp">
-
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button"
                     android:id="@+id/button_sesion_asesores"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginLeft="25dp"
-                    android:layout_marginRight="25dp"
-                    app:cardBackgroundColor="@color/color_blue1"
-                    app:cardCornerRadius="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="@string/sesion_asesor"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    app:cornerRadius="15dp"
+                    app:backgroundTint="@color/background_green"
                     app:layout_constraintBottom_toBottomOf="@id/guideline14"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/guideline12">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="@string/sesion_asesor"
-                            android:textColor="@color/design_default_color_background"
-                            android:textSize="18sp" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
+                    app:layout_constraintTop_toTopOf="@id/guideline12"
+                    />
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button"
                     android:id="@+id/button_asesores_disponibles"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginLeft="25dp"
-                    android:layout_marginRight="25dp"
-                    app:cardBackgroundColor="@color/color_blue1"
-                    app:cardCornerRadius="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="@string/asesores_disponibles"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    app:cornerRadius="15dp"
+                    app:backgroundTint="@color/background_green"
                     app:layout_constraintBottom_toTopOf="@id/guideline13"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/guideline15">
+                    app:layout_constraintTop_toTopOf="@id/guideline15"
+                    />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="@string/asesores_disponibles"
-                            android:textColor="@color/design_default_color_background"
-                            android:textSize="18sp" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
+
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline13"

@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.SplashScreenActivity;
@@ -29,7 +30,7 @@ import java.util.Objects;
 public class MainAppActivity extends AppCompatActivity implements View.OnClickListener, Status {
 
     private final InternetHelper internetHelper = new InternetHelper();
-    private CardView button_asesores_disponibles,button_sesion_asesor;
+    private MaterialButton button_asesores_disponibles,button_sesion_asesor;
     private WifiReceiver wifiReceiver = new WifiReceiver();
     private ButtonHelper buttonHelper = new ButtonHelper();
 
@@ -43,9 +44,7 @@ public class MainAppActivity extends AppCompatActivity implements View.OnClickLi
         button_sesion_asesor = findViewById(R.id.button_sesion_asesores);
         button_sesion_asesor.setOnClickListener(this);
         button_asesores_disponibles.setOnClickListener(this);
-        buttonHelper.actionClickButton(button_sesion_asesor, getResources().getColor(R.color.color_blue1_light), getResources().getColor(R.color.color_blue1));
-        buttonHelper.actionClickButton(button_asesores_disponibles, getResources().getColor(R.color.color_blue1_light), getResources().getColor(R.color.color_blue1));
-    }
+        }
     @Override
     protected void onStart() {
         super.onStart();

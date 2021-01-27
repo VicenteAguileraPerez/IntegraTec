@@ -97,6 +97,7 @@
     <string name="buscar">Buscar por nombre o número de control</string>
     <string name="agregar_asesorado">Agregar asesorado</string>
     <string name="sin_registros_para_mostrar">Sin registros para mostrar</string>
+    <string name="seleccione_una_carrera">Seleccione una carrera...</string>
 
 
 </resources>

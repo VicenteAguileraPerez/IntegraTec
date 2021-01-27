@@ -31,14 +31,14 @@ import com.vicenteaguilera.integratec.helpers.DataBaseHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
-import com.vicenteaguilera.integratec.models.Alumno;
+import com.vicenteaguilera.integratec.models.AlumnoAsesorado;
 
 import java.util.ArrayList;
 
 public class AsesoradosActivity extends AppCompatActivity {
     private ListView listView_BD;
     private ArrayList<String> listaInformacion;
-    private ArrayList<Alumno> listaAlumnos;
+    private ArrayList<AlumnoAsesorado> listaAlumnos;
     private DataBaseHelper helper;
     private ArrayAdapter arrayAdapterListView;
     private TextView textView_sin_data;
@@ -64,7 +64,7 @@ public class AsesoradosActivity extends AppCompatActivity {
 
         textView_sin_data = findViewById(R.id.textView_sin_data);
 
-        listaAlumnos = new ArrayList<Alumno>();
+        listaAlumnos = new ArrayList<AlumnoAsesorado>();
         listaInformacion = new ArrayList<String>();
         listView_BD = findViewById(R.id.listView_BD);
 
@@ -84,7 +84,7 @@ public class AsesoradosActivity extends AppCompatActivity {
         });
     }
 
-    private void showDialogUpdateDelete(final Alumno alumno, int position) {
+    private void showDialogUpdateDelete(final AlumnoAsesorado alumno, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
 
@@ -227,7 +227,7 @@ public class AsesoradosActivity extends AppCompatActivity {
 
     private void consultarBD() {
         SQLiteDatabase db = helper.getReadableDatabase();
-        Alumno alumno = null;
+        AlumnoAsesorado alumno = null;
 
         if(listaAlumnos.size()!=0){
             listaAlumnos.clear();
@@ -236,7 +236,7 @@ public class AsesoradosActivity extends AppCompatActivity {
         Cursor cursor = db.rawQuery("SELECT * FROM "+ PropiertiesHelper.NOMBRE_TABLA, null);
 
         while (cursor.moveToNext()){
-            alumno = new Alumno();
+            alumno = new AlumnoAsesorado();
             alumno.setId(cursor.getInt(0));
             alumno.setnControl(cursor.getInt(1));
             alumno.setNombre(cursor.getString(2));
@@ -257,7 +257,7 @@ public class AsesoradosActivity extends AppCompatActivity {
         int i = 0;
 
         if(listaAlumnos.size()!=0) {
-            for (Alumno alumno : listaAlumnos) {
+            for (AlumnoAsesorado alumno : listaAlumnos) {
                 Log.e("I: ", (i++) + "");
                 listaInformacion.add("Número de control:" + alumno.getnControl() + "\nNombre del alumno:" + alumno.getNombre() +"\nFecha:" + alumno.getFecha());
             }
@@ -389,13 +389,13 @@ public class AsesoradosActivity extends AppCompatActivity {
 
     private void consultarBDPorFiltro(String text) {
         SQLiteDatabase db = helper.getReadableDatabase();
-        Alumno alumno = null;
+        AlumnoAsesorado alumno = null;
 
         listaAlumnos.clear();
         Cursor cursor = db.rawQuery("SELECT * FROM "+ PropiertiesHelper.NOMBRE_TABLA, null);
 
         while (cursor.moveToNext()){
-            alumno = new Alumno();
+            alumno = new AlumnoAsesorado();
             alumno.setId(cursor.getInt(0));
             alumno.setnControl(cursor.getInt(1));
             alumno.setNombre(cursor.getString(2));

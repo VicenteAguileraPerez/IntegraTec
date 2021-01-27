@@ -13,7 +13,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
@@ -24,9 +26,9 @@ import static androidx.navigation.Navigation.findNavController;
 
 public class SignInFragment extends Fragment  {
 
-    private CardView cardView_ButtonSiguiente;
+    private MaterialButton button_siguiente;
     private ImageButton imageButton;
-    private EditText editText_email,editText_password,editText_password_confirm,editText_codigo;
+    private TextInputLayout editText_email,editText_password,editText_password_confirm,editText_codigo;
     private StringHelper stringHelper = new StringHelper();
     private ButtonHelper buttonHelper = new ButtonHelper();
 
@@ -49,22 +51,21 @@ public class SignInFragment extends Fragment  {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        cardView_ButtonSiguiente = view.findViewById(R.id.cardView_ButtonSiguiente);
-        editText_email= view.findViewById(R.id.editText_nombre);
-        editText_password = view.findViewById(R.id.editText_apellidos);
+        button_siguiente = view.findViewById(R.id.button_siguiente);
+        editText_email= view.findViewById(R.id.editText_correo);
+        editText_password = view.findViewById(R.id.editText_password);
         editText_password_confirm = view.findViewById(R.id.editText_password_confirm);
         editText_codigo = view.findViewById(R.id.editText_codigo);
 
-        buttonHelper.actionClickButton(cardView_ButtonSiguiente, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
 
-        cardView_ButtonSiguiente.setOnClickListener(new View.OnClickListener() {
+        button_siguiente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 hideSetErrors();
-                String email = editText_email.getText().toString();
-                String password  = editText_password.getText().toString();
-                String password_confirm = editText_password_confirm.getText().toString();
-                String codigo = editText_codigo.getText().toString();
+                String email = editText_email.getEditText().getText().toString();
+                String password  = editText_password.getEditText().getText().toString();
+                String password_confirm = editText_password_confirm.getEditText().getText().toString();
+                String codigo = editText_codigo.getEditText().getText().toString();
 
                 boolean flag_email = false;
                 boolean flag_password = false;

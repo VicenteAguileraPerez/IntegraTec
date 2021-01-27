@@ -9,12 +9,16 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputLayout;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseQueryHelper;
@@ -27,10 +31,10 @@ import static androidx.navigation.Navigation.findNavController;
 
 public class LoginFragment extends Fragment  implements Status{
 
-    private CardView cardView_ButtonRegistrarse;
-    private CardView cardView_ButtonIniciarSesion;
+    private MaterialButton button_Registrarse;
+    private MaterialButton button_IniciarSesion;
     private CardView cardView_OlvidastePass;
-    private EditText editText_email,editText_password;
+    private TextInputLayout editText_email,editText_password;
     private FirebaseAuthHelper firebaseAuthHelper = new FirebaseAuthHelper();
     private StringHelper stringHelper = new StringHelper();
     private ButtonHelper buttonHelper = new ButtonHelper();
@@ -55,25 +59,25 @@ public class LoginFragment extends Fragment  implements Status{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        editText_email= view.findViewById(R.id.editText_nombre);
-        editText_password = view.findViewById(R.id.editText_apellidos);
-        cardView_ButtonRegistrarse = view.findViewById(R.id.cardView_ButtonRegistrarse);
-        cardView_ButtonIniciarSesion = view.findViewById(R.id.cardView_ButtonIniciarSesion);
+        editText_email= view.findViewById(R.id.editText_correo);
+        editText_password = view.findViewById(R.id.editText_password);
+        button_Registrarse = view.findViewById(R.id.button_registrarse);
+        button_IniciarSesion = view.findViewById(R.id.button_iniciarsesion);
         cardView_OlvidastePass = view.findViewById(R.id.cardView_OlvidastePass);
 
-        cardView_ButtonRegistrarse.setOnClickListener(new View.OnClickListener() {
+        button_Registrarse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 findNavController(requireView()).navigate(R.id.action_loginFragment_to_signInFragment);
             }
         });
 
-        cardView_ButtonIniciarSesion.setOnClickListener(new View.OnClickListener() {
+        button_IniciarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //login evaluacion que email sea email y que pass != ""
-                String email = editText_email.getText().toString();
-                String password  = editText_password.getText().toString();
+                String email = editText_email.getEditText().getText().toString();
+                String password  = editText_password.getEditText().getText().toString();
 
                 switch (stringHelper.loginHelper(email,password)){
                     case 1:
@@ -108,10 +112,9 @@ public class LoginFragment extends Fragment  implements Status{
                 showDialogRecoverPass();
             }
         });
+        textWacher();
 
-        buttonHelper.actionClickButton(cardView_ButtonIniciarSesion, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
-        buttonHelper.actionClickButton(cardView_ButtonRegistrarse, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
-        buttonHelper.actionClickButton(cardView_OlvidastePass, getResources().getColor(R.color.gray), getResources().getColor(R.color.white));
+       buttonHelper.actionClickButton(cardView_OlvidastePass, getResources().getColor(R.color.gray), getResources().getColor(R.color.white));
     }
 
     private void showDialogRecoverPass() {
@@ -171,5 +174,65 @@ public class LoginFragment extends Fragment  implements Status{
     public void status(String message)
     {
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+    }
+
+    private void textWacher()
+    {
+        editText_email.getEditText().addTextChangedListener(
+            new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+                {
+                    if(charSequence.length()==0)
+                    {
+                        editText_email.setError("Campo vacío");
+                    }
+                    else if(!stringHelper.isEmail(charSequence.toString()))
+                    {
+                        editText_email.setError("Correo electrónico invalido");
+                    }
+                    else
+                    {
+                        editText_email.setError(null);
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            }
+        );
+        editText_password.getEditText().addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+                    {
+                        if(charSequence.length()==0)
+                        {
+                            editText_password.setError("Campo vacío");
+                        }
+                        else
+                        {
+                            editText_password.setError(null);
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+
+                    }
+                }
+        );
     }
 }

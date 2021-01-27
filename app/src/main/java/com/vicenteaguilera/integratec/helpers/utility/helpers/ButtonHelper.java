@@ -3,6 +3,8 @@ package com.vicenteaguilera.integratec.helpers.utility.helpers;
 import android.annotation.SuppressLint;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+
 import androidx.cardview.widget.CardView;
 
 public class ButtonHelper

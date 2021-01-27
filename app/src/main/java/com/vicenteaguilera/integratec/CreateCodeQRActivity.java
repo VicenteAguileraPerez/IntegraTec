@@ -13,25 +13,23 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
-
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
-
 import net.glxn.qrgen.android.QRCode;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -41,15 +39,12 @@ import java.util.Objects;
 public class CreateCodeQRActivity extends AppCompatActivity {
 
     private final int REQUEST_CODE_ASK_PERMISSION = 111;
-    private EditText editText_Nombre;
-    private EditText editText_Tema;
-    private EditText editText_NumeroControl;
-    private Spinner spinner_Carrera;
-    private Spinner spinner_Asignatura;
-    private Spinner spinner_Semestre;
+    private TextInputLayout editText_Nombre;
+    private TextInputLayout editText_NumeroControl;
+    private TextInputLayout spinner_Carrera;
     private ImageView imageView;
-    private CardView cardView_BtnCrearQR;
-    private CardView cardView_ButtonGuardarQR;
+    private MaterialButton button_crearQR;
+    private MaterialButton button_guardarQR;
     private Bitmap bitmap;
     private WifiReceiver wifiReceiver = new WifiReceiver();
     private ButtonHelper buttonHelper = new ButtonHelper();
@@ -71,34 +66,29 @@ public class CreateCodeQRActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_code_q_r);
 
-        editText_Nombre = findViewById(R.id.editText_Nombre);
-        editText_Tema = findViewById(R.id.editText_Tema);
+        editText_Nombre = findViewById(R.id.editText_nombre);
         editText_NumeroControl = findViewById(R.id.editText_NumeroControl);
-        spinner_Carrera = findViewById(R.id.spinner_Carrera);
-        spinner_Asignatura = findViewById(R.id.spinner_Asignatura);
-        spinner_Semestre = findViewById(R.id.spinner_Semestre);
+        spinner_Carrera = findViewById(R.id.spinner_carrera);
         imageView = findViewById(R.id.imageView);
-        cardView_BtnCrearQR = findViewById(R.id.cardView_ButtonCrearQR);
-        cardView_ButtonGuardarQR = findViewById(R.id.cardView_ButtonGuardarQR);
+        button_crearQR = findViewById(R.id.button_crearqr);
+        button_guardarQR = findViewById(R.id.button_guardarqr);
 
         imageView.setVisibility(View.INVISIBLE);
 
         ArrayAdapter<String> arrayAdapter_Carreras= new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
-        ArrayAdapter<String> arrayAdapter_Materias= new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.MATERIAS);
-        ArrayAdapter<String> arrayAdapter_Semestres= new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.SEMESTRES);
 
-        spinner_Asignatura.setAdapter(arrayAdapter_Materias);
-        spinner_Carrera.setAdapter(arrayAdapter_Carreras);
-        spinner_Semestre.setAdapter(arrayAdapter_Semestres);
 
-        cardView_BtnCrearQR.setOnClickListener(new View.OnClickListener() {
+        ((AutoCompleteTextView)spinner_Carrera.getEditText()).setAdapter(arrayAdapter_Carreras);
+
+
+        button_crearQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 crearQR();
             }
         });
 
-        cardView_ButtonGuardarQR.setOnClickListener(new View.OnClickListener() {
+        button_guardarQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(bitmap!=null)
@@ -120,56 +110,42 @@ public class CreateCodeQRActivity extends AppCompatActivity {
                 }
             }
         });
-        buttonHelper.actionClickButton(cardView_ButtonGuardarQR, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
-        buttonHelper.actionClickButton(cardView_BtnCrearQR, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
+         textWachers();
     }
 
 
     private void crearQR()
     {
-        if(!editText_NumeroControl.getText().toString().isEmpty() && editText_NumeroControl.getText().toString().length()==8){
+        if(!Objects.requireNonNull(editText_NumeroControl.getEditText()).getText().toString().isEmpty() && editText_NumeroControl.getEditText().getText().toString().length()==8){
 
-            if(!editText_Nombre.getText().toString().isEmpty()) {
+            if(!Objects.requireNonNull(editText_Nombre.getEditText()).getText().toString().isEmpty()) {
 
-                if(spinner_Semestre.getSelectedItemPosition() != 0) {
 
-                    if(spinner_Carrera.getSelectedItemPosition() != 0) {
-
-                        if(spinner_Asignatura.getSelectedItemPosition() != 0) {
-
-                            if (!editText_Tema.getText().toString().isEmpty()) {
-
-                                String texto = editText_NumeroControl.getText().toString() + "_" + editText_Nombre.getText().toString() + "_"
-                                        + spinner_Carrera.getSelectedItem().toString() + "_" + spinner_Asignatura.getSelectedItem().toString() + "_"
-                                        + editText_Tema.getText().toString() + "_" + spinner_Semestre.getSelectedItem().toString() + "_"+PropiertiesHelper.obtenerFecha().substring(0,10);
+                    if(Objects.requireNonNull(spinner_Carrera.getEditText()).getText().length() != 0) {
+                                String texto = editText_NumeroControl.getEditText().getText().toString() + "_" + editText_Nombre.getEditText().getText().toString() + "_"
+                                        + spinner_Carrera.getEditText().getText() + "_"+PropiertiesHelper.obtenerFecha().substring(0,10);
 
                                 bitmap = QRCode.from(texto).withSize(400, 400).bitmap();
                                 imageView.setImageBitmap(bitmap);
                                 imageView.setVisibility(View.VISIBLE);
-                            } else {
-                                Snackbar.make(findViewById(android.R.id.content), "Debes ingresar el tema de asesoria.", Snackbar.LENGTH_SHORT).show();
-                            }
-                        }
-                        else
-                        {
-                            Snackbar.make(findViewById(android.R.id.content), "Debes seleccionar una materia.", Snackbar.LENGTH_SHORT).show();
-                        }
+                        spinner_Carrera.setError(null);
+                        editText_Nombre.setError(null);
+                        editText_NumeroControl.setError(null);
                     }
                     else
                     {
+                        spinner_Carrera.setError("Debes seleccionar una carrera");
                         Snackbar.make(findViewById(android.R.id.content), "Debes seleccionar una carrera.", Snackbar.LENGTH_SHORT).show();
                     }
-                }
-                else
-                {
-                    Snackbar.make(findViewById(android.R.id.content), "Debes seleccionar un semestre.", Snackbar.LENGTH_SHORT).show();
-                }
+
             }
             else
             {
+                editText_Nombre.setError("Campo vacío");
                 Snackbar.make(findViewById(android.R.id.content), "Debes ingresar tú nombre.", Snackbar.LENGTH_SHORT).show();
             }
         }else{
+            editText_NumeroControl.setError("Campo vacío");
             Snackbar.make(findViewById(android.R.id.content), "Debes ingresar tú número de control completo.", Snackbar.LENGTH_SHORT).show();
         }
     }
@@ -232,5 +208,66 @@ public class CreateCodeQRActivity extends AppCompatActivity {
                     public void onScanCompleted(String path, Uri uri) {
                     }
                 });
+    }
+
+
+    private void textWachers()
+    {
+        editText_NumeroControl.getEditText().addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+                    {
+                        if(charSequence.length()==0)
+                        {
+                            editText_NumeroControl.setError("Campo vacío");
+                        }
+                        else if(charSequence.length()!=8)
+                        {
+                            editText_NumeroControl.setError("Debe tener 8 dígitos");
+                        }
+                        else
+                        {
+                            editText_NumeroControl.setError(null);
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+
+                    }
+                }
+        );
+        editText_Nombre.getEditText().addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+                    {
+                        if(charSequence.length()==0)
+                        {
+                            editText_Nombre.setError("Campo vacío");
+                        }
+                        else
+                        {
+                            editText_Nombre.setError(null);
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+
+                    }
+                }
+        );
     }
 }
