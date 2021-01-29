@@ -1,143 +1,192 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-  <ScrollView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content">
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:orientation="vertical">
-          <EditText
-              android:id="@+id/editText_numero_control_add"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginStart="20dp"
-              android:layout_marginTop="20dp"
-              android:layout_marginEnd="20dp"
-              android:layout_marginBottom="10dp"
-              android:ems="10"
-              android:hint="@string/numero_de_control"
-              android:importantForAutofill="no"
-              android:inputType="number"
-              android:maxLength="8" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-          <EditText
-              android:id="@+id/editText_nombre_add"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginStart="20dp"
-              android:layout_marginTop="10dp"
-              android:layout_marginEnd="20dp"
-              android:layout_marginBottom="10dp"
-              android:ems="10"
-              android:hint="@string/nombre_completo"
-              android:importantForAutofill="no"
-              android:inputType="textPersonName" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-          <Spinner
-              android:id="@+id/spinner_carrera_add"
-              style="@style/Widget.AppCompat.Spinner.Underlined"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginStart="20dp"
-              android:layout_marginTop="20dp"
-              android:layout_marginEnd="20dp"
-              android:layout_marginBottom="10dp" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout_numeroControl_add_alumno"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:hint="@string/n_mero_de_control"
+                app:counterEnabled="true"
+                app:counterMaxLength="8"
+                app:endIconDrawable="@drawable/ic_search_black_24dp"
+                app:endIconMode="custom">
 
-          <Spinner
-              android:id="@+id/spinner_semestre_add"
-              style="@style/Widget.AppCompat.Spinner.Underlined"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginStart="20dp"
-              android:layout_marginTop="20dp"
-              android:layout_marginEnd="20dp"
-              android:layout_marginBottom="10dp" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:editable="true"
+                    android:inputType="number"
+                    android:maxLength="8" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-          <Spinner
-              android:id="@+id/spinner_materia_add"
-              style="@style/Widget.AppCompat.Spinner.Underlined"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginStart="20dp"
-              android:layout_marginTop="20dp"
-              android:layout_marginEnd="20dp"
-              android:layout_marginBottom="10dp" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout_nombre_add_alumno"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:hint="@string/nombre_completo">
 
-          <EditText
-              android:id="@+id/editTextText_tema_add"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginStart="20dp"
-              android:layout_marginTop="10dp"
-              android:layout_marginEnd="20dp"
-              android:layout_marginBottom="20dp"
-              android:ems="10"
-              android:hint="@string/tema"
-              android:importantForAutofill="no"
-              android:inputType="text" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:editable="false" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-          <androidx.cardview.widget.CardView
-              android:id="@+id/cardView_agregar_add"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_margin="20dp"
-              app:cardBackgroundColor="@color/background_green"
-              app:cardCornerRadius="20dp">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout_carrera_add_alumno"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:hint="@string/car">
 
-              <LinearLayout
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:orientation="vertical">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:editable="false" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                  <TextView
-                      android:id="@+id/textView_registrar"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:layout_marginTop="8dp"
-                      android:layout_marginBottom="8dp"
-                      android:gravity="center"
-                      android:text="@string/registrar"
-                      android:textColor="@color/white"
-                      android:textSize="16sp" />
-              </LinearLayout>
-          </androidx.cardview.widget.CardView>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/spinner_materia_add"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:hint="Seleccione una materia"
+                app:errorEnabled="true">
 
-          <androidx.cardview.widget.CardView
-              android:id="@+id/cardView_cancelar_add"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginStart="20dp"
-              android:layout_marginTop="10dp"
-              android:layout_marginEnd="20dp"
-              android:layout_marginBottom="20dp"
-              app:cardBackgroundColor="@color/background_green"
-              app:cardCornerRadius="20dp">
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none" />
 
-              <LinearLayout
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:orientation="horizontal">
+            </com.google.android.material.textfield.TextInputLayout>
 
-                  <TextView
-                      android:id="@+id/textView7"
-                      android:layout_width="0dp"
-                      android:layout_height="wrap_content"
-                      android:layout_marginTop="8dp"
-                      android:layout_marginBottom="8dp"
-                      android:layout_weight="1"
-                      android:gravity="center"
-                      android:text="@string/cancelar"
-                      android:textColor="@color/white"
-                      android:textSize="16sp" />
-              </LinearLayout>
-          </androidx.cardview.widget.CardView>
-      </LinearLayout>
-  </ScrollView>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout_tema_add_alumno"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:hint="@string/tema">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:hint="@string/fecha">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInputEditText_fecha_add_alumno"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:inputType="date"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView_agregar_add"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="10dp"
+                app:cardBackgroundColor="@color/background_green"
+                app:cardCornerRadius="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView_registrar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:gravity="center"
+                        android:text="@string/registrar"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView_cancelar_add"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                app:cardBackgroundColor="@color/background_green"
+                app:cardCornerRadius="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView7"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/cancelar"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

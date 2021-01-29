@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -27,6 +28,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.vicenteaguilera.integratec.helpers.DataBaseHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
@@ -44,6 +49,7 @@ public class AsesoradosActivity extends AppCompatActivity {
     private TextView textView_sin_data;
     private WifiReceiver wifiReceiver = new WifiReceiver();
     private ButtonHelper buttonHelper = new ButtonHelper();
+
 
     @Override
     protected void onStart() {
@@ -444,27 +450,38 @@ public class AsesoradosActivity extends AppCompatActivity {
         dialogAdd.show();
 
 
-        final EditText editText_NumeroControl = dialogAdd.findViewById(R.id.editText_numero_control_add);
-        final EditText editText_Nombre = dialogAdd.findViewById(R.id.editText_nombre_add);
-        final EditText editText_Tema = dialogAdd.findViewById(R.id.editTextText_tema_add);
+        final TextInputLayout textInputLayout_numeroControl_add_alumno = dialogAdd.findViewById(R.id.textInputLayout_numeroControl_add_alumno);
+        final TextInputEditText textInputEditText_fecha_add_alumno = dialogAdd.findViewById(R.id.textInputEditText_fecha_add_alumno);
+        final TextInputLayout spinner_materia_add = dialogAdd.findViewById(R.id.spinner_materia_add);
 
-        final Spinner spinner_carrera = dialogAdd.findViewById(R.id.spinner_carrera_add);
-        final Spinner spinner_semestre = dialogAdd.findViewById(R.id.spinner_semestre_add);
-        final Spinner spinner_materia = dialogAdd.findViewById(R.id.spinner_materia_add);
+        final EditText editText_fecha_add_alumno = dialogAdd.findViewById(R.id.textInputEditText_fecha_add_alumno);
+
         final CardView cardview_cancelar = dialogAdd.findViewById(R.id.cardView_cancelar_add);
         final CardView cardview_add = dialogAdd.findViewById(R.id.cardView_agregar_add);
 
         buttonHelper.actionClickButton(cardview_cancelar, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
         buttonHelper.actionClickButton(cardview_add, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
 
-        ArrayAdapter<String> arrayAdapterCarrera = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
-        spinner_carrera.setAdapter(arrayAdapterCarrera);
+        ArrayAdapter<String> arrayAdapter_materia = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.MATERIAS);
+        ((AutoCompleteTextView)spinner_materia_add.getEditText()).setAdapter(arrayAdapter_materia);
 
-        ArrayAdapter<String> arrayAdapterSemestre = new ArrayAdapter<>(this,  R.layout.custom_spinner_item, PropiertiesHelper.SEMESTRES);
-        spinner_semestre.setAdapter(arrayAdapterSemestre);
+        //DatePicker
+        MaterialDatePicker.Builder builder_date = MaterialDatePicker.Builder.datePicker();
+        final MaterialDatePicker materialDatePicker = builder_date.build();
 
-        ArrayAdapter<String> arrayAdapterMateria = new ArrayAdapter<>(this,  R.layout.custom_spinner_item, PropiertiesHelper.MATERIAS);
-        spinner_materia.setAdapter(arrayAdapterMateria);
+
+        textInputEditText_fecha_add_alumno.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                materialDatePicker.show(getSupportFragmentManager(), "DATE_PICKER");
+                materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+                    @Override
+                    public void onPositiveButtonClick(Object selection) {
+                        textInputEditText_fecha_add_alumno.setText(materialDatePicker.getHeaderText());
+                    }
+                });
+            }
+        });
 
         cardview_cancelar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -476,69 +493,27 @@ public class AsesoradosActivity extends AppCompatActivity {
         cardview_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editText_NumeroControl.setError(null);
-                editText_Nombre.setError(null);
-                editText_Tema.setError(null);
-
-                boolean flag_nControl = false;
-                boolean flag_nombre = false;
-                boolean flag_spinners = false;
-                boolean flag_tema = false;
-
-                if (!editText_NumeroControl.getText().toString().isEmpty() && !editText_NumeroControl.getText().toString().equals("")
-                        && editText_NumeroControl.getText().toString() != null && editText_NumeroControl.getText().toString().length() == 8) {
-                    flag_nControl = true;
-                } else {
-                    editText_NumeroControl.setError("El número de control es invalido");
-                }
-
-                if (!editText_Nombre.getText().toString().isEmpty() && !editText_Nombre.getText().toString().equals("") && editText_Nombre != null) {
-                    flag_nombre = true;
-                } else {
-                    editText_Nombre.setError("Nombre requerido");
-                }
-
-                if (spinner_carrera.getSelectedItemPosition() != 0 && spinner_materia.getSelectedItemPosition() != 0 && spinner_semestre.getSelectedItemPosition() != 0) {
-                    flag_spinners = true;
-                }
-
-                if (!editText_Tema.getText().toString().isEmpty() && !editText_Tema.getText().toString().equals("") && editText_Tema.getText().toString() != null) {
-                    flag_tema = true;
-                } else {
-                    editText_Tema.setError("Tema requerido");
-                }
-
-
-                if (flag_nControl && flag_nombre && flag_spinners && flag_tema) {
-                    SQLiteDatabase db = helper.getWritableDatabase();
-                    ContentValues values = new ContentValues();
-
-                    values.put(PropiertiesHelper.CAMPO_NCONTROL, editText_NumeroControl.getText().toString());
-                    values.put(PropiertiesHelper.CAMPO_NOMBRE, editText_Nombre.getText().toString());
-                    values.put(PropiertiesHelper.CAMPO_CARRERA, spinner_carrera.getSelectedItem().toString());
-                    values.put(PropiertiesHelper.CAMPO_MATERIA, spinner_materia.getSelectedItem().toString());
-                    values.put(PropiertiesHelper.CAMPO_TEMA, editText_Tema.getText().toString());
-                    values.put(PropiertiesHelper.CAMPO_SEMESTRE, spinner_semestre.getSelectedItem().toString());
-                    values.put(PropiertiesHelper.CAMPO_FECHA, PropiertiesHelper.obtenerFecha().substring(0, 10));
-                    db.insert(PropiertiesHelper.NOMBRE_TABLA, "id", values);
-                    Toast.makeText(AsesoradosActivity.this, "Alumno registrado con exito", Toast.LENGTH_LONG).show();
-                    consultarBD();
-                    arrayAdapterListView.notifyDataSetChanged();
-                    dialogAdd.dismiss();
-                } else {
-                    Toast.makeText(AsesoradosActivity.this, "Algunos de los datos ingresados son inválidos", Toast.LENGTH_LONG).show();
-                }
-
+                Toast.makeText(AsesoradosActivity.this, "Fecha:"+editText_fecha_add_alumno.getText(), Toast.LENGTH_SHORT).show();
             }
+        });
 
-
-
+        textInputLayout_numeroControl_add_alumno.setEndIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(AsesoradosActivity.this, "Este campo de texto contiene = "+textInputLayout_numeroControl_add_alumno.getEditText().getText(),
+                        Toast.LENGTH_LONG).show();
+                //Aquí se le da vida al icono de busqueda
+            }
         });
     }
+
+
 
     @Override
     protected void onDestroy() {
         helper.close();
         super.onDestroy();
     }
+
+
 }
