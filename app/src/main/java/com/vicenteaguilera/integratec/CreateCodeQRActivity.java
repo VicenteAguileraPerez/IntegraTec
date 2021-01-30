@@ -1,8 +1,11 @@
 package com.vicenteaguilera.integratec;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -26,9 +29,12 @@ import androidx.core.app.ActivityCompat;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.vicenteaguilera.integratec.helpers.services.FirestoreAlumno;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
+import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
+
 import net.glxn.qrgen.android.QRCode;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,7 +42,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Objects;
 
-public class CreateCodeQRActivity extends AppCompatActivity {
+public class CreateCodeQRActivity extends AppCompatActivity implements Status{
 
     private final int REQUEST_CODE_ASK_PERMISSION = 111;
     private TextInputLayout editText_Nombre;
@@ -48,6 +54,7 @@ public class CreateCodeQRActivity extends AppCompatActivity {
     private Bitmap bitmap;
     private WifiReceiver wifiReceiver = new WifiReceiver();
     private ButtonHelper buttonHelper = new ButtonHelper();
+    private Status status;
 
     @Override
     protected void onStart() {
@@ -112,7 +119,6 @@ public class CreateCodeQRActivity extends AppCompatActivity {
         });
          textWachers();
     }
-
 
     private void crearQR()
     {
@@ -268,5 +274,10 @@ public class CreateCodeQRActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    @Override
+    public void status(String message) {
+
     }
 }

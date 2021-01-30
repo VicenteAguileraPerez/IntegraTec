@@ -50,7 +50,6 @@ public class AsesoradosActivity extends AppCompatActivity {
     private WifiReceiver wifiReceiver = new WifiReceiver();
     private ButtonHelper buttonHelper = new ButtonHelper();
 
-
     @Override
     protected void onStart() {
         super.onStart();
