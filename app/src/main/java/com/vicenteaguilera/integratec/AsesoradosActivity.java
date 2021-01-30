@@ -492,15 +492,12 @@ public class AsesoradosActivity extends AppCompatActivity {
         cardview_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(AsesoradosActivity.this, "Fecha:"+editText_fecha_add_alumno.getText(), Toast.LENGTH_SHORT).show();
             }
         });
 
         textInputLayout_numeroControl_add_alumno.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(AsesoradosActivity.this, "Este campo de texto contiene = "+textInputLayout_numeroControl_add_alumno.getEditText().getText(),
-                        Toast.LENGTH_LONG).show();
                 //Aquí se le da vida al icono de busqueda
             }
         });
