@@ -5,6 +5,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.view.MenuItemCompat;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
@@ -32,15 +33,23 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
 import com.vicenteaguilera.integratec.helpers.DataBaseHelper;
+import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
+import com.vicenteaguilera.integratec.helpers.services.FirestoreAsesorado;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.AlertDialogPersonalized;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
+import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesorados;
+import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
 import com.vicenteaguilera.integratec.models.AlumnoAsesorado;
+import com.vicenteaguilera.integratec.models.Asesorado;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class AsesoradosActivity extends AppCompatActivity {
+public class AsesoradosActivity extends AppCompatActivity implements Status, ListaAsesorados {
     private ListView listView_BD;
     private ArrayList<String> listaInformacion;
     private ArrayList<AlumnoAsesorado> listaAlumnos;
@@ -426,8 +435,15 @@ public class AsesoradosActivity extends AppCompatActivity {
         switch (item.getItemId()){
 
             case R.id.item_add_asesorado:
-
-                showDialogAddAlumno();
+                ProgressDialog dialog = ProgressDialog.show(AsesoradosActivity.this, "", "Buscando...", true);
+                //ProgressDialog dialog = ProgressDialog.show(AsesoradosActivity.this, "", "Agregando datos...", true);
+                //ProgressDialog dialog = ProgressDialog.show(AsesoradosActivity.this, "", "Eliminando...", true);
+                dialog.show();
+                //new FirestoreAsesorado().addAsesorado(this, dialog, this, "18040756", "Salvador", "ISC", "Cálculo", "Derivadas", "31-01-2021", FirebaseAuthHelper.getCurrentUser().getUid());
+                //new FirestoreAsesorado().addAsesorado(this, dialog, this, "18040076", "Antonio", "ISC", "Cálculo", "Derivadas", "31-01-2021", FirebaseAuthHelper.getCurrentUser().getUid());
+                //new FirestoreAsesorado().deleteAsesorados(FirebaseAuthHelper.getCurrentUser().getUid(), dialog);
+                new FirestoreAsesorado().readAsesorados(this, FirebaseAuthHelper.getCurrentUser().getUid());
+                //showDialogAddAlumno();
                 break;
 
         }
@@ -512,4 +528,19 @@ public class AsesoradosActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void status(String message) {
+        Toast.makeText(AsesoradosActivity.this,message,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void getAsesorados(List<Asesorado> asesoradoList) {
+        String a = "";
+        for(int i = 0; i<asesoradoList.size(); i++)
+        {
+            a += "Nombre = " + asesoradoList.get(i).getNombre() + "\n";
+            a += "NumControl = " + asesoradoList.get(i).getnControl() + "\n\n";
+        }
+        new AlertDialogPersonalized().alertDialogInformacion(a, this);
+    }
 }
