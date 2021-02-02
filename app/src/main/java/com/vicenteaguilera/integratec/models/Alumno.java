@@ -1,6 +1,8 @@
 package com.vicenteaguilera.integratec.models;
 
-public class Alumno
+import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
+
+public class Alumno implements Status
 {
     private String numeroControl;
     private String nombre;

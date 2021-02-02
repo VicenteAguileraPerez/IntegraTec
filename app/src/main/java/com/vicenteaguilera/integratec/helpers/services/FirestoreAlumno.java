@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class FirestoreAlumno {
+public class FirestoreAlumno{
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final CollectionReference AlumnoCollection = db.collection("alumno");
     public static Alumno alumno = null;

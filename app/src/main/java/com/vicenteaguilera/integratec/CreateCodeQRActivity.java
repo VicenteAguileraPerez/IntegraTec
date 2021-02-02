@@ -29,6 +29,7 @@ import androidx.core.app.ActivityCompat;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreAlumno;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
@@ -128,8 +129,8 @@ public class CreateCodeQRActivity extends AppCompatActivity implements Status{
 
 
                     if(Objects.requireNonNull(spinner_Carrera.getEditText()).getText().length() != 0) {
-                                String texto = editText_NumeroControl.getEditText().getText().toString() + "_" + editText_Nombre.getEditText().getText().toString() + "_"
-                                        + spinner_Carrera.getEditText().getText() + "_"+PropiertiesHelper.obtenerFecha().substring(0,10);
+                                String texto = editText_NumeroControl.getEditText().getText().toString() + "_" + editText_Nombre.getEditText().getText().toString().toUpperCase() + "_"
+                                        + spinner_Carrera.getEditText().getText().toString().toUpperCase();
                                 bitmap = QRCode.from(texto).withSize(400, 400).bitmap();
                                 imageView.setImageBitmap(bitmap);
                                 imageView.setVisibility(View.VISIBLE);

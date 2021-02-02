@@ -508,6 +508,8 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         cardview_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //spinner_materia_add.getEditText().getText().toString();
             }
         });
 
