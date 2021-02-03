@@ -28,6 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -49,8 +50,10 @@ import androidx.documentfile.provider.DocumentFile;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.lowagie.text.Document;
@@ -1233,21 +1236,19 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         dialogEditProfile.setCancelable(false);
         dialogEditProfile.show();
 
-        final EditText editText_Name = dialogEditProfile.findViewById(R.id.editText_Name);
-        final EditText editText_LastNames = dialogEditProfile.findViewById(R.id.editText_LastNames);
-        final Spinner spinner_career = dialogEditProfile.findViewById(R.id.spinner_carrera_edit);
-        CardView cardView_ButtonUpdate = dialogEditProfile.findViewById(R.id.cardView_Button_Update);
-        CardView cardView_ButtonClose = dialogEditProfile.findViewById(R.id.cardView_ButtonClose);
+        final TextInputLayout editText_Name = dialogEditProfile.findViewById(R.id.editText_Name);
+        final TextInputLayout editText_LastNames = dialogEditProfile.findViewById(R.id.editText_LastNames);
+        final TextInputLayout spinner_career = dialogEditProfile.findViewById(R.id.spinner_carrera_edit);
+        MaterialButton cardView_ButtonUpdate = dialogEditProfile.findViewById(R.id.cardView_Button_Update);
+        MaterialButton cardView_ButtonClose = dialogEditProfile.findViewById(R.id.cardView_ButtonClose);
 
-        buttonHelper.actionClickButton(cardView_ButtonUpdate, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
-        buttonHelper.actionClickButton(cardView_ButtonClose, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
 
         ArrayAdapter<String> arrayAdapterCareer = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
-        spinner_career.setAdapter(arrayAdapterCareer);
+        ((AutoCompleteTextView)spinner_career.getEditText()).setAdapter(arrayAdapterCareer);
 
-        editText_Name.setText(FirestoreHelper.asesor.getNombre());
-        editText_LastNames.setText(FirestoreHelper.asesor.getApellidos());
-        spinner_career.setSelection(retornaCarrera());
+        editText_Name.getEditText().setText(FirestoreHelper.asesor.getNombre());
+        editText_LastNames.getEditText().setText(FirestoreHelper.asesor.getApellidos());
+        spinner_career.getEditText().setText(FirestoreHelper.asesor.getCarrera());
 
         cardView_ButtonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1256,21 +1257,21 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 boolean flag_LastNames=false;
                 boolean flag_Career=false;
 
-                if(!editText_Name.getText().toString().isEmpty()) {
+                if(!editText_Name.getEditText().getText().toString().isEmpty()) {
                     flag_Name=true;
                 }
                 else {
                     editText_Name.setError("Nombre requerido");
                 }
 
-                if(!editText_LastNames.getText().toString().isEmpty()) {
+                if(!editText_LastNames.getEditText().getText().toString().isEmpty()) {
                     flag_LastNames=true;
                 }
                 else {
                     editText_LastNames.setError("Apellidos requeridos");
                 }
 
-                if(spinner_career.getSelectedItemPosition()!=0) {
+                if(spinner_career.getEditText().getText().length()!=0) {
                     flag_Career=true;
                 }
                 else {
@@ -1282,8 +1283,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
                             "Actualizando..", true);
                     dialog.show();
-                    firestoreHelper.updateDataAsesor(editText_Name.getText().toString(), editText_LastNames.getText().toString(),
-                            String.valueOf(spinner_career.getSelectedItem()),dialog,MainAdviserActivityApp.this);
+                    firestoreHelper.updateDataAsesor(editText_Name.getEditText().getText().toString(), editText_LastNames.getEditText().getText().toString(),
+                            String.valueOf(spinner_career.getEditText().getText()),dialog,MainAdviserActivityApp.this);
                     dialogEditProfile.dismiss();
                    // Toast.makeText(MainAdviserActivityApp.this, "Actualizando datos...", Toast.LENGTH_SHORT).show();
                 }
@@ -1311,15 +1312,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         dialogNewSemester.setCancelable(false);
         dialogNewSemester.show();
 
-        CardView cardView_Button_CreatePDF1= dialogNewSemester.findViewById(R.id.cardView_Button_CreatePDF1);
-        CardView cardView_Button_CreatePDF2= dialogNewSemester.findViewById(R.id.cardView_Button_CreatePDF2);
-        CardView cardView_ButtonDelete= dialogNewSemester.findViewById(R.id.cardView_Button_Delete);
-        CardView cardView_ButtonCancel = dialogNewSemester.findViewById(R.id.cardView_ButtonCancel);
+        MaterialButton cardView_Button_CreatePDF1= dialogNewSemester.findViewById(R.id.cardView_Button_CreatePDF1);
+        MaterialButton cardView_Button_CreatePDF2= dialogNewSemester.findViewById(R.id.cardView_Button_CreatePDF2);
+        MaterialButton cardView_ButtonDelete= dialogNewSemester.findViewById(R.id.cardView_Button_Delete);
+        MaterialButton cardView_ButtonCancel = dialogNewSemester.findViewById(R.id.cardView_ButtonCancel);
 
-        buttonHelper.actionClickButton(cardView_Button_CreatePDF1, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
-        buttonHelper.actionClickButton(cardView_Button_CreatePDF2, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
-        buttonHelper.actionClickButton(cardView_ButtonDelete, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
-        buttonHelper.actionClickButton(cardView_ButtonCancel, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
 
         cardView_Button_CreatePDF1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1430,27 +1427,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     }
 
 
-    public int retornaCarrera(){
 
-        if(FirestoreHelper.asesor.getCarrera().equals("Ingeniería en Sistemas Computacionales")){
-            return 1;
-        }else if(FirestoreHelper.asesor.getCarrera().equals("Ingeniería en Administración")){
-            return 2;
-        }else if(FirestoreHelper.asesor.getCarrera().equals("Ingeniería en Mecatrónica")){
-            return 3;
-        }else if(FirestoreHelper.asesor.getCarrera().equals("Ingeniería Industrial")){
-            return 4;
-        }else if(FirestoreHelper.asesor.getCarrera().equals("Ingeniería en Mecánica")){
-            return 5;
-        }else if(FirestoreHelper.asesor.getCarrera().equals("Ingeniería en Industrias Alimentarias")){
-            return 6;
-        }else if(FirestoreHelper.asesor.getCarrera().equals("Ingeniería Civil")){
-            return 7;
-        }else if(FirestoreHelper.asesor.getCarrera().equals("Ingeniería Electrónica")){
-            return 8;
-        }
-        return 0;
-    }
     public Map<String,Object> dataToSave()
     {
         Map<String,Object> data = new HashMap<>();

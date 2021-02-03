@@ -3,6 +3,7 @@ package com.vicenteaguilera.integratec.helpers.utility.helpers;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.regex.Pattern;
 
 public class StringHelper
 {
@@ -10,7 +11,7 @@ public class StringHelper
     //jhasjadja @ gmail.com
 
     private String[] parts;
-
+    private String EXREGEMAIL="([a-z,0-9]+((\\.|_|-)[a-z0-9]+)*)@([a-z,0-9]+(\\.[a-z0-9]+)*)\\.([a-z]{2,})(\\.([a-z]{2}))?";
     public boolean  isEmpty(String string)
     {
         return string.isEmpty();
@@ -25,49 +26,10 @@ public class StringHelper
     }
     public boolean isEmail(String email)
     {
-        return hasArroba(email);
+        return Pattern.matches(EXREGEMAIL,email);
     }
-    private boolean hasArroba(String email)
-    {
-        if(email.contains("@"))
-        {
-            parts = email.split("@");
-            if(parts.length==2)
-            {
-                return isServerValid(parts[1]);
-            }
-        }
-        return false;
-    }
-    private boolean isServerValid(String servidor)
-    {
-        if(servidor.contains("."))
-        {
-            parts=servidor.split("\\.");
-            /*Log.e("tag",parts[0]+"");
-            return true;*/
-            if(parts.length==2)
-            {
-                if(parts[0].length()>=3 && parts[1].length()>=2){
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            }
-            else if(parts.length==3)
-            {
-                if(parts[0].length()>=3 && parts[1].length()>=2 && parts[2].length()==2)
-                {
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            }
-        }
-        return false;
-    }
+
+
 
     public boolean isNotEmptyCredentials(String email,String password)
     {

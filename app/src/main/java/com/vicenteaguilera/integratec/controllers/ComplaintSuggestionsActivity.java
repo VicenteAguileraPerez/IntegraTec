@@ -12,7 +12,9 @@ import android.widget.RadioGroup;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
@@ -28,12 +30,12 @@ import javax.mail.Session;
 
 public class ComplaintSuggestionsActivity extends AppCompatActivity implements View.OnClickListener {
     String topic="queja";
-    private CardView cardView_ButtonEnviar;
+    private MaterialButton cardView_ButtonEnviar;
     private RadioButton radioButton_queja,radioButton_sugerencia;
     private RadioGroup radioGroup_topic;
-    private EditText editText_email;
-    private EditText editText_mensaje;
-    private EditText editText_nombre;
+    private TextInputLayout editText_email;
+    private TextInputLayout editText_mensaje;
+    private TextInputLayout editText_nombre;
     private ButtonHelper buttonHelper = new ButtonHelper();
 
     private WifiReceiver wifiReceiver = new WifiReceiver();
@@ -66,7 +68,7 @@ public class ComplaintSuggestionsActivity extends AppCompatActivity implements V
         radioGroup_topic = findViewById(R.id.radioGroup_topic);
         cardView_ButtonEnviar = findViewById(R.id.cardView_ButtonEnviar);
         cardView_ButtonEnviar.setOnClickListener(this);
-        buttonHelper.actionClickButton(cardView_ButtonEnviar, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
+
         radioButtonListener();
     }
 
@@ -96,12 +98,7 @@ public class ComplaintSuggestionsActivity extends AppCompatActivity implements V
             }
         });
 
-        /*if (radioButton_queja.isChecked()) {
-            topic = getResources().getString(R.string.queja).toLowerCase();
-        }
-        else if (radioButton_sugerencia.isChecked()) {
-            topic = getResources().getString(R.string.sugerencia).toLowerCase();
-        }*/
+
     }
 
     @Override
@@ -116,7 +113,7 @@ public class ComplaintSuggestionsActivity extends AppCompatActivity implements V
                 boolean flagNombre=false;
 
                 //evaluación de nombre
-                if(!editText_nombre.getText().toString().isEmpty()) {
+                if(!editText_nombre.getEditText().getText().toString().isEmpty()) {
                     flagNombre=true;
                 }
                 else{
@@ -124,8 +121,8 @@ public class ComplaintSuggestionsActivity extends AppCompatActivity implements V
                 }
 
                 //evaluación de email
-                if(!editText_email.getText().toString().isEmpty()) {
-                    if(new StringHelper().isEmail(editText_email.getText().toString())) {
+                if(!editText_email.getEditText().getText().toString().isEmpty()) {
+                    if(new StringHelper().isEmail(editText_email.getEditText().getText().toString())) {
                         flagEmail=true;
                     }
                     else {
@@ -137,7 +134,7 @@ public class ComplaintSuggestionsActivity extends AppCompatActivity implements V
                 }
 
                 //evaluación de mensaje
-                if(!editText_mensaje.getText().toString().isEmpty()) {
+                if(!editText_mensaje.getEditText().getText().toString().isEmpty()) {
                     flagMensaje=true;
                 }
                 else{
@@ -147,15 +144,18 @@ public class ComplaintSuggestionsActivity extends AppCompatActivity implements V
                 if(!topic.equals("") && flagEmail && flagMensaje && flagNombre)
                 {
                     String datos[] = new String[4];
-                    datos[0] = editText_nombre.getText().toString();
-                    datos[1] = editText_email.getText().toString();
+                    datos[0] = editText_nombre.getEditText().getText().toString();
+                    datos[1] = editText_email.getEditText().getText().toString();
                     datos[2] = topic;
-                    datos[3] = editText_mensaje.getText().toString();
+                    datos[3] = editText_mensaje.getEditText().getText().toString();
                     Snackbar.make(view, getResources().getText(R.string.agradecimientos) +" "+ topic, Snackbar.LENGTH_SHORT).show();
-                    sendEmailWithGmail(PropiertiesHelper.EMAIL, PropiertiesHelper.PASSWORD, editText_email.getText().toString(), view.getContext(), datos);
-                    editText_nombre.setText("");
-                    editText_mensaje.setText("");
-                    editText_email.setText("");
+                    sendEmailWithGmail(PropiertiesHelper.EMAIL, PropiertiesHelper.PASSWORD, editText_email.getEditText().getText().toString(), view.getContext(), datos);
+                    editText_nombre.getEditText().setText("");
+                    editText_mensaje.getEditText().setText("");
+                    editText_email.getEditText().setText("");
+                    editText_nombre.setError(null);
+                    editText_mensaje.setError(null);
+                    editText_email.setError(null);
                     radioButton_queja.setChecked(true);
                 }
                 break;

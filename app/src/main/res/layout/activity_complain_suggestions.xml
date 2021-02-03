@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="15dp"
-        app:cardBackgroundColor="@color/colorPrimaryDark"
+        app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="20dp"
         tools:layout_editor_absoluteX="20dp"
         tools:layout_editor_absoluteY="20dp">
@@ -26,39 +26,53 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/editText_nombre"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="50dp"
                     android:layout_marginEnd="20dp"
-                    android:layout_marginBottom="15dp"
-                    android:backgroundTint="@color/white"
-                    android:ems="10"
+                    android:layout_marginBottom="10dp"
                     android:hint="@string/nombre_completo"
-                    android:importantForAutofill="no"
-                    android:inputType="textCapWords"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"
-                    android:textSize="18sp" />
+                    app:backgroundTint="@color/colorPrimaryDark"
+                    app:errorEnabled="true"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-                <EditText
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapWords"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/editText_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="30dp"
                     android:layout_marginEnd="20dp"
                     android:layout_marginBottom="15dp"
-                    android:autofillHints=""
-                    android:backgroundTint="@color/white"
-                    android:ems="10"
                     android:hint="@string/email"
-                    android:inputType="textEmailAddress"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"
-                    android:textSize="18sp" />
+                    app:backgroundTint="@color/colorPrimaryDark"
+                    app:errorEnabled="true"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
 
                 <RadioGroup
                     android:id="@+id/radioGroup_topic"
@@ -76,10 +90,10 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:buttonTint="@color/white"
+                        android:buttonTint="@color/colorPrimaryDark"
                         android:checked="true"
                         android:text="@string/queja"
-                        android:textColor="@color/white"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="18sp" />
 
 
@@ -88,55 +102,52 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:buttonTint="@color/white"
+                        android:buttonTint="@color/colorPrimaryDark"
                         android:text="@string/sugerencia"
-                        android:textColor="@color/white"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="18sp" />
                 </RadioGroup>
-
-                <EditText
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/editText_mensaje"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="30dp"
                     android:layout_marginEnd="20dp"
-                    android:layout_marginBottom="30dp"
-                    android:backgroundTint="@color/white"
-                    android:ems="10"
-                    android:gravity="start|top"
+                    android:layout_marginBottom="15dp"
                     android:hint="@string/mensaje"
-                    android:importantForAutofill="no"
-                    android:inputType="textMultiLine"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"
-                    android:textSize="18sp" />
+                    app:backgroundTint="@color/colorPrimaryDark"
+                    app:errorEnabled="true"
+                    app:counterMaxLength="200"
+                    app:counterEnabled="true"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-                <androidx.cardview.widget.CardView
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textMultiLine"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button"
                     android:id="@+id/cardView_ButtonEnviar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="20dp"
-                    app:cardBackgroundColor="@color/background_green"
-                    app:cardCornerRadius="20dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/textView2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="10dp"
-                            android:gravity="center"
-                            android:text="Enviar"
-                            android:textColor="@color/white"
-                            android:textSize="18sp" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                    android:gravity="center"
+                    android:text="Enviar"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    app:cornerRadius="15dp"
+                    app:backgroundTint="@color/background_green"
+                    />
 
             </LinearLayout>
         </ScrollView>
