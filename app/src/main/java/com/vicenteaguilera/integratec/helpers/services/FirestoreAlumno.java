@@ -104,6 +104,7 @@ public class FirestoreAlumno{
     }
 
     public void getDataAlumno(String document, final ProgressDialog dialog, final Status status, final Context context){
+
         AlumnoCollection.document(document).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -132,6 +133,8 @@ public class FirestoreAlumno{
                         );
                         dialog.dismiss();
                         alertDialogBuilder.show();
+
+
                     }
                 }else {
                     status.status("Error, verifique su conexión a Internet, si los problemas continuan contacte al administrado");

@@ -13,162 +13,159 @@
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
          android:orientation="vertical">
-         <EditText
-             android:id="@+id/editText_numero_Control"
+
+
+         <com.google.android.material.textfield.TextInputLayout
+             android:id="@+id/textInputLayout_numero_control_update"
+             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:layout_marginStart="20dp"
              android:layout_marginTop="20dp"
              android:layout_marginEnd="20dp"
-             android:layout_marginBottom="10dp"
-             android:ems="10"
+             android:layout_marginBottom="5dp"
+             android:backgroundTint="@color/colorPrimaryDark"
              android:hint="@string/numero_de_control"
-             android:importantForAutofill="no"
-             android:inputType="number"
-             android:maxLength="8" />
+             app:counterEnabled="true"
+             app:counterMaxLength="8"
+             app:errorEnabled="true">
 
-         <EditText
-             android:id="@+id/editText_nombre_completo"
+             <com.google.android.material.textfield.TextInputEditText
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:inputType="number" />
+
+         </com.google.android.material.textfield.TextInputLayout>
+
+         <com.google.android.material.textfield.TextInputLayout
+             android:id="@+id/textInputLayout_nombre_update"
+             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
              android:layout_width="match_parent"
-             android:layout_height="wrap_content"
+             android:layout_height="match_parent"
              android:layout_marginStart="20dp"
-             android:layout_marginTop="20dp"
              android:layout_marginEnd="20dp"
              android:layout_marginBottom="10dp"
-             android:ems="10"
+             android:backgroundTint="@color/colorPrimaryDark"
              android:hint="@string/nombre_completo"
-             android:importantForAutofill="no"
-             android:inputType="textPersonName" />
+             app:errorEnabled="true">
 
-         <Spinner
-             android:id="@+id/spinner_carrera"
-             style="Widget.AppCompat.Spinner.Underlined"
+             <com.google.android.material.textfield.TextInputEditText
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:inputType="textPersonName" />
+         </com.google.android.material.textfield.TextInputLayout>
+
+         <com.google.android.material.textfield.TextInputLayout
+             android:id="@+id/spinner_carrera_update"
+             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:layout_marginStart="20dp"
-             android:layout_marginTop="20dp"
+             android:layout_marginTop="5dp"
              android:layout_marginEnd="20dp"
-             android:layout_marginBottom="10dp" />
+             android:layout_marginBottom="5dp"
+             android:backgroundTint="@color/colorPrimaryDark"
+             android:hint="@string/seleccione_una_carrera_spinner"
+             app:errorEnabled="true">
 
-         <Spinner
-             android:id="@+id/spinner_semestre"
-             style="Widget.AppCompat.Spinner.Underlined"
+             <AutoCompleteTextView
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:inputType="none" />
+
+         </com.google.android.material.textfield.TextInputLayout>
+
+         <com.google.android.material.textfield.TextInputLayout
+             android:id="@+id/spinner_materia_update"
+             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:layout_marginStart="20dp"
-             android:layout_marginTop="20dp"
              android:layout_marginEnd="20dp"
-             android:layout_marginBottom="10dp" />
+             android:backgroundTint="@color/colorPrimaryDark"
+             android:hint="@string/seleccione_una_materia"
+             app:errorEnabled="true">
 
-         <Spinner
-             android:id="@+id/spinner_materia"
-             style="Widget.AppCompat.Spinner.Underlined"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_marginStart="20dp"
-             android:layout_marginTop="20dp"
-             android:layout_marginEnd="20dp"
-             android:layout_marginBottom="10dp" />
+             <AutoCompleteTextView
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:inputType="none" />
 
-         <EditText
-             android:id="@+id/editText_Tema"
+         </com.google.android.material.textfield.TextInputLayout>
+
+
+         <com.google.android.material.textfield.TextInputLayout
+             android:id="@+id/textInputLayout_tema_update"
+             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
              android:layout_width="match_parent"
-             android:layout_height="wrap_content"
+             android:layout_height="match_parent"
              android:layout_marginStart="20dp"
-             android:layout_marginTop="20dp"
+             android:layout_marginTop="5dp"
              android:layout_marginEnd="20dp"
              android:layout_marginBottom="10dp"
-             android:ems="10"
-             android:hint="@string/tema"
-             android:inputType="text"
-             android:importantForAutofill="no" />
+             android:backgroundTint="@color/colorPrimaryDark"
+             android:hint="@string/tema_text"
+             app:errorEnabled="true">
 
-         <androidx.cardview.widget.CardView
-             android:id="@+id/cardview_modificar_d"
+             <com.google.android.material.textfield.TextInputEditText
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:inputType="textPersonName" />
+         </com.google.android.material.textfield.TextInputLayout>
+
+         <com.google.android.material.button.MaterialButton
+
+             android:id="@+id/button_modificar_update"
+             style="@style/Widget.MaterialComponents.Button"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:layout_marginStart="20dp"
              android:layout_marginTop="10dp"
              android:layout_marginEnd="20dp"
-             android:layout_marginBottom="10dp"
-             app:cardBackgroundColor="@color/background_green"
-             app:cardCornerRadius="20dp">
+             android:layout_marginBottom="5dp"
+             android:gravity="center"
+             android:paddingTop="5dp"
+             android:paddingBottom="5dp"
+             android:text="@string/modificar"
+             android:textColor="#FFFFFF"
+             android:textSize="14sp"
+             app:cornerRadius="15dp" />
 
-             <LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="match_parent"
-                 android:orientation="vertical">
+         <com.google.android.material.button.MaterialButton
 
-                 <TextView
-                     android:id="@+id/textView3"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:layout_marginTop="8dp"
-                     android:layout_marginBottom="8dp"
-                     android:gravity="center"
-                     android:text="@string/modificar"
-                     android:textColor="@android:color/white"
-                     android:textSize="16sp" />
-             </LinearLayout>
-         </androidx.cardview.widget.CardView>
-
-         <androidx.cardview.widget.CardView
-             android:id="@+id/cardview_borrar_d"
+             android:id="@+id/button_borrar_update"
+             style="@style/Widget.MaterialComponents.Button"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:layout_marginStart="20dp"
-             android:layout_marginTop="10dp"
+             android:layout_marginTop="5dp"
              android:layout_marginEnd="20dp"
-             android:layout_marginBottom="10dp"
-             app:cardBackgroundColor="@color/background_green"
-             app:cardCornerRadius="20dp">
+             android:layout_marginBottom="5dp"
+             android:gravity="center"
+             android:paddingTop="5dp"
+             android:paddingBottom="5dp"
+             android:text="@string/borrar"
+             android:textColor="#FFFFFF"
+             android:textSize="14sp"
+             app:cornerRadius="15dp" />
 
-             <LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="match_parent"
-                 android:orientation="vertical">
+         <com.google.android.material.button.MaterialButton
 
-                 <TextView
-                     android:id="@+id/textView4"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:layout_marginTop="8dp"
-                     android:layout_marginBottom="8dp"
-                     android:gravity="center"
-                     android:text="@string/borrar"
-                     android:textColor="@android:color/white"
-                     android:textSize="16sp" />
-             </LinearLayout>
-         </androidx.cardview.widget.CardView>
-
-         <androidx.cardview.widget.CardView
-             android:id="@+id/cardview_cancelar_d"
+             android:id="@+id/button_cancelar_update"
+             style="@style/Widget.MaterialComponents.Button"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:layout_marginStart="20dp"
-             android:layout_marginTop="10dp"
+             android:layout_marginTop="5dp"
              android:layout_marginEnd="20dp"
-             android:layout_marginBottom="20dp"
-             app:cardBackgroundColor="@color/background_green"
-             app:cardCornerRadius="20dp">
-
-             <LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="match_parent"
-                 android:orientation="vertical">
-
-                 <TextView
-                     android:id="@+id/textView5"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:layout_marginTop="8dp"
-                     android:layout_marginBottom="8dp"
-                     android:gravity="center"
-                     android:text="@string/cancelar"
-                     android:textColor="@android:color/white"
-                     android:textSize="16sp" />
-             </LinearLayout>
-         </androidx.cardview.widget.CardView>
+             android:layout_marginBottom="15dp"
+             android:gravity="center"
+             android:paddingTop="5dp"
+             android:paddingBottom="5dp"
+             android:text="@string/cancelar"
+             android:textColor="#FFFFFF"
+             android:textSize="14sp"
+             app:cornerRadius="15dp" />
      </LinearLayout>
  </ScrollView>
 

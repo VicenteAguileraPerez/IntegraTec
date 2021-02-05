@@ -14,6 +14,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -130,39 +131,39 @@ public class LoginFragment extends Fragment  implements Status{
         dialogRecoverPass.setCancelable(false);
         dialogRecoverPass.show();
 
-        final EditText editText_Email = dialogRecoverPass.findViewById(R.id.textView_email);
-        CardView cardView_ButtonSend = dialogRecoverPass.findViewById(R.id.cardView_Button_Send);
-        CardView cardView_ButtonCancel = dialogRecoverPass.findViewById(R.id.cardView_ButtonCancel);
+        final TextInputLayout editText_email_recover = dialogRecoverPass.findViewById(R.id.editText_email_recover);
+        final MaterialButton button_Send_recover = dialogRecoverPass.findViewById(R.id.button_Send_recover);
+        final MaterialButton button_Cancel_recover = dialogRecoverPass.findViewById(R.id.button_Cancel_recover);
 
-        buttonHelper.actionClickButton(cardView_ButtonSend, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
-        buttonHelper.actionClickButton(cardView_ButtonCancel, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
+        //buttonHelper.actionClickButton(cardView_ButtonSend, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
+        //buttonHelper.actionClickButton(cardView_ButtonCancel, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
 
-        cardView_ButtonSend.setOnClickListener(new View.OnClickListener() {
+        button_Send_recover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 boolean flag_Email=false;
-                if(!editText_Email.getText().toString().isEmpty()) {
-                    if(new StringHelper().isEmail(editText_Email.getText().toString())) {
+                if(!editText_email_recover.getEditText().getText().toString().isEmpty()) {
+                    if(new StringHelper().isEmail(editText_email_recover.getEditText().getText().toString())) {
                         flag_Email=true;
                     }
                     else {
-                        editText_Email.setError("Correo electrónico inválido");
+                        editText_email_recover.setError("Correo electrónico inválido");
                     }
                 }
                 else {
-                    editText_Email.setError("Correo electrónico requerido");
+                    editText_email_recover.setError("Correo electrónico requerido");
                 }
 
                 if(flag_Email)
                 {
-                    new FirebaseQueryHelper().BuscarCredenciales(editText_Email.getText().toString(),getActivity());
+                    new FirebaseQueryHelper().BuscarCredenciales(editText_email_recover.getEditText().getText().toString(),getActivity());
                     dialogRecoverPass.dismiss();
                 }
             }
         });
 
-        cardView_ButtonCancel.setOnClickListener(new View.OnClickListener() {
+        button_Cancel_recover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialogRecoverPass.dismiss();

@@ -23,6 +23,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="5dp"
+                android:backgroundTint="@color/colorPrimaryDark"
                 android:hint="@string/n_mero_de_control"
                 app:counterEnabled="true"
                 app:counterMaxLength="8"
@@ -46,12 +47,14 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="5dp"
+                android:backgroundTint="@color/colorPrimaryDark"
                 android:hint="@string/nombre_completo">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:editable="false" />
+                    android:focusable="false"
+                    android:inputType="textPersonName" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -63,6 +66,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="5dp"
+                android:backgroundTint="@color/colorPrimaryDark"
                 android:hint="@string/car">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -80,7 +84,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
                 android:backgroundTint="@color/colorPrimaryDark"
-                android:hint="Seleccione una materia"
+                android:hint="@string/seleccione_una_materia"
                 app:errorEnabled="true">
 
                 <AutoCompleteTextView
@@ -98,6 +102,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="5dp"
+                android:backgroundTint="@color/colorPrimaryDark"
                 android:hint="@string/tema">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -114,6 +119,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="5dp"
+                android:backgroundTint="@color/colorPrimaryDark"
                 android:hint="@string/fecha">
 
                 <com.google.android.material.textfield.TextInputEditText

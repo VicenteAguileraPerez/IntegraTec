@@ -3,8 +3,8 @@
 
     <!-- CreateQRCode -->
     <string name="generarQR">Generar QR</string>
-    <string name="tema">Tema</string>
-    <string name="fecha">Fecha</string>
+    <string name="tema">Tema:</string>
+    <string name="fecha">Fecha:</string>
     <string name="imagen_de_codigo_qr">Imagen de codigo QR</string>
     <string name="guardar_qr">Guardar QR</string>
     <string name="numero_de_control">Número de Control</string>
@@ -100,6 +100,10 @@
     <string name="seleccione_una_carrera">Seleccione una carrera...</string>
     <string name="n_mero_de_control">Número de control</string>
     <string name="car">Carrera</string>
+    <string name="seleccione_una_materia">Seleccione una materia</string>
+    <string name="seleccione_una_carrera_spinner">Seleccione una carrera</string>
+    <string name="tema_text">Tema</string>
+    <string name="seleccione_un_lugar">Seleccione un lugar</string>
 
 
 </resources>

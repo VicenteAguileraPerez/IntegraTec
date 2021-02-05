@@ -6,11 +6,8 @@ import androidx.core.view.MenuItemCompat;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,16 +22,14 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
-import com.vicenteaguilera.integratec.helpers.DataBaseHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreAsesorado;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.AlertDialogPersonalized;
@@ -48,12 +43,12 @@ import com.vicenteaguilera.integratec.models.Asesorado;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class AsesoradosActivity extends AppCompatActivity implements Status, ListaAsesorados {
     private ListView listView_BD;
     private ArrayList<String> listaInformacion;
     private ArrayList<AlumnoAsesorado> listaAlumnos;
-    private DataBaseHelper helper;
     private ArrayAdapter arrayAdapterListView;
     private TextView textView_sin_data;
     private WifiReceiver wifiReceiver = new WifiReceiver();
@@ -82,9 +77,6 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         listaInformacion = new ArrayList<String>();
         listView_BD = findViewById(R.id.listView_BD);
 
-
-        helper = new DataBaseHelper(AsesoradosActivity.this, PropiertiesHelper.NOMBRE_BD, null, 1);
-
         consultarBD();
 
         arrayAdapterListView = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listaInformacion);
@@ -109,38 +101,35 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         dialogUpdateDelete.setCancelable(false);
         dialogUpdateDelete.show();
 
-        final EditText editText_NumeroControl = dialogUpdateDelete.findViewById(R.id.editText_numero_Control);
-        final EditText editText_Nombre = dialogUpdateDelete.findViewById(R.id.editText_nombre_completo);
-        final EditText editText_Tema = dialogUpdateDelete.findViewById(R.id.editText_Tema);
+        final TextInputLayout textInputLayout_numero_control_update = dialogUpdateDelete.findViewById(R.id.textInputLayout_numero_control_update);
+        final TextInputLayout textInputLayout_nombre_update = dialogUpdateDelete.findViewById(R.id.textInputLayout_nombre_update);
+        final TextInputLayout textInputLayout_tema_update = dialogUpdateDelete.findViewById(R.id.textInputLayout_tema_update);
 
-        final Spinner spinner_carrera = dialogUpdateDelete.findViewById(R.id.spinner_carrera);
-        final Spinner spinner_semestre = dialogUpdateDelete.findViewById(R.id.spinner_semestre);
-        final Spinner spinner_materia = dialogUpdateDelete.findViewById(R.id.spinner_materia);
-        final CardView cardview_cancelar = dialogUpdateDelete.findViewById(R.id.cardview_cancelar_d);
-        final CardView cardview_borrar = dialogUpdateDelete.findViewById(R.id.cardview_borrar_d);
-        final CardView cardview_modificar = dialogUpdateDelete.findViewById(R.id.cardview_modificar_d);
+        final TextInputLayout spinner_carrera_update = dialogUpdateDelete.findViewById(R.id.spinner_carrera_update);
+        final TextInputLayout spinner_materia_update = dialogUpdateDelete.findViewById(R.id.spinner_materia_update);
 
-        buttonHelper.actionClickButton(cardview_cancelar, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
-        buttonHelper.actionClickButton(cardview_borrar, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
-        buttonHelper.actionClickButton(cardview_modificar, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
+        final MaterialButton button_cancelar_update = dialogUpdateDelete.findViewById(R.id.button_cancelar_update);
+        final MaterialButton button_borrar_update = dialogUpdateDelete.findViewById(R.id.button_borrar_update);
+        final MaterialButton button_modificar_update = dialogUpdateDelete.findViewById(R.id.button_modificar_update);
+
+        //buttonHelper.actionClickButton(cardview_cancelar, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
+        //buttonHelper.actionClickButton(cardview_borrar, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
+        //buttonHelper.actionClickButton(cardview_modificar, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
 
         ArrayAdapter<String> arrayAdapterCarrera = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
-        spinner_carrera.setAdapter(arrayAdapterCarrera);
+        ((AutoCompleteTextView)spinner_carrera_update.getEditText()).setAdapter(arrayAdapterCarrera);
 
-        ArrayAdapter<String> arrayAdapterSemestre = new ArrayAdapter<>(this,  R.layout.custom_spinner_item, PropiertiesHelper.SEMESTRES);
-        spinner_semestre.setAdapter(arrayAdapterSemestre);
 
         ArrayAdapter<String> arrayAdapterMateria = new ArrayAdapter<>(this,  R.layout.custom_spinner_item, PropiertiesHelper.MATERIAS);
-        spinner_materia.setAdapter(arrayAdapterMateria);
+        ((AutoCompleteTextView)spinner_materia_update.getEditText()).setAdapter(arrayAdapterCarrera);
 
-        editText_NumeroControl.setText(String.valueOf(alumno.getnControl()));
-        editText_Nombre.setText(alumno.getNombre());
-        editText_Tema.setText(alumno.getTema());
-        spinner_carrera.setSelection(returnCarrera(alumno.getCarrera()));
-        spinner_materia.setSelection(returnMateria(alumno.getMateria()));
-        spinner_semestre.setSelection(returnSemestre(alumno.getSemestre()));
+        textInputLayout_numero_control_update.getEditText().setText(String.valueOf(alumno.getnControl()));
+        textInputLayout_nombre_update.getEditText().setText(alumno.getNombre());
+        textInputLayout_tema_update.getEditText().setText(alumno.getTema());
+        spinner_carrera_update.getEditText().setText(alumno.getCarrera());
+        spinner_materia_update.getEditText().setText(alumno.getMateria());
 
-        cardview_borrar.setOnClickListener(new View.OnClickListener() {
+        button_borrar_update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -151,12 +140,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
                 dialogConfirm.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        SQLiteDatabase db = helper.getWritableDatabase();
-                        String parametros[] = {String.valueOf(alumno.getId())};
 
-                        db.delete(PropiertiesHelper.NOMBRE_TABLA, "id=?", parametros);
-                        consultarBD();
-                        arrayAdapterListView.notifyDataSetChanged();
                         dialogUpdateDelete.dismiss();
                     }
                 });
@@ -171,65 +155,59 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
             }
         });
 
-        cardview_cancelar.setOnClickListener(new View.OnClickListener() {
+        button_cancelar_update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialogUpdateDelete.dismiss();
             }
         });
 
-        cardview_modificar.setOnClickListener(new View.OnClickListener() {
+        button_modificar_update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editText_NumeroControl.setError(null);
-                editText_Nombre.setError(null);
-                editText_Tema.setError(null);
+                textInputLayout_numero_control_update.setError(null);
+                textInputLayout_nombre_update.setError(null);
+                textInputLayout_tema_update.setError(null);
 
                 boolean flag_nControl = false;
                 boolean flag_nombre = false;
-                boolean flag_spinners = false;
+                boolean flag_spinner_carrera = false;
+                boolean flag_spinner_materia = false;
                 boolean flag_tema = false;
 
-                if(!editText_NumeroControl.getText().toString().isEmpty() && !editText_NumeroControl.getText().toString().equals("")
-                        && editText_NumeroControl.getText().toString() != null && editText_NumeroControl.getText().toString().length() == 8){
+                if(!textInputLayout_numero_control_update.getEditText().getText().toString().isEmpty() && !textInputLayout_numero_control_update.getEditText().getText().toString().equals("")
+                        && textInputLayout_numero_control_update.getEditText().getText().toString() != null && textInputLayout_numero_control_update.getEditText().getText().toString().length() == 8){
                     flag_nControl = true;
                 }else {
-                    editText_NumeroControl.setError("El número de control es invalido");
+                    textInputLayout_numero_control_update.setError("El número de control es invalido");
                 }
 
-                if(!editText_Nombre.getText().toString().isEmpty() && !editText_Nombre.getText().toString().equals("") && editText_Nombre != null){
+                if(!textInputLayout_nombre_update.getEditText().getText().toString().isEmpty() && !textInputLayout_nombre_update.getEditText().getText().toString().equals("")){
                     flag_nombre = true;
                 }else {
-                    editText_Nombre.setError("Nombre requerido");
+                    textInputLayout_nombre_update.setError("Nombre requerido");
                 }
 
-                if(spinner_carrera.getSelectedItemPosition() != 0 && spinner_materia.getSelectedItemPosition() != 0 && spinner_semestre.getSelectedItemPosition() != 0){
-                    flag_spinners = true;
+                if(Objects.requireNonNull(spinner_carrera_update.getEditText()).getText().length() != 0 ){
+                    flag_spinner_carrera = true;
+                }else {
+                    spinner_carrera_update.setError("Seleccione una opción valida");
                 }
 
-                if(!editText_Tema.getText().toString().isEmpty() && !editText_Tema.getText().toString().equals("") && editText_Tema.getText().toString()!= null){
+                if(Objects.requireNonNull(spinner_materia_update.getEditText()).getText().length() != 0 ){
+                    flag_spinner_materia = true;
+                }else {
+                    spinner_materia_update.setError("Seleccione una opción valida");
+                }
+
+                if(!textInputLayout_tema_update.getEditText().getText().toString().isEmpty() && !textInputLayout_tema_update.getEditText().getText().toString().equals("") && textInputLayout_tema_update.getEditText().getText().toString()!= null){
                     flag_tema = true;
                 }else {
-                    editText_Tema.setError("Tema requerido");
+                    textInputLayout_tema_update.setError("Tema requerido");
                 }
 
 
-                if(flag_nControl && flag_nombre && flag_spinners && flag_tema){
-                    SQLiteDatabase db = helper.getWritableDatabase();
-                    String parametros[] = {String.valueOf(alumno.getId())};
-                    ContentValues values = new ContentValues();
-                    values.put(PropiertiesHelper.CAMPO_NCONTROL, editText_NumeroControl.getText().toString());
-                    values.put(PropiertiesHelper.CAMPO_NOMBRE, editText_Nombre.getText().toString());
-                    values.put(PropiertiesHelper.CAMPO_CARRERA, spinner_carrera.getSelectedItem().toString());
-                    values.put(PropiertiesHelper.CAMPO_SEMESTRE, spinner_semestre.getSelectedItem().toString());
-                    values.put(PropiertiesHelper.CAMPO_MATERIA, spinner_materia.getSelectedItem().toString());
-                    values.put(PropiertiesHelper.CAMPO_TEMA, editText_Tema.getText().toString());
-
-
-                    db.update(PropiertiesHelper.NOMBRE_TABLA, values,"id=?",parametros);
-
-                    consultarBD();
-                    arrayAdapterListView.notifyDataSetChanged();
+                if(flag_nControl && flag_nombre && flag_spinner_carrera && flag_tema && flag_spinner_materia){
 
                     dialogUpdateDelete.dismiss();
                 }else {
@@ -240,29 +218,9 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
     }
 
     private void consultarBD() {
-        SQLiteDatabase db = helper.getReadableDatabase();
-        AlumnoAsesorado alumno = null;
-
         if(listaAlumnos.size()!=0){
             listaAlumnos.clear();
         }
-
-        Cursor cursor = db.rawQuery("SELECT * FROM "+ PropiertiesHelper.NOMBRE_TABLA, null);
-
-        while (cursor.moveToNext()){
-            alumno = new AlumnoAsesorado();
-            alumno.setId(cursor.getInt(0));
-            alumno.setnControl(cursor.getInt(1));
-            alumno.setNombre(cursor.getString(2));
-            alumno.setSemestre(cursor.getString(3));
-            alumno.setCarrera(cursor.getString(4));
-            alumno.setMateria(cursor.getString(5));
-            alumno.setTema(cursor.getString(6));
-            alumno.setFecha(cursor.getString(7));
-
-            listaAlumnos.add(alumno);
-        }
-
         obtenerLista();
     }
 
@@ -285,97 +243,6 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
 
     }
 
-    private int returnCarrera(String carrera){
-        if(carrera.equals("Ingeniería en Sistemas Computacionales")){
-            return 1;
-        }else if(carrera.equals("Ingeniería en Administración")){
-            return 2;
-        }else if(carrera.equals("Ingeniería en Mecatrónica")){
-            return 3;
-        }else if(carrera.equals("Ingeniería Industrial")){
-            return 4;
-        }else if(carrera.equals("Ingeniería en Mecánica")){
-            return 5;
-        }else if(carrera.equals("Ingeniería en Industrias Alimentarias")){
-            return 6;
-        }else if(carrera.equals("Ingeniería Civil")){
-            return 7;
-        }else if(carrera.equals("Ingeniería Electrónica")){
-            return 8;
-        }
-        return  0;
-    }
-
-    private int returnSemestre(String semestre){
-        if(semestre.equals("1A")){
-            return 1;
-        }else if(semestre.equals("1B")){
-            return 2;
-        }else if(semestre.equals("2A")){
-            return 3;
-        }else if(semestre.equals("2B")){
-            return 4;
-        }else if(semestre.equals("3A")){
-            return 5;
-        }else if(semestre.equals("3B")){
-            return 6;
-        }else if(semestre.equals("4A")){
-            return 7;
-        }else if(semestre.equals("4B")){
-            return 8;
-        }else if(semestre.equals("5A")){
-            return 9;
-        }else if(semestre.equals("5B")){
-            return 10;
-        }else if(semestre.equals("6A")){
-            return 11;
-        }else if(semestre.equals("6B")){
-            return 12;
-        }else if(semestre.equals("7A")){
-            return 13;
-        }else if(semestre.equals("7B")){
-            return 14;
-        }else if(semestre.equals("8A")){
-            return 15;
-        }else if(semestre.equals("8B")){
-            return 16;
-        }else if(semestre.equals("9A")){
-            return 17;
-        }else if(semestre.equals("9B")){
-            return 18;
-        }else if(semestre.equals("10A")){
-            return 19;
-        }else if(semestre.equals("10B")){
-            return 20;
-        }
-
-        return 0;
-    }
-
-    private int returnMateria(String materia){
-        if(materia.equals("Álgebra")){
-            return 1;
-        }else if(materia.equals("Álgebra lineal")){
-            return 2;
-        }else if(materia.equals("Cálculo diferencial")){
-            return 3;
-        }else if(materia.equals("Cálculo integral")){
-            return 4;
-        }else if(materia.equals("Cálculo vectorial")){
-            return 5;
-        }else if(materia.equals("Ecuaciones diferenciales")){
-            return 6;
-        }else if(materia.equals("Probabilidad y estadística")){
-            return 7;
-        }else if(materia.equals("Métodos numéricos")){
-            return 8;
-        }else if(materia.equals("Química")){
-            return 9;
-        }else if(materia.equals("Física")){
-            return 10;
-        }
-        return 0;
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -402,28 +269,8 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
     }
 
     private void consultarBDPorFiltro(String text) {
-        SQLiteDatabase db = helper.getReadableDatabase();
-        AlumnoAsesorado alumno = null;
-
         listaAlumnos.clear();
-        Cursor cursor = db.rawQuery("SELECT * FROM "+ PropiertiesHelper.NOMBRE_TABLA, null);
 
-        while (cursor.moveToNext()){
-            alumno = new AlumnoAsesorado();
-            alumno.setId(cursor.getInt(0));
-            alumno.setnControl(cursor.getInt(1));
-            alumno.setNombre(cursor.getString(2));
-            alumno.setSemestre(cursor.getString(3));
-            alumno.setCarrera(cursor.getString(4));
-            alumno.setMateria(cursor.getString(5));
-            alumno.setTema(cursor.getString(6));
-            alumno.setFecha(cursor.getString(7));
-
-            if(alumno.getData().contains(text)) {
-                listaAlumnos.add(alumno);
-                Log.e("InfoAlumno: ", alumno.getData());
-            }
-        }
         obtenerLista();
         arrayAdapterListView.notifyDataSetChanged();
     }
@@ -467,6 +314,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
 
         final TextInputLayout textInputLayout_numeroControl_add_alumno = dialogAdd.findViewById(R.id.textInputLayout_numeroControl_add_alumno);
         final TextInputEditText textInputEditText_fecha_add_alumno = dialogAdd.findViewById(R.id.textInputEditText_fecha_add_alumno);
+        final TextInputLayout textInputLayout_nombre_add_alumno = dialogAdd.findViewById(R.id.textInputLayout_nombre_add_alumno);
         final TextInputLayout spinner_materia_add = dialogAdd.findViewById(R.id.spinner_materia_add);
 
         final EditText editText_fecha_add_alumno = dialogAdd.findViewById(R.id.textInputEditText_fecha_add_alumno);
@@ -525,7 +373,6 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
 
     @Override
     protected void onDestroy() {
-        helper.close();
         super.onDestroy();
     }
 
