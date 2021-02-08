@@ -31,34 +31,44 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
+import com.vicenteaguilera.integratec.helpers.services.FirestoreAlumno;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreAsesorado;
+import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.AlertDialogPersonalized;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesorados;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
+import com.vicenteaguilera.integratec.models.Alumno;
 import com.vicenteaguilera.integratec.models.AlumnoAsesorado;
 import com.vicenteaguilera.integratec.models.Asesorado;
 
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class AsesoradosActivity extends AppCompatActivity implements Status, ListaAsesorados {
+public class AsesoradosActivity extends AppCompatActivity implements Status, ListaAsesorados, View.OnClickListener {
     private ListView listView_BD;
     private ArrayList<String> listaInformacion;
-    private ArrayList<AlumnoAsesorado> listaAlumnos;
+    private ArrayList<Asesorado> listaAlumnos;
+    private ArrayList<Asesorado> listaAlumnosFiltrados;
     private ArrayAdapter arrayAdapterListView;
     private TextView textView_sin_data;
     private WifiReceiver wifiReceiver = new WifiReceiver();
-    private ButtonHelper buttonHelper = new ButtonHelper();
+    private FirestoreAlumno firestoreAlumno = new FirestoreAlumno();
+    private FirestoreAsesorado firestoreAsesorado = new FirestoreAsesorado();
+    private FirestoreHelper firestoreHelper = new FirestoreHelper();
+
+    private boolean flag = false;
 
     @Override
     protected void onStart() {
         super.onStart();
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(wifiReceiver,intentFilter);
+        firestoreAsesorado.readAsesorados(AsesoradosActivity.this, FirestoreHelper.asesor.getUid());
     }
 
     @Override
@@ -66,6 +76,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         super.onStop();
         unregisterReceiver(wifiReceiver);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,11 +84,10 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
 
         textView_sin_data = findViewById(R.id.textView_sin_data);
 
-        listaAlumnos = new ArrayList<AlumnoAsesorado>();
+        listaAlumnos = new ArrayList<Asesorado>();
+        listaAlumnosFiltrados = new ArrayList<Asesorado>();
         listaInformacion = new ArrayList<String>();
         listView_BD = findViewById(R.id.listView_BD);
-
-        consultarBD();
 
         arrayAdapterListView = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listaInformacion);
         listView_BD.setAdapter(arrayAdapterListView);
@@ -88,9 +98,11 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
                 showDialogUpdateDelete(listaAlumnos.get(position),position);
             }
         });
+
+        //createDialogAddAlumno();
     }
 
-    private void showDialogUpdateDelete(final AlumnoAsesorado alumno, int position) {
+    private void showDialogUpdateDelete(final Asesorado alumno, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
 
@@ -112,16 +124,11 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         final MaterialButton button_borrar_update = dialogUpdateDelete.findViewById(R.id.button_borrar_update);
         final MaterialButton button_modificar_update = dialogUpdateDelete.findViewById(R.id.button_modificar_update);
 
-        //buttonHelper.actionClickButton(cardview_cancelar, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
-        //buttonHelper.actionClickButton(cardview_borrar, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
-        //buttonHelper.actionClickButton(cardview_modificar, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
-
         ArrayAdapter<String> arrayAdapterCarrera = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
         ((AutoCompleteTextView)spinner_carrera_update.getEditText()).setAdapter(arrayAdapterCarrera);
 
-
         ArrayAdapter<String> arrayAdapterMateria = new ArrayAdapter<>(this,  R.layout.custom_spinner_item, PropiertiesHelper.MATERIAS);
-        ((AutoCompleteTextView)spinner_materia_update.getEditText()).setAdapter(arrayAdapterCarrera);
+        ((AutoCompleteTextView)spinner_materia_update.getEditText()).setAdapter(arrayAdapterMateria);
 
         textInputLayout_numero_control_update.getEditText().setText(String.valueOf(alumno.getnControl()));
         textInputLayout_nombre_update.getEditText().setText(alumno.getNombre());
@@ -140,8 +147,10 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
                 dialogConfirm.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        ProgressDialog dialogD = ProgressDialog.show(AsesoradosActivity.this, "", "Eliminando...", true);
+                        firestoreAsesorado.deleteDataAsesorado(AsesoradosActivity.this, dialogD, AsesoradosActivity.this, alumno.getId());
                         dialogUpdateDelete.dismiss();
+                        firestoreAsesorado.readAsesorados(AsesoradosActivity.this, FirestoreHelper.asesor.getUid());
                     }
                 });
                 dialogConfirm.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -208,8 +217,17 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
 
 
                 if(flag_nControl && flag_nombre && flag_spinner_carrera && flag_tema && flag_spinner_materia){
-
+                    ProgressDialog dialog = ProgressDialog.show(AsesoradosActivity.this, "", "Actualizando...", true);
+                    firestoreAsesorado.updateDataAsesorado(AsesoradosActivity.this, dialog, AsesoradosActivity.this, alumno.getId(),
+                            textInputLayout_numero_control_update.getEditText().getText().toString(),
+                            textInputLayout_nombre_update.getEditText().getText().toString(),
+                            spinner_carrera_update.getEditText().getText().toString(),
+                            spinner_materia_update.getEditText().getText().toString(),
+                            textInputLayout_tema_update.getEditText().getText().toString(),
+                            alumno.getFecha(),
+                            FirestoreHelper.asesor.getUid());
                     dialogUpdateDelete.dismiss();
+                    firestoreAsesorado.readAsesorados(AsesoradosActivity.this, FirestoreHelper.asesor.getUid());
                 }else {
                     Toast.makeText(AsesoradosActivity.this, "Algunos de los datos ingresados son inválidos", Toast.LENGTH_LONG).show();
                 }
@@ -229,7 +247,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         int i = 0;
 
         if(listaAlumnos.size()!=0) {
-            for (AlumnoAsesorado alumno : listaAlumnos) {
+            for (Asesorado alumno : listaAlumnos) {
                 Log.e("I: ", (i++) + "");
                 listaInformacion.add("Número de control:" + alumno.getnControl() + "\nNombre del alumno:" + alumno.getNombre() +"\nFecha:" + alumno.getFecha());
             }
@@ -239,8 +257,6 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
             listView_BD.setVisibility(View.GONE);
             textView_sin_data.setVisibility(View.VISIBLE);
         }
-
-
     }
 
 
@@ -282,15 +298,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         switch (item.getItemId()){
 
             case R.id.item_add_asesorado:
-                ProgressDialog dialog = ProgressDialog.show(AsesoradosActivity.this, "", "Buscando...", true);
-                //ProgressDialog dialog = ProgressDialog.show(AsesoradosActivity.this, "", "Agregando datos...", true);
-                //ProgressDialog dialog = ProgressDialog.show(AsesoradosActivity.this, "", "Eliminando...", true);
-                dialog.show();
-                //new FirestoreAsesorado().addAsesorado(this, dialog, this, "18040756", "Salvador", "ISC", "Cálculo", "Derivadas", "31-01-2021", FirebaseAuthHelper.getCurrentUser().getUid());
-                //new FirestoreAsesorado().addAsesorado(this, dialog, this, "18040076", "Antonio", "ISC", "Cálculo", "Derivadas", "31-01-2021", FirebaseAuthHelper.getCurrentUser().getUid());
-                //new FirestoreAsesorado().deleteAsesorados(FirebaseAuthHelper.getCurrentUser().getUid(), dialog);
-                new FirestoreAsesorado().readAsesorados(this, FirebaseAuthHelper.getCurrentUser().getUid());
-                //showDialogAddAlumno();
+                showDialogAddAlumno();
                 break;
 
         }
@@ -298,8 +306,12 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
 
     }
 
-    private void showDialogAddAlumno(){
+    private void createDialogAddAlumno(){
 
+    }
+
+    private void showDialogAddAlumno()
+    {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
 
@@ -311,31 +323,132 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         dialogAdd.setCancelable(false);
         dialogAdd.show();
 
-
         final TextInputLayout textInputLayout_numeroControl_add_alumno = dialogAdd.findViewById(R.id.textInputLayout_numeroControl_add_alumno);
-        final TextInputEditText textInputEditText_fecha_add_alumno = dialogAdd.findViewById(R.id.textInputEditText_fecha_add_alumno);
         final TextInputLayout textInputLayout_nombre_add_alumno = dialogAdd.findViewById(R.id.textInputLayout_nombre_add_alumno);
-        final TextInputLayout spinner_materia_add = dialogAdd.findViewById(R.id.spinner_materia_add);
+        final TextInputLayout textInputLayout_carrera_add_alumno = dialogAdd.findViewById(R.id.textInputLayout_carrera_add_alumno);
+        final TextInputLayout textInputLayout_materia_add_alumno = dialogAdd.findViewById(R.id.spinner_materia_add);
+        final TextInputLayout textInputLayout_tema_add_alumno = dialogAdd.findViewById(R.id.textInputLayout_tema_add_alumno);
+        final TextInputEditText textInputEditText_fecha_add_alumno = dialogAdd.findViewById(R.id.textInputEditText_fecha_add_alumno);
+        final MaterialButton button_registrar_add_alumno = findViewById(R.id.button_registrar_add);
+        final MaterialButton button_cancelar_add_alumno = findViewById(R.id.button_cancelar_add);
 
-        final EditText editText_fecha_add_alumno = dialogAdd.findViewById(R.id.textInputEditText_fecha_add_alumno);
-
-        final CardView cardview_cancelar = dialogAdd.findViewById(R.id.cardView_cancelar_add);
-        final CardView cardview_add = dialogAdd.findViewById(R.id.cardView_agregar_add);
-
-        buttonHelper.actionClickButton(cardview_cancelar, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
-        buttonHelper.actionClickButton(cardview_add, getResources().getColor(R.color.background_green), getResources().getColor(R.color.background_green_black));
+        ArrayAdapter<String> arrayAdapter_carreras = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
+        ((AutoCompleteTextView)textInputLayout_carrera_add_alumno.getEditText()).setAdapter(arrayAdapter_carreras);
 
         ArrayAdapter<String> arrayAdapter_materia = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.MATERIAS);
-        ((AutoCompleteTextView)spinner_materia_add.getEditText()).setAdapter(arrayAdapter_materia);
+        ((AutoCompleteTextView)textInputLayout_materia_add_alumno.getEditText()).setAdapter(arrayAdapter_materia);
 
-        //DatePicker
-        MaterialDatePicker.Builder builder_date = MaterialDatePicker.Builder.datePicker();
-        final MaterialDatePicker materialDatePicker = builder_date.build();
+        button_cancelar_add_alumno.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogAdd.dismiss();
+            }
+        });
+        button_registrar_add_alumno.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                String numControl = textInputLayout_numeroControl_add_alumno.getEditText().getText().toString();
+                String nombreCompleto = textInputLayout_nombre_add_alumno.getEditText().getText().toString();
+                String carrera = textInputLayout_carrera_add_alumno.getEditText().getText().toString();
+                String materia = textInputLayout_materia_add_alumno.getEditText().getText().toString();
+                String tema = textInputLayout_tema_add_alumno.getEditText().getText().toString();
+                String fecha = textInputEditText_fecha_add_alumno.getText().toString();
 
+                boolean flagNumControl = false;
+                boolean flagNombreCompleto = false;
+                boolean flagCarrera = false;
+                boolean flagMateria = false;
+                boolean flagTema = false;
+                boolean flagFecha = false;
+
+                if(!numControl.isEmpty() && numControl.length()==8)
+                {
+                    flagNumControl = true;
+                }
+                {
+                    textInputLayout_numeroControl_add_alumno.getEditText().setText("Número de control no válido.");
+                }
+
+                if(!nombreCompleto.isEmpty())
+                {
+                    flagNombreCompleto = true;
+                }
+                {
+                    textInputLayout_nombre_add_alumno.getEditText().setText("Campo requerido.");
+                }
+
+                if(!carrera.isEmpty())
+                {
+                    flagCarrera = true;
+                }
+                {
+                    textInputLayout_carrera_add_alumno.getEditText().setText("Campo requerido.");
+                }
+
+                if(!materia.isEmpty())
+                {
+                    flagMateria = true;
+                }
+                {
+                    textInputLayout_materia_add_alumno.getEditText().setText("Campo requerido.");
+                }
+
+                if(!tema.isEmpty())
+                {
+                    flagTema = true;
+                }
+                {
+                    textInputLayout_tema_add_alumno.getEditText().setText("Campo requerido.");
+                }
+
+                if(!fecha.isEmpty())
+                {
+                    flagFecha = true;
+                }
+                {
+                    textInputEditText_fecha_add_alumno.setText("Campo requerido.");
+                }
+
+                if(flagNumControl && flagNombreCompleto && flagCarrera && flagMateria && flagTema && flagFecha)
+                {
+                    ProgressDialog dialog = ProgressDialog.show(AsesoradosActivity.this, "", "Resgistrando...", true);
+                    firestoreAsesorado.addAsesorado(AsesoradosActivity.this, dialog, AsesoradosActivity.this, numControl, nombreCompleto, carrera, materia, tema, fecha, FirestoreHelper.asesor.getUid());
+                    if(flag==false)
+                    {
+                        firestoreAlumno.addDataAlumno(AsesoradosActivity.this, dialog, numControl, nombreCompleto, carrera, AsesoradosActivity.this);
+                    }
+                    firestoreAsesorado.readAsesorados(AsesoradosActivity.this, FirestoreHelper.asesor.getUid());
+                }
+                else
+                {
+                    status("Debes llenar todos los campos requeridos.");
+                }
+
+            }
+        });
+        textInputLayout_numeroControl_add_alumno.setEndIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Aquí se le da vida al icono de busqueda
+                ProgressDialog dialog = ProgressDialog.show(AsesoradosActivity.this, "", "Buscando...", true);
+                String numControl = textInputLayout_numeroControl_add_alumno.getEditText().getText().toString();
+                if(numControl.length()==8)
+                {
+                    firestoreAlumno.getDataAlumno(AsesoradosActivity.this, numControl, dialog, AsesoradosActivity.this, AsesoradosActivity.this);
+                }
+                else
+                {
+                    textInputLayout_numeroControl_add_alumno.setError("Número de control no válido.");
+                }
+            }
+        });
         textInputEditText_fecha_add_alumno.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
+                //DatePicker
+                MaterialDatePicker.Builder builder_date = MaterialDatePicker.Builder.datePicker();
+                final MaterialDatePicker materialDatePicker = builder_date.build();
                 materialDatePicker.show(getSupportFragmentManager(), "DATE_PICKER");
                 materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
                     @Override
@@ -345,31 +458,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
                 });
             }
         });
-
-        cardview_cancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogAdd.dismiss();
-            }
-        });
-
-        cardview_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //spinner_materia_add.getEditText().getText().toString();
-            }
-        });
-
-        textInputLayout_numeroControl_add_alumno.setEndIconOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Aquí se le da vida al icono de busqueda
-            }
-        });
     }
-
-
 
     @Override
     protected void onDestroy() {
@@ -384,12 +473,29 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
 
     @Override
     public void getAsesorados(List<Asesorado> asesoradoList) {
-        String a = "";
-        for(int i = 0; i<asesoradoList.size(); i++)
+        listaAlumnos = (ArrayList<Asesorado>) asesoradoList;
+        obtenerLista();
+        arrayAdapterListView.notifyDataSetChanged();
+    }
+
+    @Override
+    public void getAlumno(Alumno alumno) {
+        if(alumno!=null)
         {
-            a += "Nombre = " + asesoradoList.get(i).getNombre() + "\n";
-            a += "NumControl = " + asesoradoList.get(i).getnControl() + "\n\n";
+            flag = true;
+            //textInputLayout_nombre_add_alumno.getEditText().setText(alumno.getNombre());
+            //textInputLayout_carrera_add_alumno.getEditText().setText(alumno.getCarrera());
         }
-        new AlertDialogPersonalized().alertDialogInformacion(a, this);
+        else
+        {
+            //new AlertDialogPersonalized().alertDialogInformacion("Alumno no registrado en la BD, debes llenar los campos: Nombre completo y Carrera.", AsesoradosActivity.this);
+            //textInputLayout_nombre_add_alumno.getEditText().setEnabled(true);
+            //textInputLayout_carrera_add_alumno.getEditText().setEnabled(true);
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+
     }
 }

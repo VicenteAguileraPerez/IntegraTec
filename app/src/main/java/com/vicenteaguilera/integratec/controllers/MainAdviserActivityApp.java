@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -115,15 +116,15 @@ import id.zelory.compressor.Compressor;
 
 
 public class MainAdviserActivityApp extends AppCompatActivity implements View.OnClickListener, Status, ListaAsesorias {
-    private EditText editTextText_otroLugar;
+    private TextInputLayout editTextText_otroLugar;
     private final static int GALLERY_INTENT = 1;
     private final int REQUEST_CODE_ASK_PERMISSION = 111;
     private File imagen=null;
     private static boolean status=true;
     private SharedPreferencesHelper sharedPreferencesHelper;
     private TimePickerDialog picker=null;
-    private Spinner spinner_materias;//Se cambio por TextInputLayout
-    private Spinner spinner_lugares;//Se cambio por TextInputLayout
+    private TextInputLayout spinner_materias;//Se cambio por TextInputLayout
+    private TextInputLayout spinner_lugares;//Se cambio por TextInputLayout
     private RadioGroup radioGroup;
     private TextInputLayout editText_URL;
     private TextInputLayout editText_HoraInicio;
@@ -132,17 +133,16 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private MaterialButton button_Terminar;
     private ImageButton imageButton_edit_image;
     private TextInputLayout editTextTextMultiLine;
-    TextView textView_button_publicar;
     private TextView textView_Nombre;
     private ImageView imageView_perfil;
     private RadioButton radioButton_AOnline;
     private RadioButton radioBAPresencial;
     private FirebaseAuthHelper firebaseAuthHelper = new FirebaseAuthHelper();
-    private  FirestoreHelper firestoreHelper = new FirestoreHelper();
+    private FirestoreHelper firestoreHelper = new FirestoreHelper();
     private FirebaseStorageHelper firebaseStorageHelper = new FirebaseStorageHelper();
     private InternetHelper internetHelper = new InternetHelper();
-    private int positionPlace=-1;
-    private int positionSubject=-1;
+    //private int positionPlace=-1;
+    //private int positionSubject=-1;
     private List<Asesoria> asesoriaList;
     private IntentResult result= null;
     private StorageManagerCompat manager;
@@ -283,34 +283,24 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     {
         if(preferences!=null)
         {
-
             status=false;
             disableEditTextHoras();
-            textView_button_publicar.setText("Actualizar asesoría");
+            button_Publicar.setText("Actualizar asesoría");
             Boolean tipo =  Boolean.parseBoolean(String.valueOf(preferences.get("tipo")));
             String url = (String) preferences.get("url");
-            String lugar2 = (String) preferences.get("lugar2");
             String h_inicio = (String) preferences.get("h_inicio");
             String h_final = (String) preferences.get("h_fin");
             String info = (String) preferences.get("info");
-            int pos;
+
             if (tipo) {
                 radioBAPresencial.setChecked(true);
-                pos=Integer.parseInt(String.valueOf(preferences.get("lugar")));
-                positionPlace = pos;
-                spinner_lugares.setSelection(pos);
-                if(pos==PropiertiesHelper.LUGARES.length-1)
-                {
-                    editTextText_otroLugar.setText(lugar2);
-                }
+                spinner_lugares.getEditText().setText((String)preferences.get("lugar"));
             }
             else {
                 radioButton_AOnline.setChecked(true);
                 editText_URL.getEditText().setText(url);
             }
-            pos = Integer.parseInt(String.valueOf(preferences.get("materia")));
-            positionSubject = pos;
-            spinner_materias.setSelection(pos);
+            spinner_materias.getEditText().setText((String)preferences.get("materia"));
             editText_HoraInicio.getEditText().setText(h_inicio);
             editText_HoraFinalizacion.getEditText().setText(h_final);
             if (info != null) {
@@ -323,7 +313,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         {
             status=true;
             enableEditTextHoras();
-            textView_button_publicar.setText("Publicar asesoría");
+            button_Publicar.setText("Publicar asesoría");
         }
     }
 
@@ -346,6 +336,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         textView_Nombre = findViewById(R.id.textView_Nombre);
         radioButton_AOnline = findViewById(R.id.radioButton_AOnline);
         radioBAPresencial = findViewById(R.id.radioButton_APresencial);
+        button_Publicar = findViewById(R.id.button_Publicar);
+        button_Terminar = findViewById(R.id.button_Terminar);
 
         editText_HoraInicio = findViewById(R.id.editText_HoraInicio);
         editText_HoraInicio.setLongClickable(false);
@@ -356,6 +348,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         editText_HoraInicio.setOnClickListener(this);
         editText_HoraFinalizacion.setOnClickListener(this);
         button_Publicar.setOnClickListener(this);
+        button_Terminar.setOnClickListener(this);
 
         editText_URL.requestFocus();
         editTextFocusListener();
@@ -366,8 +359,9 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         ArrayAdapter<String> arrayAdapterLugares = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.LUGARES);
         ArrayAdapter<String> arrayAdapterMaterias = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.MATERIAS);
 
-        spinner_lugares.setAdapter(arrayAdapterLugares);
-        spinner_materias.setAdapter(arrayAdapterMaterias);
+        ((AutoCompleteTextView)spinner_lugares.getEditText()).setAdapter(arrayAdapterLugares);
+        ((AutoCompleteTextView)spinner_materias.getEditText()).setAdapter(arrayAdapterMaterias);
+
         imageButton_edit_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -408,8 +402,6 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         });
         setImage(FirestoreHelper.asesor.getuRI_image());
         sharedPreferencesHelper = new SharedPreferencesHelper(MainAdviserActivityApp.this);
-
-
     }
 
     @Override
@@ -507,11 +499,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     public void onClick(View view)
     {
         int idView = view.getId();
-        if(idView==R.id.editText_HoraInicio)
+        if(idView==editText_HoraInicio.getEditText().getId())
         {
             getHora(editText_HoraInicio.getEditText());
         }
-        else if(idView==R.id.editText_HoraFin)
+        else if(idView== editText_HoraFinalizacion.getEditText().getId())
         {
             getHora(editText_HoraFinalizacion.getEditText());
         }
@@ -554,7 +546,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                             clear();
                             sharedPreferencesHelper.deletePreferences();
 
-                            textView_button_publicar.setText("Publicar asesoría");
+                            button_Publicar.setText("Publicar asesoría");
                             enableEditTextHoras();
                             status = true;
                         }
@@ -574,7 +566,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                             clear();
                             sharedPreferencesHelper.deletePreferences();
 
-                            textView_button_publicar.setText("Publicar asesoría");
+                            button_Publicar.setText("Publicar asesoría");
                             enableEditTextHoras();
                             status = true;
                         }
@@ -610,11 +602,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
         if(radioBAPresencial.isChecked())
         {
-            if(spinner_lugares.getSelectedItemPosition()>0)
+            if(!spinner_lugares.getEditText().getText().toString().isEmpty())
             {
-                if(spinner_lugares.getSelectedItem().toString().equals("Otro(Especifique)"))
+                if(spinner_lugares.getEditText().getText().toString().equals("Otro(Especifique)"))
                 {
-                    if(!editTextText_otroLugar.getText().toString().isEmpty()) {
+                    if(!editTextText_otroLugar.getEditText().getText().toString().isEmpty()) {
                         flag_otherPlace=true;
                     }
                     else {
@@ -648,7 +640,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             }
         }
 
-        if(spinner_materias.getSelectedItemPosition()>0)
+        if(!spinner_materias.getEditText().getText().toString().isEmpty())
         {
             flag_spinnerMateria=true;
         }
@@ -684,11 +676,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
             if(radioBAPresencial.isChecked())
             {
-                if(spinner_lugares.getSelectedItemPosition()>0)
+                if(!spinner_lugares.getEditText().getText().toString().isEmpty())
                 {
-                    if(spinner_lugares.getSelectedItem().toString().equals("Otro(Especifique)"))
+                    if(spinner_lugares.getEditText().getText().toString().equals("Otro(Especifique)"))
                     {
-                        if(!editTextText_otroLugar.getText().toString().isEmpty()) {
+                        if(!editTextText_otroLugar.getEditText().getText().toString().isEmpty()) {
                             flag_otherPlace=true;
                         }
                         else {
@@ -722,7 +714,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 }
             }
 
-            if(spinner_materias.getSelectedItemPosition()>0)
+            if(!spinner_materias.getEditText().getText().toString().isEmpty())
             {
                 flag_spinnerMateria=true;
             }
@@ -807,10 +799,10 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         Map<String, Object> asesor = new HashMap<>();
         if (radioBAPresencial.isChecked()) {
             asesor.put("URL", "");
-            if (spinner_lugares.getSelectedItemPosition() == PropiertiesHelper.LUGARES.length - 1) {
-                asesor.put("lugar", editTextText_otroLugar.getText().toString());
+            if (spinner_lugares.getEditText().getText().toString().equals("Otro(Especifique)")) {
+                asesor.put("lugar", editTextText_otroLugar.getEditText().getText().toString());
             } else {
-                asesor.put("lugar", spinner_lugares.getSelectedItem().toString());
+                asesor.put("lugar", spinner_lugares.getEditText().getText().toString());
             }
         } else {
             asesor.put("URL", editText_URL.getEditText().getText().toString());
@@ -819,7 +811,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         }
         asesor.put("nombre", FirestoreHelper.asesor.getNombre() + " " + FirestoreHelper.asesor.getApellidos());
         asesor.put("image_asesor", FirestoreHelper.asesor.getuRI_image());
-        asesor.put("materia", spinner_materias.getSelectedItem().toString());
+        asesor.put("materia", spinner_materias.getEditText().getText().toString());
         asesor.put("h_inicio", editText_HoraInicio.getEditText().getText().toString());
         asesor.put("h_final", editText_HoraFinalizacion.getEditText().getText().toString());
         asesor.put("informacion", editTextTextMultiLine.getEditText().getText().toString());
@@ -872,45 +864,15 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                         editText_URL.setVisibility(View.VISIBLE);
                         editTextText_otroLugar.setVisibility(View.GONE);
 
-                    }else if(checkedRadioButton.getId()==R.id.radioButton_APresencial)
-                    {
+                    }else if(checkedRadioButton.getId()==R.id.radioButton_APresencial) {
                         editText_URL.setVisibility(View.GONE);
                         spinner_lugares.setVisibility(View.VISIBLE);
-                        if(spinner_lugares.getSelectedItem().toString().equals("Otro(Especifique)"))
-                        {
+                        if (spinner_lugares.getEditText().getText().toString().equals("Otro(Especifique)")) {
                             editTextText_otroLugar.setVisibility(View.VISIBLE);
                         }
-                        spinner_lugares.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                if(spinner_lugares.getItemIdAtPosition(position)!=PropiertiesHelper.LUGARES.length-1){
-                                    editTextText_otroLugar.setVisibility(View.GONE);
-                                }else{
-                                    editTextText_otroLugar.setVisibility(View.VISIBLE);
-                                }
-                                positionPlace = position;
-                            }
-
-                            @Override
-                            public void onNothingSelected(AdapterView<?> parent) {}
-                        });
                     }
                 }
-
             }
-        });
-        /* parent The AdapterView where the selection happened
-         * view The view within the AdapterView that was clicked
-         * position The position of the view in the adapter
-         * id The row id of the item that is selected*/
-        spinner_materias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id)
-            {
-                positionSubject = position;
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) { }
         });
     }
 
@@ -1407,12 +1369,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         Map<String,Object> data = new HashMap<>();
         data.put("tipo",radioBAPresencial.isChecked());
         if(radioBAPresencial.isChecked()) {
-            if (spinner_lugares.getSelectedItemPosition() == PropiertiesHelper.LUGARES.length - 1) {
-                data.put("lugar2", editTextText_otroLugar.getText().toString());
+            if (spinner_lugares.getEditText().getText().toString().equals("Otro(Especifique)")) {
+                data.put("lugar", editTextText_otroLugar.getEditText().getText().toString());
             } else {
-                data.put("lugar2", "");
+                data.put("lugar", spinner_lugares.getEditText().getText().toString());
             }
-            data.put("lugar", positionPlace);
             data.put("url",  "");
         }
         else
@@ -1421,7 +1382,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             data.put("lugar", -1);
             data.put("lugar2", "");
         }
-        data.put("materia",positionSubject);
+        data.put("materia", spinner_materias.getEditText().getText().toString());
         data.put("h_inicio",editText_HoraInicio.getEditText().getText().toString());
         data.put("h_fin",editText_HoraFinalizacion.getEditText().getText().toString());
         data.put("info",editTextTextMultiLine.getEditText().getText().toString());
@@ -1430,16 +1391,14 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     }
     private void clear()
     {
-
         radioBAPresencial.setChecked(true);
-        spinner_lugares.setSelection(0);
-        spinner_materias.setSelection(0);
+        spinner_lugares.getEditText().getText().clear();
+        spinner_materias.getEditText().getText().clear();
         editText_HoraInicio.getEditText().getText().clear();
         editText_HoraFinalizacion.getEditText().getText().clear();
         editTextTextMultiLine.getEditText().getText().clear();
-        editTextText_otroLugar.getText().clear();
+        editTextText_otroLugar.getEditText().getText().clear();
         editText_URL.getEditText().getText().clear();
-
     }
 
     //Creación de pdfs

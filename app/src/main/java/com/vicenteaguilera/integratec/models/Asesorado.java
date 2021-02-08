@@ -1,6 +1,7 @@
 package com.vicenteaguilera.integratec.models;
 
 public class Asesorado {
+    private String id;
     private String nombre;
     private String nControl;
     private String carrera;
@@ -11,7 +12,8 @@ public class Asesorado {
 
     public Asesorado(){}
 
-    public Asesorado(String nombre, String nControl, String carrera, String tema, String fecha, String materia, String idAsesor) {
+    public Asesorado(String id, String nombre, String nControl, String carrera, String tema, String fecha, String materia, String idAsesor) {
+        this.id = id;
         this.nombre = nombre;
         this.nControl = nControl;
         this.carrera = carrera;
@@ -19,6 +21,14 @@ public class Asesorado {
         this.fecha = fecha;
         this.materia = materia;
         this.idAsesor = idAsesor;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getNombre() {
@@ -80,5 +90,13 @@ public class Asesorado {
     public String getData()
     {
         return   nombre+" "+ nControl;
+    }
+
+    public String getIdAsesor() {
+        return idAsesor;
+    }
+
+    public void setIdAsesor(String idAsesor) {
+        this.idAsesor = idAsesor;
     }
 }

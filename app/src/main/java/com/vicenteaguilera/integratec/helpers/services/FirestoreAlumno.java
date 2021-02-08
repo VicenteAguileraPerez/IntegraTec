@@ -18,7 +18,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.vicenteaguilera.integratec.AsesoradosActivity;
 import com.vicenteaguilera.integratec.controllers.OptionsActivity;
+import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesorados;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
 import com.vicenteaguilera.integratec.models.Alumno;
 
@@ -29,7 +31,7 @@ import java.util.Objects;
 public class FirestoreAlumno{
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final CollectionReference AlumnoCollection = db.collection("alumno");
-    public static Alumno alumno = null;
+    private Alumno alumno = null;
 
     public void addDataAlumno(final Status status, final ProgressDialog dialog, final String num, String nombre, String carrera, final Context context){
         final Map<String, Object> alumno = new HashMap<>();
@@ -77,33 +79,16 @@ public class FirestoreAlumno{
             public void onComplete(@NonNull Task<Void> task) {
                 progressDialog.dismiss();
 
-                final AlertDialog.Builder  alertDialogBuilder = new AlertDialog.Builder(context);
-                alertDialogBuilder.setCancelable(false);
-                alertDialogBuilder.setTitle("Aviso");
-
-                alertDialogBuilder.setPositiveButton("Aceptar",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface alertDialog, int i)
-                            {
-                                alertDialog.dismiss();
-                            }
-                        }
-                );
-
                 if(task.isSuccessful()){
-                    alertDialogBuilder.setMessage("Alumno registrado con exito...");
+                    status.status("Alumno registrado en el banco de datos de IntegraTec.");
                 }else {
-                    alertDialogBuilder.setMessage("Error del registros de los datos. Inténtelo de nuevo");
-                    status.status("Error del registros de los datos. Inténtelo de nuevo");
+                    status.status("Error al registrar alumno en el banco de datos de IntegraTec.");
                 }
-
-                alertDialogBuilder.show();
             }
         });
     }
 
-    public void getDataAlumno(String document, final ProgressDialog dialog, final Status status, final Context context){
+    public void getDataAlumno(final ListaAsesorados listaAsesorados, String document, final ProgressDialog dialog, final Status status, final Context context){
 
         AlumnoCollection.document(document).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -114,7 +99,7 @@ public class FirestoreAlumno{
                     if(Objects.requireNonNull(document).exists()){
                         Map<String,Object> data = document.getData();
                         alumno = new Alumno(document.getId(), data.get("nombre").toString(), data.get("carrera").toString());
-
+                        listaAsesorados.getAlumno(alumno);
                     }else {
                         status.status("No existe esa cuenta");
                         final AlertDialog.Builder  alertDialogBuilder = new AlertDialog.Builder(context);
@@ -133,8 +118,8 @@ public class FirestoreAlumno{
                         );
                         dialog.dismiss();
                         alertDialogBuilder.show();
-
-
+                        alumno=null;
+                        listaAsesorados.getAlumno(alumno);
                     }
                 }else {
                     status.status("Error, verifique su conexión a Internet, si los problemas continuan contacte al administrado");
@@ -178,7 +163,4 @@ public class FirestoreAlumno{
             }
         });
     }
-
-
-
 }

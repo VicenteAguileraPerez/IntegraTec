@@ -27,7 +27,6 @@ public class SharedPreferencesHelper
         SharedPreferences sharedPref = ((Activity)context).getPreferences(Context.MODE_PRIVATE);
         saveAsesoria.put("tipo",sharedPref.getString("tipo", null));
         saveAsesoria.put("lugar",sharedPref.getString("lugar", null));
-        saveAsesoria.put("lugar2",sharedPref.getString("lugar2", null));
         saveAsesoria.put("materia",sharedPref.getString("materia",null));
         saveAsesoria.put("url",sharedPref.getString("url", null));
         saveAsesoria.put("h_inicio",sharedPref.getString("h_inicio", null));
@@ -47,7 +46,6 @@ public class SharedPreferencesHelper
         SharedPreferences sharedPref = ((Activity)context).getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("tipo",String.valueOf(saveAsesoria.get("tipo")));
-        editor.putString("lugar2",String.valueOf(saveAsesoria.get("lugar2")));
         editor.putString("lugar",String.valueOf(saveAsesoria.get("lugar")));
         editor.putString("url",String.valueOf(saveAsesoria.get("url")));
         editor.putString("materia",String.valueOf(saveAsesoria.get("materia")));

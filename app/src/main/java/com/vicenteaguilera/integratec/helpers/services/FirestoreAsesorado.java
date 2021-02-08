@@ -91,7 +91,28 @@ public class FirestoreAsesorado {
                     @Override
                     public void onFailure(@NonNull Exception e)
                     {
-                        dialogPersonalized.alertDialogInformacion("No se actualizarón los datos del asesorado, verifica tu conexión a Internet", context);
+                        dialogPersonalized.alertDialogInformacion("No se actualizarón los datos del asesorado, verifica tu conexión a Internet.", context);
+                        //status.status("No se actualizarón los datos del asesorado, verifica tu conexión a Internet");
+                        dialog.dismiss();
+                    }
+                });
+    }
+
+    public void deleteDataAsesorado(final Status status, final ProgressDialog dialog, final Context context, final String idAsesorado) {
+        AsesoradosCollection.document(idAsesorado).delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        dialogPersonalized.alertDialogInformacion("Se eliminarón los datos del asesorado.", context);
+                        //status.status("Se actualizarón los datos del asesorado.");
+                        dialog.dismiss();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e)
+                    {
+                        dialogPersonalized.alertDialogInformacion("No se eliminarón los datos del asesorado, verifica tu conexión a Internet.", context);
                         //status.status("No se actualizarón los datos del asesorado, verifica tu conexión a Internet");
                         dialog.dismiss();
                     }
@@ -135,7 +156,7 @@ public class FirestoreAsesorado {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 final Map<String,Object> asesorado_add =  document.getData();
-                                asesorados[0] = new Asesorado(asesorado_add.get("nombre").toString(), asesorado_add.get("numeroControl").toString(), asesorado_add.get("carrera").toString(),
+                                asesorados[0] = new Asesorado(document.getId(), asesorado_add.get("nombre").toString(), asesorado_add.get("numeroControl").toString(), asesorado_add.get("carrera").toString(),
                                         asesorado_add.get("tema").toString(), asesorado_add.get("fecha").toString(), asesorado_add.get("materia").toString(), asesorado_add.get("idAsesor").toString());
                                 asesoradosList.add(asesorados[0]);
                             }
