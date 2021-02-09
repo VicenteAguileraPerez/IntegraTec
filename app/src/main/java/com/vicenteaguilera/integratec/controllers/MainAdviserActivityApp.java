@@ -51,6 +51,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.lowagie.text.Document;
@@ -499,11 +501,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     public void onClick(View view)
     {
         int idView = view.getId();
-        if(idView==editText_HoraInicio.getEditText().getId())
+        if(idView==editText_HoraInicio.getId())
         {
             getHora(editText_HoraInicio.getEditText());
         }
-        else if(idView== editText_HoraFinalizacion.getEditText().getId())
+        else if(idView== editText_HoraFinalizacion.getId())
         {
             getHora(editText_HoraFinalizacion.getEditText());
         }
@@ -908,13 +910,13 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     String horas = hrs < 10 ? "0" + hrs : hrs + "";
                     String minutos = min < 10 ? "0" + min : min + "";
                     view.setText(horas + ":" + minutos + " " + aux);
-
             }
         };
         if (picker == null) {
-            picker = new TimePickerDialog(MainAdviserActivityApp.this, timePicker, hour, minutes, false);
+             picker = new TimePickerDialog(MainAdviserActivityApp.this, timePicker, hour, minutes, false);
+            //picker = new MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_12H).build();
         }
-        picker.show();
+        //picker.show();
     }
 
     private boolean getRangoValidoHoras()

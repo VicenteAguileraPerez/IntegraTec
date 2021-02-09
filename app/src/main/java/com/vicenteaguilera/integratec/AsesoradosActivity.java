@@ -30,6 +30,8 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreAlumno;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreAsesorado;
@@ -60,6 +62,12 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
     private FirestoreAlumno firestoreAlumno = new FirestoreAlumno();
     private FirestoreAsesorado firestoreAsesorado = new FirestoreAsesorado();
     private FirestoreHelper firestoreHelper = new FirestoreHelper();
+
+    private TextInputLayout textInputLayout_nombre_add_alumno;
+    private TextInputLayout textInputLayout_carrera_add_alumno;
+
+    public ArrayAdapter<String> arrayAdapter_carreras;
+    public ArrayAdapter<String> arrayAdapter_materia;
 
     private boolean flag = false;
 
@@ -99,6 +107,8 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
             }
         });
 
+       arrayAdapter_carreras  = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
+       arrayAdapter_materia  = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.MATERIAS);
         //createDialogAddAlumno();
     }
 
@@ -324,18 +334,15 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         dialogAdd.show();
 
         final TextInputLayout textInputLayout_numeroControl_add_alumno = dialogAdd.findViewById(R.id.textInputLayout_numeroControl_add_alumno);
-        final TextInputLayout textInputLayout_nombre_add_alumno = dialogAdd.findViewById(R.id.textInputLayout_nombre_add_alumno);
-        final TextInputLayout textInputLayout_carrera_add_alumno = dialogAdd.findViewById(R.id.textInputLayout_carrera_add_alumno);
+        textInputLayout_nombre_add_alumno = dialogAdd.findViewById(R.id.textInputLayout_nombre_add_alumno);
+        textInputLayout_carrera_add_alumno = dialogAdd.findViewById(R.id.textInputLayout_carrera_add_alumno);
         final TextInputLayout textInputLayout_materia_add_alumno = dialogAdd.findViewById(R.id.spinner_materia_add);
         final TextInputLayout textInputLayout_tema_add_alumno = dialogAdd.findViewById(R.id.textInputLayout_tema_add_alumno);
         final TextInputEditText textInputEditText_fecha_add_alumno = dialogAdd.findViewById(R.id.textInputEditText_fecha_add_alumno);
-        final MaterialButton button_registrar_add_alumno = findViewById(R.id.button_registrar_add);
-        final MaterialButton button_cancelar_add_alumno = findViewById(R.id.button_cancelar_add);
+        final MaterialButton button_registrar_add_alumno = dialogAdd.findViewById(R.id.button_registrar_add);
+        final MaterialButton button_cancelar_add_alumno = dialogAdd.findViewById(R.id.button_cancelar_add);
 
-        ArrayAdapter<String> arrayAdapter_carreras = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
         ((AutoCompleteTextView)textInputLayout_carrera_add_alumno.getEditText()).setAdapter(arrayAdapter_carreras);
-
-        ArrayAdapter<String> arrayAdapter_materia = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.MATERIAS);
         ((AutoCompleteTextView)textInputLayout_materia_add_alumno.getEditText()).setAdapter(arrayAdapter_materia);
 
         button_cancelar_add_alumno.setOnClickListener(new View.OnClickListener() {
@@ -447,13 +454,32 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
             @Override
             public void onClick(View view) {
                 //DatePicker
-                MaterialDatePicker.Builder builder_date = MaterialDatePicker.Builder.datePicker();
+                /*MaterialDatePicker.Builder builder_date = MaterialDatePicker.Builder.datePicker();
                 final MaterialDatePicker materialDatePicker = builder_date.build();
                 materialDatePicker.show(getSupportFragmentManager(), "DATE_PICKER");
                 materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
                     @Override
                     public void onPositiveButtonClick(Object selection) {
                         textInputEditText_fecha_add_alumno.setText(materialDatePicker.getHeaderText());
+                    }
+                });*/
+
+                MaterialTimePicker.Builder builder_time = new MaterialTimePicker.Builder();
+                builder_time.setTimeFormat(TimeFormat.CLOCK_12H);
+                final MaterialTimePicker materialTimePicker = builder_time.build();
+                materialTimePicker.show(getSupportFragmentManager(), "TIME_PICKER");
+                materialTimePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        textInputEditText_fecha_add_alumno.setText(materialTimePicker.getHour()+":"+materialTimePicker.getMinute());
+                    }
+                });
+
+                materialTimePicker.addOnNegativeButtonClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        textInputEditText_fecha_add_alumno.setError("Campo requerido");
                     }
                 });
             }
@@ -483,14 +509,15 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         if(alumno!=null)
         {
             flag = true;
-            //textInputLayout_nombre_add_alumno.getEditText().setText(alumno.getNombre());
-            //textInputLayout_carrera_add_alumno.getEditText().setText(alumno.getCarrera());
+            textInputLayout_nombre_add_alumno.getEditText().setText(alumno.getNombre());
+            textInputLayout_carrera_add_alumno.getEditText().setText(alumno.getCarrera());
         }
         else
         {
-            //new AlertDialogPersonalized().alertDialogInformacion("Alumno no registrado en la BD, debes llenar los campos: Nombre completo y Carrera.", AsesoradosActivity.this);
-            //textInputLayout_nombre_add_alumno.getEditText().setEnabled(true);
-            //textInputLayout_carrera_add_alumno.getEditText().setEnabled(true);
+            ((AutoCompleteTextView)textInputLayout_carrera_add_alumno.getEditText()).setAdapter(null);
+            ((AutoCompleteTextView)textInputLayout_carrera_add_alumno.getEditText()).setAdapter(arrayAdapter_carreras);
+            textInputLayout_nombre_add_alumno.getEditText().setEnabled(true);
+            textInputLayout_carrera_add_alumno.getEditText().setEnabled(true);
         }
     }
 
