@@ -10,6 +10,8 @@ import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -126,6 +128,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         final TextInputLayout textInputLayout_numero_control_update = dialogUpdateDelete.findViewById(R.id.textInputLayout_numero_control_update);
         final TextInputLayout textInputLayout_nombre_update = dialogUpdateDelete.findViewById(R.id.textInputLayout_nombre_update);
         final TextInputLayout textInputLayout_tema_update = dialogUpdateDelete.findViewById(R.id.textInputLayout_tema_update);
+        final TextInputEditText textInputEditText_fecha_update_alumno = dialogUpdateDelete.findViewById(R.id.textInputEditText_fecha_update_alumno);
 
         final TextInputLayout spinner_carrera_update = dialogUpdateDelete.findViewById(R.id.spinner_carrera_update);
         final TextInputLayout spinner_materia_update = dialogUpdateDelete.findViewById(R.id.spinner_materia_update);
@@ -145,6 +148,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         textInputLayout_tema_update.getEditText().setText(alumno.getTema());
         spinner_carrera_update.getEditText().setText(alumno.getCarrera());
         spinner_materia_update.getEditText().setText(alumno.getMateria());
+        textInputEditText_fecha_update_alumno.setText(alumno.getFecha());
 
         button_borrar_update.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -187,12 +191,16 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
                 textInputLayout_numero_control_update.setError(null);
                 textInputLayout_nombre_update.setError(null);
                 textInputLayout_tema_update.setError(null);
+                spinner_materia_update.setError(null);
+                spinner_carrera_update.setError(null);
+                textInputEditText_fecha_update_alumno.setError(null);
 
                 boolean flag_nControl = false;
                 boolean flag_nombre = false;
                 boolean flag_spinner_carrera = false;
                 boolean flag_spinner_materia = false;
                 boolean flag_tema = false;
+                boolean flag_fecha = false;
 
                 if(!textInputLayout_numero_control_update.getEditText().getText().toString().isEmpty() && !textInputLayout_numero_control_update.getEditText().getText().toString().equals("")
                         && textInputLayout_numero_control_update.getEditText().getText().toString() != null && textInputLayout_numero_control_update.getEditText().getText().toString().length() == 8){
@@ -225,8 +233,13 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
                     textInputLayout_tema_update.setError("Tema requerido");
                 }
 
+                if(!textInputEditText_fecha_update_alumno.getText().toString().isEmpty()){
+                    flag_fecha = true;
+                }else {
+                    textInputEditText_fecha_update_alumno.setError("Fecha requerida");
+                }
 
-                if(flag_nControl && flag_nombre && flag_spinner_carrera && flag_tema && flag_spinner_materia){
+                if(flag_nControl && flag_nombre && flag_spinner_carrera && flag_tema && flag_spinner_materia && flag_fecha){
                     ProgressDialog dialog = ProgressDialog.show(AsesoradosActivity.this, "", "Actualizando...", true);
                     firestoreAsesorado.updateDataAsesorado(AsesoradosActivity.this, dialog, AsesoradosActivity.this, alumno.getId(),
                             textInputLayout_numero_control_update.getEditText().getText().toString(),
@@ -234,7 +247,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
                             spinner_carrera_update.getEditText().getText().toString(),
                             spinner_materia_update.getEditText().getText().toString(),
                             textInputLayout_tema_update.getEditText().getText().toString(),
-                            alumno.getFecha(),
+                            textInputEditText_fecha_update_alumno.getText().toString(),
                             FirestoreHelper.asesor.getUid());
                     dialogUpdateDelete.dismiss();
                     firestoreAsesorado.readAsesorados(AsesoradosActivity.this, FirestoreHelper.asesor.getUid());
@@ -243,32 +256,23 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
                 }
             }
         });
-    }
 
-    private void consultarBD() {
-        if(listaAlumnos.size()!=0){
-            listaAlumnos.clear();
-        }
-        obtenerLista();
-    }
-
-    private void obtenerLista() {
-        listaInformacion.clear();
-        int i = 0;
-
-        if(listaAlumnos.size()!=0) {
-            for (Asesorado alumno : listaAlumnos) {
-                Log.e("I: ", (i++) + "");
-                listaInformacion.add("Número de control:" + alumno.getnControl() + "\nNombre del alumno:" + alumno.getNombre() +"\nFecha:" + alumno.getFecha());
+        textInputEditText_fecha_update_alumno.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //DatePicker
+                MaterialDatePicker.Builder builder_date = MaterialDatePicker.Builder.datePicker();
+                final MaterialDatePicker materialDatePicker = builder_date.build();
+                materialDatePicker.show(getSupportFragmentManager(), "DATE_PICKER");
+                materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+                    @Override
+                    public void onPositiveButtonClick(Object selection) {
+                        textInputEditText_fecha_update_alumno.setText(materialDatePicker.getHeaderText());
+                    }
+                });
             }
-            listView_BD.setVisibility(View.VISIBLE);
-            textView_sin_data.setVisibility(View.GONE);
-        }else {
-            listView_BD.setVisibility(View.GONE);
-            textView_sin_data.setVisibility(View.VISIBLE);
-        }
+        });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -294,13 +298,6 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void consultarBDPorFiltro(String text) {
-        listaAlumnos.clear();
-
-        obtenerLista();
-        arrayAdapterListView.notifyDataSetChanged();
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -316,9 +313,6 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
 
     }
 
-    private void createDialogAddAlumno(){
-
-    }
 
     private void showDialogAddAlumno()
     {
@@ -362,6 +356,13 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
                 String tema = textInputLayout_tema_add_alumno.getEditText().getText().toString();
                 String fecha = textInputEditText_fecha_add_alumno.getText().toString();
 
+                textInputLayout_numeroControl_add_alumno.setError(null);
+                textInputLayout_nombre_add_alumno.setError(null);
+                textInputLayout_carrera_add_alumno.setError(null);
+                textInputLayout_materia_add_alumno.setError(null);
+                textInputLayout_tema_add_alumno.setError(null);
+                textInputEditText_fecha_add_alumno.setError(null);
+
                 boolean flagNumControl = false;
                 boolean flagNombreCompleto = false;
                 boolean flagCarrera = false;
@@ -369,56 +370,43 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
                 boolean flagTema = false;
                 boolean flagFecha = false;
 
-                if(!numControl.isEmpty() && numControl.length()==8)
-                {
+                if(!numControl.isEmpty() & numControl.length() == 8 && isNumeric(numControl)){
                     flagNumControl = true;
-                }
-                {
-                    textInputLayout_numeroControl_add_alumno.getEditText().setText("Número de control no válido.");
+                }else {
+                    textInputLayout_numeroControl_add_alumno.setError("Número de control no válido.");
                 }
 
-                if(!nombreCompleto.isEmpty())
-                {
+                if(!nombreCompleto.isEmpty()){
                     flagNombreCompleto = true;
-                }
-                {
-                    textInputLayout_nombre_add_alumno.getEditText().setText("Campo requerido.");
+                }else {
+                    textInputLayout_nombre_add_alumno.setError("Campo requerido.");
                 }
 
-                if(!carrera.isEmpty())
-                {
+                if(!carrera.isEmpty()){
                     flagCarrera = true;
-                }
-                {
-                    textInputLayout_carrera_add_alumno.getEditText().setText("Campo requerido.");
+                }else {
+                    textInputLayout_carrera_add_alumno.setError("Campo requerido.");
                 }
 
-                if(!materia.isEmpty())
-                {
+                if(!materia.isEmpty()){
                     flagMateria = true;
-                }
-                {
-                    textInputLayout_materia_add_alumno.getEditText().setText("Campo requerido.");
+                }else {
+                    textInputLayout_materia_add_alumno.setError("Campo requerido.");
                 }
 
-                if(!tema.isEmpty())
-                {
+                if(!tema.isEmpty()){
                     flagTema = true;
-                }
-                {
-                    textInputLayout_tema_add_alumno.getEditText().setText("Campo requerido.");
+                }else {
+                    textInputLayout_tema_add_alumno.setError("Campo requerido.");
                 }
 
-                if(!fecha.isEmpty())
-                {
+                if(!fecha.isEmpty()){
                     flagFecha = true;
-                }
-                {
-                    textInputEditText_fecha_add_alumno.setText("Campo requerido.");
+                }else {
+                    textInputEditText_fecha_add_alumno.setError("Campo requerido.");
                 }
 
-                if(flagNumControl && flagNombreCompleto && flagCarrera && flagMateria && flagTema && flagFecha)
-                {
+                if(flagNumControl && flagNombreCompleto && flagCarrera && flagMateria && flagTema && flagFecha) {
                     ProgressDialog dialog = ProgressDialog.show(AsesoradosActivity.this, "", "Resgistrando...", true);
                     firestoreAsesorado.addAsesorado(AsesoradosActivity.this, dialog, AsesoradosActivity.this, numControl, nombreCompleto, carrera, materia, tema, fecha, FirestoreHelper.asesor.getUid());
                     if(flag==false)
@@ -426,9 +414,8 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
                         firestoreAlumno.addDataAlumno(AsesoradosActivity.this, dialog, numControl, nombreCompleto, carrera, AsesoradosActivity.this);
                     }
                     firestoreAsesorado.readAsesorados(AsesoradosActivity.this, FirestoreHelper.asesor.getUid());
-                }
-                else
-                {
+                    dialogAdd.dismiss();
+                } else {
                     status("Debes llenar todos los campos requeridos.");
                 }
 
@@ -437,16 +424,16 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         textInputLayout_numeroControl_add_alumno.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Aquí se le da vida al icono de busqueda
-                ProgressDialog dialog = ProgressDialog.show(AsesoradosActivity.this, "", "Buscando...", true);
                 String numControl = textInputLayout_numeroControl_add_alumno.getEditText().getText().toString();
-                if(numControl.length()==8)
-                {
-                    firestoreAlumno.getDataAlumno(AsesoradosActivity.this, numControl, dialog, AsesoradosActivity.this, AsesoradosActivity.this);
-                }
-                else
-                {
-                    textInputLayout_numeroControl_add_alumno.setError("Número de control no válido.");
+                if(isNumeric(numControl)) {
+                    if (numControl.length() == 8 && !numControl.isEmpty()) {
+                        ProgressDialog dialog = ProgressDialog.show(AsesoradosActivity.this, "", "Buscando...", true);
+                        firestoreAlumno.getDataAlumno(AsesoradosActivity.this, numControl, dialog, AsesoradosActivity.this, AsesoradosActivity.this);
+                    } else {
+                        textInputLayout_numeroControl_add_alumno.setError("Número de control no válido.");
+                    }
+                } else {
+                    textInputLayout_numeroControl_add_alumno.setError("El campo solo puede recibir numeros");
                 }
             }
         });
@@ -454,7 +441,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
             @Override
             public void onClick(View view) {
                 //DatePicker
-                /*MaterialDatePicker.Builder builder_date = MaterialDatePicker.Builder.datePicker();
+                MaterialDatePicker.Builder builder_date = MaterialDatePicker.Builder.datePicker();
                 final MaterialDatePicker materialDatePicker = builder_date.build();
                 materialDatePicker.show(getSupportFragmentManager(), "DATE_PICKER");
                 materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
@@ -462,28 +449,12 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
                     public void onPositiveButtonClick(Object selection) {
                         textInputEditText_fecha_add_alumno.setText(materialDatePicker.getHeaderText());
                     }
-                });*/
-
-                MaterialTimePicker.Builder builder_time = new MaterialTimePicker.Builder();
-                builder_time.setTimeFormat(TimeFormat.CLOCK_12H);
-                final MaterialTimePicker materialTimePicker = builder_time.build();
-                materialTimePicker.show(getSupportFragmentManager(), "TIME_PICKER");
-                materialTimePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        textInputEditText_fecha_add_alumno.setText(materialTimePicker.getHour()+":"+materialTimePicker.getMinute());
-                    }
                 });
 
-                materialTimePicker.addOnNegativeButtonClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        textInputEditText_fecha_add_alumno.setError("Campo requerido");
-                    }
-                });
             }
         });
+
+        textWachers(textInputLayout_numeroControl_add_alumno);
     }
 
     @Override
@@ -500,8 +471,42 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
     @Override
     public void getAsesorados(List<Asesorado> asesoradoList) {
         listaAlumnos = (ArrayList<Asesorado>) asesoradoList;
+        listaAlumnosFiltrados = listaAlumnos;
+
         obtenerLista();
         arrayAdapterListView.notifyDataSetChanged();
+    }
+
+    private void consultarBDPorFiltro(String text) {
+        listaAlumnos.clear();
+
+        for(Asesorado asesorado: listaAlumnosFiltrados){
+            if (asesorado.getData().contains(text)){
+                listaAlumnos.add(asesorado);
+                Toast.makeText(AsesoradosActivity.this, listaAlumnos.get(0).getNombre(), Toast.LENGTH_LONG).show();
+            }
+        }
+
+        obtenerLista();
+        arrayAdapterListView.notifyDataSetChanged();
+    }
+
+
+    private void obtenerLista() {
+        listaInformacion.clear();
+        int i = 0;
+
+        if(listaAlumnos.size()!=0) {
+            for (Asesorado alumno : listaAlumnos) {
+                Log.e("I: ", (i++) + "");
+                listaInformacion.add("Número de control:" + alumno.getnControl() + "\nNombre del alumno:" + alumno.getNombre() +"\nFecha: " + alumno.getFecha());
+            }
+            listView_BD.setVisibility(View.VISIBLE);
+            textView_sin_data.setVisibility(View.GONE);
+        }else {
+            listView_BD.setVisibility(View.GONE);
+            textView_sin_data.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -511,12 +516,16 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
             flag = true;
             textInputLayout_nombre_add_alumno.getEditText().setText(alumno.getNombre());
             textInputLayout_carrera_add_alumno.getEditText().setText(alumno.getCarrera());
+            textInputLayout_nombre_add_alumno.getEditText().setFocusableInTouchMode(false);
+            textInputLayout_carrera_add_alumno.getEditText().setEnabled(false);
         }
         else
         {
+            textInputLayout_carrera_add_alumno.getEditText().setText("");
+            textInputLayout_nombre_add_alumno.getEditText().setText("");
             ((AutoCompleteTextView)textInputLayout_carrera_add_alumno.getEditText()).setAdapter(null);
             ((AutoCompleteTextView)textInputLayout_carrera_add_alumno.getEditText()).setAdapter(arrayAdapter_carreras);
-            textInputLayout_nombre_add_alumno.getEditText().setEnabled(true);
+            textInputLayout_nombre_add_alumno.getEditText().setFocusableInTouchMode(true);
             textInputLayout_carrera_add_alumno.getEditText().setEnabled(true);
         }
     }
@@ -524,5 +533,39 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
     @Override
     public void onClick(View view) {
 
+    }
+
+    private void textWachers(final TextInputLayout textInputLayout){
+        textInputLayout.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                if(charSequence.length() == 0){
+                    textInputLayout.setError("Campo vacío");
+                }else if(charSequence.length() != 8 ){
+                    textInputLayout.setError("Debe tener 8 dígitos");
+                }else {
+                    textInputLayout.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+    private boolean isNumeric(String number){
+        try {
+            Integer.valueOf(number);
+            return true;
+        }catch (NumberFormatException e){
+            return false;
+        }
     }
 }

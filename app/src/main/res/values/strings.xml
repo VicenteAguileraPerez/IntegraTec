@@ -97,13 +97,14 @@
     <string name="buscar">Buscar por nombre o número de control</string>
     <string name="agregar_asesorado">Agregar asesorado</string>
     <string name="sin_registros_para_mostrar">Sin registros para mostrar</string>
-    <string name="seleccione_una_carrera">Seleccione una carrera...</string>
+    <string name="seleccione_una_carrera">Seleccione una carrera</string>
     <string name="n_mero_de_control">Número de control</string>
     <string name="car">Carrera</string>
     <string name="seleccione_una_materia">Seleccione una materia</string>
     <string name="seleccione_una_carrera_spinner">Seleccione una carrera</string>
     <string name="tema_text">Tema</string>
     <string name="seleccione_un_lugar">Seleccione un lugar</string>
+    <string name="fecha_tex">Fecha</string>
 
 
 </resources>
