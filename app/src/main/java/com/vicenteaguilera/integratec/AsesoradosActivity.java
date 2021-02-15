@@ -71,7 +71,11 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
     public ArrayAdapter<String> arrayAdapter_carreras;
     public ArrayAdapter<String> arrayAdapter_materia;
 
+    private SearchView searchView;
+
+
     private boolean flag = false;
+    private boolean flagLista = false;
 
     @Override
     protected void onStart() {
@@ -105,7 +109,14 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         listView_BD.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showDialogUpdateDelete(listaAlumnos.get(position),position);
+                if(flagLista==false)
+                {
+                    showDialogUpdateDelete(listaAlumnos.get(position),position);
+                }
+                else
+                {
+                    showDialogUpdateDelete(listaAlumnosFiltrados.get(position),position);
+                }
             }
         });
 
@@ -279,12 +290,11 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_crud_activity, menu);
         MenuItem menuItem = menu.findItem(R.id.item_buscar);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
         searchView.setQueryHint(getResources().getString(R.string.buscar));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-
                 return false;
             }
 
@@ -471,28 +481,26 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
     @Override
     public void getAsesorados(List<Asesorado> asesoradoList) {
         listaAlumnos = (ArrayList<Asesorado>) asesoradoList;
-        listaAlumnosFiltrados = listaAlumnos;
-
         obtenerLista();
         arrayAdapterListView.notifyDataSetChanged();
     }
 
     private void consultarBDPorFiltro(String text) {
-        listaAlumnos.clear();
-
-        for(Asesorado asesorado: listaAlumnosFiltrados){
+        flagLista = true;
+        listaInformacion.clear();
+        listaAlumnosFiltrados.clear();
+        for(Asesorado asesorado: listaAlumnos){
             if (asesorado.getData().contains(text)){
-                listaAlumnos.add(asesorado);
-                Toast.makeText(AsesoradosActivity.this, listaAlumnos.get(0).getNombre(), Toast.LENGTH_LONG).show();
+                listaAlumnosFiltrados.add(asesorado);
+                listaInformacion.add("Número de control:" + asesorado.getnControl() + "\nNombre del alumno:" + asesorado.getNombre() +"\nFecha: " + asesorado.getFecha());
             }
         }
-
-        obtenerLista();
         arrayAdapterListView.notifyDataSetChanged();
     }
 
 
     private void obtenerLista() {
+        flagLista = false;
         listaInformacion.clear();
         int i = 0;
 
