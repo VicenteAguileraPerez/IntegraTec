@@ -498,7 +498,6 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         arrayAdapterListView.notifyDataSetChanged();
     }
 
-
     private void obtenerLista() {
         flagLista = false;
         listaInformacion.clear();
