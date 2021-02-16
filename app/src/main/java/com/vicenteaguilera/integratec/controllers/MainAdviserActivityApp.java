@@ -367,7 +367,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         editTextFocusListener();
         radioButtonListener();
 
-        editTextTextMultiLine.getEditText().setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE|InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        editTextTextMultiLine.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
 
         arrayAdapterLugares = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.LUGARES);
         arrayAdapterMaterias = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.MATERIAS);
@@ -415,6 +415,17 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         });
         setImage(FirestoreHelper.asesor.getuRI_image());
         sharedPreferencesHelper = new SharedPreferencesHelper(MainAdviserActivityApp.this);
+
+        ((AutoCompleteTextView) spinner_lugares.getEditText()).setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(spinner_lugares.getEditText().getText().toString().equals("Otro(Especifique)")){
+                   editTextText_otroLugar.setVisibility(View.VISIBLE);
+                }else {
+                    editTextText_otroLugar.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     @Override
