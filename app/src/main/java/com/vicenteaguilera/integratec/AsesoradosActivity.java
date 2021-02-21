@@ -157,8 +157,8 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         textInputLayout_numero_control_update.getEditText().setText(String.valueOf(alumno.getnControl()));
         textInputLayout_nombre_update.getEditText().setText(alumno.getNombre());
         textInputLayout_tema_update.getEditText().setText(alumno.getTema());
-        spinner_carrera_update.getEditText().setText(alumno.getCarrera());
-        spinner_materia_update.getEditText().setText(alumno.getMateria());
+        ((AutoCompleteTextView)spinner_carrera_update.getEditText()).setText(alumno.getCarrera(), false);
+        ((AutoCompleteTextView)spinner_materia_update.getEditText()).setText(alumno.getMateria(), false);
         textInputEditText_fecha_update_alumno.setText(alumno.getFecha());
 
         button_borrar_update.setOnClickListener(new View.OnClickListener() {

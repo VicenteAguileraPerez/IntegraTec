@@ -82,6 +82,7 @@ import com.vicenteaguilera.integratec.helpers.flipper.Root;
 import com.vicenteaguilera.integratec.helpers.flipper.StorageManagerCompat;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseStorageHelper;
+import com.vicenteaguilera.integratec.helpers.services.FirestoreAlumno;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreAsesorado;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
 //import com.vicenteaguilera.integratec.helpers.utility.WaterMark;
@@ -306,13 +307,13 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
             if (tipo) {
                 radioBAPresencial.setChecked(true);
-                spinner_lugares.getEditText().setText((String)preferences.get("lugar"));
+                ((AutoCompleteTextView)spinner_lugares.getEditText()).setText((String)preferences.get("lugar"), false);
             }
             else {
                 radioButton_AOnline.setChecked(true);
                 editText_URL.getEditText().setText(url);
             }
-            spinner_materias.getEditText().setText((String)preferences.get("materia"));
+            ((AutoCompleteTextView)spinner_materias.getEditText()).setText((String)preferences.get("materia"), false);
 
             editText_HoraInicio.setText(h_inicio);
             editText_HoraFinalizacion.setText(h_final);
@@ -375,6 +376,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         ((AutoCompleteTextView)spinner_lugares.getEditText()).setAdapter(arrayAdapterLugares);
         ((AutoCompleteTextView)spinner_materias.getEditText()).setAdapter(arrayAdapterMaterias);
 
+
         imageButton_edit_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -426,6 +428,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 }
             }
         });
+
+
     }
 
     @Override
@@ -1209,7 +1213,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
         editText_Name.getEditText().setText(FirestoreHelper.asesor.getNombre());
         editText_LastNames.getEditText().setText(FirestoreHelper.asesor.getApellidos());
-        spinner_career.getEditText().setText(FirestoreHelper.asesor.getCarrera());
+        ((AutoCompleteTextView)spinner_career.getEditText()).setText(FirestoreHelper.asesor.getCarrera(), false);
 
         cardView_ButtonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
