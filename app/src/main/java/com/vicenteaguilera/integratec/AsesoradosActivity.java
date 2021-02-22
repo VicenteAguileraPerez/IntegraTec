@@ -5,6 +5,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.view.MenuItemCompat;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -50,6 +52,7 @@ import com.vicenteaguilera.integratec.models.Asesorado;
 
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
@@ -452,7 +455,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
             @Override
             public void onClick(View view) {
                 //DatePicker
-                MaterialDatePicker.Builder builder_date = MaterialDatePicker.Builder.datePicker();
+                /*MaterialDatePicker.Builder builder_date = MaterialDatePicker.Builder.datePicker();
                 final MaterialDatePicker materialDatePicker = builder_date.build();
                 materialDatePicker.show(getSupportFragmentManager(), "DATE_PICKER");
                 materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
@@ -460,8 +463,23 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
                     public void onPositiveButtonClick(Object selection) {
                         textInputEditText_fecha_add_alumno.setText(materialDatePicker.getHeaderText());
                     }
-                });
+                });*/
 
+                Calendar c = Calendar.getInstance();
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
+                int year = c.get(Calendar.YEAR);
+
+                DatePickerDialog pickerDialogFecha = new DatePickerDialog(AsesoradosActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int yearD, int monthD, int dayD) {
+                        int mesActual = monthD + 1;
+                        String diaFormateado = (dayD < 10)? "0" + String.valueOf(dayD):String.valueOf(dayD);
+                        String mesFormateado = (mesActual < 10)? "0" + String.valueOf(mesActual):String.valueOf(mesActual);
+                        textInputEditText_fecha_add_alumno.setText(diaFormateado + "/" + mesFormateado + "/" + yearD);
+                    }
+                }, year, month, day);
+                pickerDialogFecha.show();
             }
         });
 
