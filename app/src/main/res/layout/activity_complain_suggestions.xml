@@ -31,9 +31,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginTop="50dp"
+                    android:layout_marginTop="40dp"
                     android:layout_marginEnd="20dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="0dp"
                     android:hint="@string/nombre_completo"
                     app:backgroundTint="@color/colorPrimaryDark"
                     app:errorEnabled="true"
@@ -43,9 +43,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textCapWords"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
-                        />
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -54,9 +53,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="20dp"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginBottom="0dp"
                     android:hint="@string/email"
                     app:backgroundTint="@color/colorPrimaryDark"
                     app:errorEnabled="true"
@@ -66,9 +65,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
-                        />
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -79,9 +77,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="20dp"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginBottom="0dp"
                     android:orientation="horizontal">
 
                     <RadioButton
@@ -112,9 +110,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="20dp"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginBottom="0dp"
                     android:hint="@string/mensaje"
                     app:backgroundTint="@color/colorPrimaryDark"
                     app:errorEnabled="true"
@@ -124,11 +122,11 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="200dp"
                         android:inputType="textMultiLine"
-                        android:textColor="@color/white"
+                        android:textColor="@android:color/black"
                         android:textSize="18sp"
-                        />
+                        android:scrollbars="vertical"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -139,6 +137,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="20dp"
+                    android:layout_marginTop="10dp"
                     android:gravity="center"
                     android:text="Enviar"
                     android:textColor="#FFFFFF"
@@ -146,7 +145,6 @@
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
                     app:cornerRadius="15dp"
-                    app:backgroundTint="@color/background_green"
                     />
 
             </LinearLayout>

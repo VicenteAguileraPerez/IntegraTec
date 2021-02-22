@@ -181,7 +181,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(wifiReceiver,intentFilter);
 
-        //cancelarAsesoriaDespuesDeHora();
+        cancelarAsesoriaDespuesDeHora();
 
         clear();
         //sharedPreferencesHelper.deletePreferences();
@@ -793,8 +793,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 editText_HoraFinalizacion.setError("Seleccionar hora de finalización.");
             }
 
-            //if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
-             //{
+            if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
+             {
                     if(((flag_radioButton || flag_otherPlace)) && flag_spinnerMateria && flag_TimeStar && flag_TimeEnd)
                     {
                             if (getRangoValidoHoras()) {
@@ -815,11 +815,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                                 disableEditTextHoras();
                             }
                     }
-            /*}
+            }
             else
             {
                 Toast.makeText(MainAdviserActivityApp.this,"Error no puede continuar hasta que habilite la hora automática en su dispositivo", Toast.LENGTH_SHORT).show();
-            }*/
+            }
     }
 
     private Map<String, Object> returnAsesoria()
@@ -1075,7 +1075,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 else if(flagPDFAsesorados)
                 {
 
-                   /* if(cursor.getCount()!=0)
+                    if(asesoradoList!=null)
                     {
                         try {
                             myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO2+"_"+PropiertiesHelper.obtenerFecha()+".pdf", "");
@@ -1090,7 +1090,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     else
                     {
                         Toast.makeText(getApplicationContext(), "No hay datos para generar el pdf.", Toast.LENGTH_SHORT).show();
-                    }*/
+                    }
                 }
             } catch (OperationFailedException e) {
                 e.printStackTrace();

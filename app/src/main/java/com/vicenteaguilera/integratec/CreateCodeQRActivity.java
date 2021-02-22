@@ -73,7 +73,7 @@ public class CreateCodeQRActivity extends AppCompatActivity implements Status{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_code_q_r);
-
+        setTitle("Crear QR");
         editText_Nombre = findViewById(R.id.editText_nombre);
         editText_NumeroControl = findViewById(R.id.editText_NumeroControl);
         spinner_Carrera = findViewById(R.id.spinner_carrera);

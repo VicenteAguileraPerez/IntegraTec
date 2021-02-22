@@ -95,6 +95,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_asesorados);
+        setTitle("Mis asesorados");
 
         textView_sin_data = findViewById(R.id.textView_sin_data);
 
@@ -126,7 +127,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
     }
 
     private void showDialogUpdateDelete(final Asesorado alumno, int position) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
 
         View view =inflater.inflate(R.layout.dialog_update_delete, null);

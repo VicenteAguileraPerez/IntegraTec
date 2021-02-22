@@ -88,7 +88,7 @@
                     android:layout_marginStart="30dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="30dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="50dp"
                     android:hint="@string/seleccione_una_carrera"
                     android:backgroundTint="@color/colorPrimaryDark"
                     app:errorEnabled="true"
@@ -118,8 +118,6 @@
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
                     app:cornerRadius="15dp"
-                    app:backgroundTint="@color/background_green"
-
                     />
 
 

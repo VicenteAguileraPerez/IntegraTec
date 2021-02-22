@@ -137,8 +137,6 @@
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
                     app:cornerRadius="15dp"
-                    app:backgroundTint="@color/background_green"
-
                     />
 
             </LinearLayout>

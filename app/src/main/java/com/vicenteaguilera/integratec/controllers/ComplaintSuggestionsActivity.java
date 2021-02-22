@@ -57,6 +57,7 @@ public class ComplaintSuggestionsActivity extends AppCompatActivity implements V
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complain_suggestions);
+        setTitle("Quejas y sugerencias");
 
         editText_email = findViewById(R.id.editText_email);
         editText_mensaje = findViewById(R.id.editText_mensaje);
