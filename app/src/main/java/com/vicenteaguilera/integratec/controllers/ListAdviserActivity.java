@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
 import com.vicenteaguilera.integratec.models.RealtimeAsesoria;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ListAdviserActivity extends AppCompatActivity implements ListaAsesores, Status {
@@ -113,37 +115,72 @@ public class ListAdviserActivity extends AppCompatActivity implements ListaAseso
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+        Calendar cldr = Calendar.getInstance();
         int id = item.getItemId();
         Intent intent;
-        switch (id){
-            case R.id.item_AcercaDe:
-                Toast.makeText(ListAdviserActivity.this, getResources().getText(R.string.acerca_de)+"...", Toast.LENGTH_SHORT).show();
-                intent = new Intent(this, AboutActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.item_Horarios:
+        if(cldr.get(Calendar.DAY_OF_WEEK)>=Calendar.MONDAY && cldr.get(Calendar.DAY_OF_WEEK)<=Calendar.FRIDAY)
+        {
+            int hour = cldr.get(Calendar.HOUR_OF_DAY);
+            Log.e("Hour: ", hour+"");
+            if(hour>=8 && hour<20) {
 
-                intent = new Intent(this, HorarioActivity.class);
-                startActivity(intent);
-                break;
+                switch (id){
+                    case R.id.item_AcercaDe:
+                        Toast.makeText(ListAdviserActivity.this, getResources().getText(R.string.acerca_de)+"...", Toast.LENGTH_SHORT).show();
+                        intent = new Intent(this, AboutActivity.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.item_Horarios:
 
-            case R.id.item_QuejasSugerencias:
-                Toast.makeText(ListAdviserActivity.this,getResources().getText(R.string.quejasSugerencias)+"...", Toast.LENGTH_SHORT).show();
-                intent = new Intent(this, ComplaintSuggestionsActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.item_ActualizarLista:
-                listView_asesores.setVisibility(View.INVISIBLE);
-                progressBar.setVisibility(View.VISIBLE);
-                new FirestoreHelper().listenAsesorias(this);
-                break;
+                        intent = new Intent(this, HorarioActivity.class);
+                        startActivity(intent);
+                        break;
 
-            case R.id.item_Crear_QR:
-                intent = new Intent(this, CreateCodeQRActivity.class);
-                startActivity(intent);
-                break;
+                    case R.id.item_QuejasSugerencias:
+                        Toast.makeText(ListAdviserActivity.this,getResources().getText(R.string.quejasSugerencias)+"...", Toast.LENGTH_SHORT).show();
+                        intent = new Intent(this, ComplaintSuggestionsActivity.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.item_ActualizarLista:
+                        listView_asesores.setVisibility(View.INVISIBLE);
+                        progressBar.setVisibility(View.VISIBLE);
+                        new FirestoreHelper().listenAsesorias(this);
+                        break;
 
+                    case R.id.item_Crear_QR:
+                        intent = new Intent(this, CreateCodeQRActivity.class);
+                        startActivity(intent);
+                        break;
+
+                }
+            }else {
+
+                switch (id) {
+                    case R.id.item_AcercaDe:
+                        Toast.makeText(ListAdviserActivity.this, getResources().getText(R.string.acerca_de) + "...", Toast.LENGTH_SHORT).show();
+                        intent = new Intent(this, AboutActivity.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.item_Horarios:
+
+                        intent = new Intent(this, HorarioActivity.class);
+                        startActivity(intent);
+                        break;
+
+                    case R.id.item_QuejasSugerencias:
+                        Toast.makeText(ListAdviserActivity.this, getResources().getText(R.string.quejasSugerencias) + "...", Toast.LENGTH_SHORT).show();
+                        intent = new Intent(this, ComplaintSuggestionsActivity.class);
+                        startActivity(intent);
+                        break;
+
+                    case R.id.item_Crear_QR:
+                        intent = new Intent(this, CreateCodeQRActivity.class);
+                        startActivity(intent);
+                        break;
+                }
+            }
         }
+
         return super.onOptionsItemSelected(item);
     }
 

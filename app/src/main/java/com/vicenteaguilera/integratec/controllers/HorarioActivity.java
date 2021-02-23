@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
@@ -35,7 +36,7 @@ public class HorarioActivity extends AppCompatActivity {
                 return false;
             }
         });
-
+        Toast.makeText(this, "Puede tardar algunos segundos en cargar, espere por favor.", Toast.LENGTH_LONG).show();
     }
     private WifiReceiver wifiReceiver = new WifiReceiver();
 
