@@ -1,5 +1,6 @@
 package com.vicenteaguilera.integratec;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.MenuItemCompat;
@@ -8,6 +9,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -36,6 +39,10 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
+import com.vicenteaguilera.integratec.helpers.CaptureActivityPortrait;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreAlumno;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreAsesorado;
@@ -67,16 +74,13 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
     private FirestoreAlumno firestoreAlumno = new FirestoreAlumno();
     private FirestoreAsesorado firestoreAsesorado = new FirestoreAsesorado();
     private FirestoreHelper firestoreHelper = new FirestoreHelper();
-
+    private IntentResult result = null;
     private TextInputLayout textInputLayout_nombre_add_alumno;
     private TextInputLayout textInputLayout_carrera_add_alumno;
-
+    private TextInputLayout textInputLayout_numeroControl_add_alumno;
     public ArrayAdapter<String> arrayAdapter_carreras;
     public ArrayAdapter<String> arrayAdapter_materia;
-
     private SearchView searchView;
-
-
     private boolean flag = false;
     private boolean flagLista = false;
 
@@ -341,7 +345,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         dialogAdd.setCancelable(false);
         dialogAdd.show();
 
-        final TextInputLayout textInputLayout_numeroControl_add_alumno = dialogAdd.findViewById(R.id.textInputLayout_numeroControl_add_alumno);
+        textInputLayout_numeroControl_add_alumno = dialogAdd.findViewById(R.id.textInputLayout_numeroControl_add_alumno);
         textInputLayout_nombre_add_alumno = dialogAdd.findViewById(R.id.textInputLayout_nombre_add_alumno);
         textInputLayout_carrera_add_alumno = dialogAdd.findViewById(R.id.textInputLayout_carrera_add_alumno);
         final TextInputLayout textInputLayout_materia_add_alumno = dialogAdd.findViewById(R.id.spinner_materia_add);
@@ -349,6 +353,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         final TextInputEditText textInputEditText_fecha_add_alumno = dialogAdd.findViewById(R.id.textInputEditText_fecha_add_alumno);
         final MaterialButton button_registrar_add_alumno = dialogAdd.findViewById(R.id.button_registrar_add);
         final MaterialButton button_cancelar_add_alumno = dialogAdd.findViewById(R.id.button_cancelar_add);
+        final ImageButton imageButton_qr_add = dialogAdd.findViewById(R.id.imageButton_qr_add);
 
         ((AutoCompleteTextView)textInputLayout_carrera_add_alumno.getEditText()).setAdapter(arrayAdapter_carreras);
         ((AutoCompleteTextView)textInputLayout_materia_add_alumno.getEditText()).setAdapter(arrayAdapter_materia);
@@ -484,6 +489,13 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         });
 
         textWachers(textInputLayout_numeroControl_add_alumno);
+
+        imageButton_qr_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                escanearQR();
+            }
+        });
     }
 
     @Override
@@ -592,6 +604,46 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
             return true;
         }catch (NumberFormatException e){
             return false;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
+        if(result != null){
+            if(result.getContents() != null){
+                String values = result.getContents();
+                setInformation(values);
+            }else {
+                Toast.makeText(AsesoradosActivity.this,"Cancelaste escaneo.",Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void escanearQR()
+    {
+        IntentIntegrator intentIntegrator = new IntentIntegrator(AsesoradosActivity.this);
+        intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+        intentIntegrator.setPrompt("Escanea código QR");
+        intentIntegrator.setOrientationLocked(false);//orientacion
+        intentIntegrator.setCameraId(0);//camara
+        intentIntegrator.setBeepEnabled(false);
+        intentIntegrator.setCaptureActivity(CaptureActivityPortrait.class);
+        intentIntegrator.setBarcodeImageEnabled(false);
+        intentIntegrator.initiateScan();
+    }
+
+    private void setInformation(String values){
+        String array[] = values.split("_");
+
+        if(array.length == 3){
+            textInputLayout_numeroControl_add_alumno.getEditText().setText(array[0]);
+            textInputLayout_nombre_add_alumno.getEditText().setText(array[1]);
+            textInputLayout_carrera_add_alumno.getEditText().setText(array[2]);
+        }else {
+            Toast.makeText(this, "Código QR inválido", Toast.LENGTH_LONG).show();
         }
     }
 }

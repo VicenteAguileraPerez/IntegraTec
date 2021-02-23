@@ -18,9 +18,6 @@
         android:id="@+id/item_Crear_QR"
         android:title="@string/crearQR" />
     <item
-        android:id="@+id/item_Leer_QR"
-        android:title="@string/leerQR" />
-    <item
         android:id="@+id/item_Crear_PDF_asesorias"
         android:title="@string/crear_pdf_asesorias" />
     <item

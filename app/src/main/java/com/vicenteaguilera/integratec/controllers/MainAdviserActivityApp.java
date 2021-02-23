@@ -470,9 +470,6 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 FirestoreHelper.asesor=null;
                 break;
 
-            case R.id.item_Leer_QR:
-                escanearQR();
-                break;
 
             case R.id.item_Crear_QR:
                 intent = new Intent(this, CreateCodeQRActivity.class);
@@ -1096,98 +1093,9 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 e.printStackTrace();
             }
         }
-        else
-        {
-            result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
-            if(result!=null)
-            {
-                if(result.getContents() != null)
-                {
-                    Toast.makeText(MainAdviserActivityApp.this,result.getContents(),Toast.LENGTH_SHORT).show();
 
-                    String values = result.getContents();
-
-                    showDialogRegistrar(values);
-                }
-                else
-                {
-                    Toast.makeText(MainAdviserActivityApp.this,"Cancelaste escaneo.",Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
     }
 
-    private void showDialogRegistrar(String values) {
-        final String array[] = values.split("_");
-
-        if(array.length == 7){
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            LayoutInflater inflater = getLayoutInflater();
-
-            View view = inflater.inflate(R.layout.dialog_registar_alumno, null);
-            builder.setView(view)
-                    .setTitle("Registrar asesorado");
-
-            final AlertDialog dialogRegistrar =builder.create();
-            dialogRegistrar.setCancelable(false);
-            dialogRegistrar.show();
-
-            final TextView textView_NumeroControl = dialogRegistrar.findViewById(R.id.textView_NumeroControl);
-            final TextView textView_Nombre = dialogRegistrar.findViewById(R.id.textView_Nombre);
-            final TextView textView_Carrera = dialogRegistrar.findViewById(R.id.textView_Carrera);
-            final TextView textView_Semestre = dialogRegistrar.findViewById(R.id.textView_Semestre);
-            final TextView textView_Materia = dialogRegistrar.findViewById(R.id.textView_Materia);
-            final TextView textView_Tema = dialogRegistrar.findViewById(R.id.textView_Tema);
-            final TextView textView_Fecha = dialogRegistrar.findViewById(R.id.textView_Fecha);
-
-            textView_NumeroControl.setText("Número de control:"+array[0]);
-            textView_Nombre.setText("Nombre completo:"+array[1]);
-            textView_Carrera.setText("Carrera:"+array[2]);
-            textView_Materia.setText("Materia:"+array[3]);
-            textView_Tema.setText("Tema:"+array[4]);
-            textView_Semestre.setText("Semestre:"+array[5]);
-            textView_Fecha.setText("Fecha:"+array[6]);
-
-            final MaterialButton button_registrar_alumno = dialogRegistrar.findViewById(R.id.button_registrar_alumno);
-            final MaterialButton button_cancelar_alumno = dialogRegistrar.findViewById(R.id.button_cancelar_alumno);
-
-
-            button_registrar_alumno.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    registrar(array);
-                    dialogRegistrar.dismiss();
-                }
-            });
-
-            button_cancelar_alumno.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialogRegistrar.dismiss();
-                }
-            });
-
-        }else {
-            Toast.makeText(this, "El código QR no contiene todos los parametros necesarios para poder ser registadros con exito", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void registrar(String[] array) {
-        Toast.makeText(this, "Alumno registrado con exito", Toast.LENGTH_LONG).show();
-    }
-
-    private void escanearQR()
-    {
-        IntentIntegrator intentIntegrator = new IntentIntegrator(MainAdviserActivityApp.this);
-        intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
-        intentIntegrator.setPrompt("Escanea código QR");
-        intentIntegrator.setOrientationLocked(false);//orientacion
-        intentIntegrator.setCameraId(0);//camara
-        intentIntegrator.setBeepEnabled(false);
-        intentIntegrator.setCaptureActivity(CaptureActivityPortrait.class);
-        intentIntegrator.setBarcodeImageEnabled(false);
-        intentIntegrator.initiateScan();
-    }
 
     private void showDialogEditProfile() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
