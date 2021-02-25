@@ -83,6 +83,8 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
     private SearchView searchView;
     private boolean flag = false;
     private boolean flagLista = false;
+    private Alumno alumno;
+    private String[] arrayValid;
 
     @Override
     protected void onStart() {
@@ -168,6 +170,11 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         ((AutoCompleteTextView)spinner_carrera_update.getEditText()).setText(alumno.getCarrera(), false);
         ((AutoCompleteTextView)spinner_materia_update.getEditText()).setText(alumno.getMateria(), false);
         textInputEditText_fecha_update_alumno.setText(alumno.getFecha());
+
+        textInputLayout_numero_control_update.getEditText().setFocusableInTouchMode(false);
+        textInputLayout_nombre_update.getEditText().setFocusableInTouchMode(false);
+        spinner_carrera_update.getEditText().setEnabled(false);
+
 
         button_borrar_update.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -278,17 +285,22 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
 
         textInputEditText_fecha_update_alumno.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                //DatePicker
-                MaterialDatePicker.Builder builder_date = MaterialDatePicker.Builder.datePicker();
-                final MaterialDatePicker materialDatePicker = builder_date.build();
-                materialDatePicker.show(getSupportFragmentManager(), "DATE_PICKER");
-                materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+            public void onClick(View v) {
+                Calendar c = Calendar.getInstance();
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
+                int year = c.get(Calendar.YEAR);
+
+                DatePickerDialog pickerDialogFecha = new DatePickerDialog(AsesoradosActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
-                    public void onPositiveButtonClick(Object selection) {
-                        textInputEditText_fecha_update_alumno.setText(materialDatePicker.getHeaderText());
+                    public void onDateSet(DatePicker datePicker, int yearD, int monthD, int dayD) {
+                        int mesActual = monthD + 1;
+                        String diaFormateado = (dayD < 10)? "0" + String.valueOf(dayD):String.valueOf(dayD);
+                        String mesFormateado = (mesActual < 10)? "0" + String.valueOf(mesActual):String.valueOf(mesActual);
+                        textInputEditText_fecha_update_alumno.setText(diaFormateado + "/" + mesFormateado + "/" + yearD);
                     }
-                });
+                }, year, month, day);
+                pickerDialogFecha.show();
             }
         });
     }
@@ -505,11 +517,6 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
 
 
     @Override
-    public void status(String message) {
-        Toast.makeText(AsesoradosActivity.this,message,Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void getAsesorados(List<Asesorado> asesoradoList) {
         listaAlumnos = (ArrayList<Asesorado>) asesoradoList;
         obtenerLista();
@@ -622,6 +629,55 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         }
     }
 
+    private void setInformation(String values){
+        arrayValid = values.split("_");
+
+        if(arrayValid.length == 3){
+            ProgressDialog dialog = ProgressDialog.show(AsesoradosActivity.this, "", "Buscando...", true);
+            firestoreAlumno.validateAlumno(arrayValid[0], dialog, AsesoradosActivity.this, AsesoradosActivity.this);
+        }else {
+            Toast.makeText(this, "Código QR inválido", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void status(String message) {
+        if (!message.equalsIgnoreCase("unknown")){
+            String array[] = message.split("_");
+            if(arrayValid[0].equals(array[0]) && arrayValid[1].equalsIgnoreCase(array[1]) && arrayValid[2].equalsIgnoreCase(array[2])){
+                textInputLayout_numeroControl_add_alumno.getEditText().setText(arrayValid[0]);
+                textInputLayout_nombre_add_alumno.getEditText().setText(arrayValid[1]);
+                textInputLayout_carrera_add_alumno.getEditText().setText(arrayValid[2]);
+            }else {
+                final AlertDialog.Builder  alertDialogBuilder = new AlertDialog.Builder(AsesoradosActivity.this);
+                alertDialogBuilder.setCancelable(false);
+                alertDialogBuilder.setTitle("Aviso");
+                alertDialogBuilder.setMessage("Los datos del código QR son erróneos \uD83D\uDE25");
+
+                alertDialogBuilder.setPositiveButton("Aceptar",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface alertDialog, int i)
+                            {
+                                alertDialog.dismiss();
+                            }
+                        }
+                );
+
+                alertDialogBuilder.show();
+                textInputLayout_numeroControl_add_alumno.getEditText().getText().clear();
+                textInputLayout_nombre_add_alumno.getEditText().getText().clear();
+                textInputLayout_carrera_add_alumno.getEditText().getText().clear();
+            }
+        }else {
+            textInputLayout_numeroControl_add_alumno.getEditText().setText(arrayValid[0]);
+            textInputLayout_nombre_add_alumno.getEditText().setText(arrayValid[1]);
+            textInputLayout_carrera_add_alumno.getEditText().setText(arrayValid[2]);
+
+        }
+    }
+
+
     private void escanearQR()
     {
         IntentIntegrator intentIntegrator = new IntentIntegrator(AsesoradosActivity.this);
@@ -635,15 +691,4 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         intentIntegrator.initiateScan();
     }
 
-    private void setInformation(String values){
-        String array[] = values.split("_");
-
-        if(array.length == 3){
-            textInputLayout_numeroControl_add_alumno.getEditText().setText(array[0]);
-            textInputLayout_nombre_add_alumno.getEditText().setText(array[1]);
-            textInputLayout_carrera_add_alumno.getEditText().setText(array[2]);
-        }else {
-            Toast.makeText(this, "Código QR inválido", Toast.LENGTH_LONG).show();
-        }
-    }
 }
