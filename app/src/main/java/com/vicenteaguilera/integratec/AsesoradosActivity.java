@@ -35,6 +35,7 @@ import android.widget.Toast;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.timepicker.MaterialTimePicker;
@@ -85,6 +86,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
     private boolean flagLista = false;
     private Alumno alumno;
     private String[] arrayValid;
+    private FloatingActionButton floatingActionButton_add_alumno;
 
     @Override
     protected void onStart() {
@@ -107,6 +109,8 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         setTitle("Mis asesorados");
 
         textView_sin_data = findViewById(R.id.textView_sin_data);
+
+        floatingActionButton_add_alumno = findViewById(R.id.floatingActionButton_add_alumno);
 
         listaAlumnos = new ArrayList<Asesorado>();
         listaAlumnosFiltrados = new ArrayList<Asesorado>();
@@ -133,6 +137,13 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
        arrayAdapter_carreras  = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
        arrayAdapter_materia  = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.MATERIAS);
         //createDialogAddAlumno();
+
+        floatingActionButton_add_alumno.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialogAddAlumno();
+            }
+        });
     }
 
     private void showDialogUpdateDelete(final Asesorado alumno, int position) {
@@ -331,16 +342,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-
-        switch (item.getItemId()){
-
-            case R.id.item_add_asesorado:
-                showDialogAddAlumno();
-                break;
-
-        }
         return super.onOptionsItemSelected(item);
-
     }
 
 
@@ -528,7 +530,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         listaInformacion.clear();
         listaAlumnosFiltrados.clear();
         for(Asesorado asesorado: listaAlumnos){
-            if (asesorado.getData().contains(text)){
+            if (asesorado.getData().toUpperCase().contains(text.toUpperCase())){
                 listaAlumnosFiltrados.add(asesorado);
                 listaInformacion.add("Número de control:" + asesorado.getnControl() + "\nNombre del alumno:" + asesorado.getNombre() +"\nFecha: " + asesorado.getFecha());
             }
@@ -622,14 +624,14 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         if(result != null){
             if(result.getContents() != null){
                 String values = result.getContents();
-                setInformation(values);
+                //setInformation(values);
             }else {
                 Toast.makeText(AsesoradosActivity.this,"Cancelaste escaneo.",Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private void setInformation(String values){
+    /*private void setInformation(String values){
         arrayValid = values.split("_");
 
         if(arrayValid.length == 3){
@@ -638,11 +640,11 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         }else {
             Toast.makeText(this, "Código QR inválido", Toast.LENGTH_LONG).show();
         }
-    }
+    }*/
 
     @Override
     public void status(String message) {
-        if (!message.equalsIgnoreCase("unknown")){
+        /*  if (!message.equalsIgnoreCase("unknown")){
             String array[] = message.split("_");
             if(arrayValid[0].equals(array[0]) && arrayValid[1].equalsIgnoreCase(array[1]) && arrayValid[2].equalsIgnoreCase(array[2])){
                 textInputLayout_numeroControl_add_alumno.getEditText().setText(arrayValid[0]);
@@ -674,7 +676,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
             textInputLayout_nombre_add_alumno.getEditText().setText(arrayValid[1]);
             textInputLayout_carrera_add_alumno.getEditText().setText(arrayValid[2]);
 
-        }
+        }*/
     }
 
 
