@@ -3,6 +3,8 @@ package com.vicenteaguilera.integratec.adapters;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -15,6 +17,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -85,6 +88,7 @@ public class AsesoriaRealtimeAdapter extends BaseAdapter
            asesoriaRealtimeHolder.textView_Horario = contentView.findViewById(R.id.textView_Horario);
            asesoriaRealtimeHolder.textView_Materia = contentView.findViewById(R.id.textView_Materia);
            asesoriaRealtimeHolder.textView_Informacion_Extra = contentView.findViewById(R.id.textView_Informacion_Extra);
+           asesoriaRealtimeHolder.imageButton_copy_asesoria = contentView.findViewById(R.id.imageButton_copy_asesoria);
            contentView.setTag(asesoriaRealtimeHolder);
 
            Bitmap placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.user);
@@ -98,6 +102,8 @@ public class AsesoriaRealtimeAdapter extends BaseAdapter
                    .apply(RequestOptions.circleCropTransform())
                    .into( asesoriaRealtimeHolder.image);
            asesoriaRealtimeHolder.textView_Informacion_Extra.setSelected(true);
+           asesoriaRealtimeHolder.textView_Lugar_Asesoria.setSelected(true);
+           asesoriaRealtimeHolder.textView_nombre.setSelected(true);
            asesoriaRealtimeHolder.textView_nombre.setText(realtimeAsesoria.getNombre());
            asesoriaRealtimeHolder.textView_Lugar_Asesoria.setText(realtimeAsesoria.getURL().equals("")?"Lugar de asesoria: "+realtimeAsesoria.getLugar():"Lugar de asesoria: "+realtimeAsesoria.getURL());
            asesoriaRealtimeHolder.textView_Horario.setText("Horario: "+realtimeAsesoria.getHora_inicio()+" a "+realtimeAsesoria.getHora_fin());
@@ -105,6 +111,20 @@ public class AsesoriaRealtimeAdapter extends BaseAdapter
            String informacion = realtimeAsesoria.getInformacion();
            asesoriaRealtimeHolder.textView_Informacion_Extra.setText(informacion.equals("")?"No hay información extra proporcionada por el asesor":"Información extra: "+informacion);
 
+          if (!realtimeAsesoria.getURL().equals("")){
+              asesoriaRealtimeHolder.imageButton_copy_asesoria.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                      ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                      ClipData clip = ClipData.newPlainText("URL de Asesoría",  realtimeAsesoria.getURL());
+                      clipboard.setPrimaryClip(clip);
+
+                      Toast.makeText(context, "URL Copiado", Toast.LENGTH_SHORT).show();
+                  }
+              });
+          }else {
+              asesoriaRealtimeHolder.imageButton_copy_asesoria.setVisibility(View.INVISIBLE);
+          }
        }
        else {
            contentView.getTag();
@@ -115,6 +135,7 @@ public class AsesoriaRealtimeAdapter extends BaseAdapter
     {
         public TextView textView_nombre,textView_Lugar_Asesoria,textView_Horario,textView_Materia,textView_Informacion_Extra;
         public ImageView image;
+        public ImageButton imageButton_copy_asesoria;
     }
 
 

@@ -211,8 +211,6 @@ public class ListAdviserActivity extends AppCompatActivity implements ListaAseso
                 listView_asesores.setAdapter(asesoriaRealtimeAdapter);
             }
 
-
-
         }
     }
 
