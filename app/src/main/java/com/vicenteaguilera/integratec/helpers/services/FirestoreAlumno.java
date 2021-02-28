@@ -129,7 +129,7 @@ public class FirestoreAlumno{
         });
     }
 
-    public void validateAlumno(String document, final ProgressDialog dialog, final Status status, final Context context){
+    public void validateAlumno(String document, final ProgressDialog dialog, final Status status, final ListaAsesorados listaAsesorados, final Context context){
 
         AlumnoCollection.document(document).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -139,16 +139,17 @@ public class FirestoreAlumno{
                     DocumentSnapshot document = task.getResult();
                     if(Objects.requireNonNull(document).exists()){
                         Map<String,Object> data = document.getData();
-                       // alumno = new Alumno(document.getId(), data.get("nombre").toString(), data.get("carrera").toString());
-                        status.status(document.getId() + "_" + data.get("nombre").toString() + "_"+ data.get("carrera").toString());
-
+                        alumno = new Alumno(document.getId(), data.get("nombre").toString(), data.get("carrera").toString());
+                        listaAsesorados.getAlumno(alumno);
+                        status.status("known");
+                        //status.status(document.getId() + "_" + data.get("nombre").toString() + "_"+ data.get("carrera").toString());
                     }else {
                         status.status("unknown");
                         Toast.makeText(context, "El alumno será registrado en la base de datos", Toast.LENGTH_LONG).show();
                         dialog.dismiss();
                     }
                 }else {
-                    status.status("Error, verifique su conexión a Internet, si los problemas continuan contacte al administrado");
+                    status.status("Error, verifique su conexión a Internet, si los problemas continuan contacte al administrador");
                 }
 
             }

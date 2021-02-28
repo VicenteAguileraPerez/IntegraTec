@@ -59,8 +59,11 @@ import com.vicenteaguilera.integratec.models.AlumnoAsesorado;
 import com.vicenteaguilera.integratec.models.Asesorado;
 
 import java.nio.file.Files;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -87,6 +90,8 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
     private Alumno alumno;
     private String[] arrayValid;
     private FloatingActionButton floatingActionButton_add_alumno;
+    private SimpleDateFormat dateFormat;
+
 
     @Override
     protected void onStart() {
@@ -111,6 +116,8 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         textView_sin_data = findViewById(R.id.textView_sin_data);
 
         floatingActionButton_add_alumno = findViewById(R.id.floatingActionButton_add_alumno);
+
+        dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
         listaAlumnos = new ArrayList<Asesorado>();
         listaAlumnosFiltrados = new ArrayList<Asesorado>();
@@ -180,7 +187,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         textInputLayout_tema_update.getEditText().setText(alumno.getTema());
         ((AutoCompleteTextView)spinner_carrera_update.getEditText()).setText(alumno.getCarrera(), false);
         ((AutoCompleteTextView)spinner_materia_update.getEditText()).setText(alumno.getMateria(), false);
-        textInputEditText_fecha_update_alumno.setText(alumno.getFecha());
+        textInputEditText_fecha_update_alumno.setText(dateFormat.format(alumno.getFecha()));
 
         textInputLayout_numero_control_update.getEditText().setFocusableInTouchMode(false);
         textInputLayout_nombre_update.getEditText().setFocusableInTouchMode(false);
@@ -376,6 +383,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
             @Override
             public void onClick(View view) {
                 dialogAdd.dismiss();
+                flag = false;
             }
         });
         button_registrar_add_alumno.setOnClickListener(new View.OnClickListener() {
@@ -448,6 +456,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
                     }
                     firestoreAsesorado.readAsesorados(AsesoradosActivity.this, FirestoreHelper.asesor.getUid());
                     dialogAdd.dismiss();
+                    flag = false;
                 } else {
                     status("Debes llenar todos los campos requeridos.");
                 }
@@ -520,9 +529,18 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
 
     @Override
     public void getAsesorados(List<Asesorado> asesoradoList) {
-        listaAlumnos = (ArrayList<Asesorado>) asesoradoList;
-        obtenerLista();
-        arrayAdapterListView.notifyDataSetChanged();
+        if(asesoradoList.size()!=0)
+        {
+            listaAlumnos = (ArrayList<Asesorado>) asesoradoList;
+            Collections.sort(this.listaAlumnos, new Comparator<Asesorado>() {
+                @Override
+                public int compare(Asesorado a1, Asesorado a2) {
+                    return Long.valueOf(a1.getFecha().getTime()).compareTo(a2.getFecha().getTime());
+                }
+            });
+            obtenerLista();
+            arrayAdapterListView.notifyDataSetChanged();
+        }
     }
 
     private void consultarBDPorFiltro(String text) {
@@ -532,7 +550,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         for(Asesorado asesorado: listaAlumnos){
             if (asesorado.getData().toUpperCase().contains(text.toUpperCase())){
                 listaAlumnosFiltrados.add(asesorado);
-                listaInformacion.add("Número de control:" + asesorado.getnControl() + "\nNombre del alumno:" + asesorado.getNombre() +"\nFecha: " + asesorado.getFecha());
+                listaInformacion.add("Número de control:" + asesorado.getnControl() + "\nNombre del alumno:" + asesorado.getNombre() +"\nFecha: " + dateFormat.format(asesorado.getFecha()));
             }
         }
         arrayAdapterListView.notifyDataSetChanged();
@@ -546,7 +564,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         if(listaAlumnos.size()!=0) {
             for (Asesorado alumno : listaAlumnos) {
                 Log.e("I: ", (i++) + "");
-                listaInformacion.add("Número de control:" + alumno.getnControl() + "\nNombre del alumno:" + alumno.getNombre() +"\nFecha: " + alumno.getFecha());
+                listaInformacion.add("Número de control:" + alumno.getnControl() + "\nNombre del alumno:" + alumno.getNombre() +"\nFecha: " + dateFormat.format(alumno.getFecha()));
             }
             listView_BD.setVisibility(View.VISIBLE);
             textView_sin_data.setVisibility(View.GONE);
@@ -560,7 +578,9 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
     public void getAlumno(Alumno alumno) {
         if(alumno!=null)
         {
+            this.alumno = alumno;
             flag = true;
+            textInputLayout_numeroControl_add_alumno.getEditText().setText(alumno.getNumeroControl());
             textInputLayout_nombre_add_alumno.getEditText().setText(alumno.getNombre());
             textInputLayout_carrera_add_alumno.getEditText().setText(alumno.getCarrera());
             textInputLayout_nombre_add_alumno.getEditText().setFocusableInTouchMode(false);
@@ -624,38 +644,37 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         if(result != null){
             if(result.getContents() != null){
                 String values = result.getContents();
-                //setInformation(values);
+                setInformation(values);
             }else {
                 Toast.makeText(AsesoradosActivity.this,"Cancelaste escaneo.",Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    /*private void setInformation(String values){
+    private void setInformation(String values){
         arrayValid = values.split("_");
-
         if(arrayValid.length == 3){
             ProgressDialog dialog = ProgressDialog.show(AsesoradosActivity.this, "", "Buscando...", true);
-            firestoreAlumno.validateAlumno(arrayValid[0], dialog, AsesoradosActivity.this, AsesoradosActivity.this);
+            firestoreAlumno.validateAlumno(arrayValid[0], dialog, AsesoradosActivity.this, AsesoradosActivity.this, AsesoradosActivity.this);
         }else {
             Toast.makeText(this, "Código QR inválido", Toast.LENGTH_LONG).show();
         }
-    }*/
+    }
 
     @Override
     public void status(String message) {
-        /*  if (!message.equalsIgnoreCase("unknown")){
-            String array[] = message.split("_");
-            if(arrayValid[0].equals(array[0]) && arrayValid[1].equalsIgnoreCase(array[1]) && arrayValid[2].equalsIgnoreCase(array[2])){
-                textInputLayout_numeroControl_add_alumno.getEditText().setText(arrayValid[0]);
-                textInputLayout_nombre_add_alumno.getEditText().setText(arrayValid[1]);
-                textInputLayout_carrera_add_alumno.getEditText().setText(arrayValid[2]);
-            }else {
+        if (message.equalsIgnoreCase("unknown")){
+            textInputLayout_numeroControl_add_alumno.getEditText().setText(arrayValid[0]);
+            textInputLayout_nombre_add_alumno.getEditText().setText(arrayValid[1]);
+            textInputLayout_carrera_add_alumno.getEditText().setText(arrayValid[2]);
+        }else if (message.equalsIgnoreCase("known")) {
+            if(!arrayValid[1].equalsIgnoreCase(alumno.getNombre())
+            || !arrayValid[2].equalsIgnoreCase(alumno.getCarrera()))
+            {
                 final AlertDialog.Builder  alertDialogBuilder = new AlertDialog.Builder(AsesoradosActivity.this);
                 alertDialogBuilder.setCancelable(false);
                 alertDialogBuilder.setTitle("Aviso");
-                alertDialogBuilder.setMessage("Los datos del código QR son erróneos \uD83D\uDE25");
-
+                alertDialogBuilder.setMessage("Los datos del asesorado posiblemente son falsos, contacte a los administradores de la app. \uD83D\uDE25");
                 alertDialogBuilder.setPositiveButton("Aceptar",
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -665,23 +684,20 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
                             }
                         }
                 );
-
                 alertDialogBuilder.show();
                 textInputLayout_numeroControl_add_alumno.getEditText().getText().clear();
                 textInputLayout_nombre_add_alumno.getEditText().getText().clear();
                 textInputLayout_carrera_add_alumno.getEditText().getText().clear();
             }
-        }else {
-            textInputLayout_numeroControl_add_alumno.getEditText().setText(arrayValid[0]);
-            textInputLayout_nombre_add_alumno.getEditText().setText(arrayValid[1]);
-            textInputLayout_carrera_add_alumno.getEditText().setText(arrayValid[2]);
-
-        }*/
+        }else{
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        }
     }
 
 
     private void escanearQR()
     {
+        flag = false;
         IntentIntegrator intentIntegrator = new IntentIntegrator(AsesoradosActivity.this);
         intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
         intentIntegrator.setPrompt("Escanea código QR");

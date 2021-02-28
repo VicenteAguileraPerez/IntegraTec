@@ -1609,7 +1609,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     tabla.addCell(asesoradoList.get(i).getCarrera());
                     tabla.addCell(asesoradoList.get(i).getMateria());
                     tabla.addCell(asesoradoList.get(i).getTema());
-                    tabla.addCell(asesoradoList.get(i).getFecha());
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    tabla.addCell(dateFormat.format(asesoradoList.get(i).getFecha()));
                 }
                 tabla.setHorizontalAlignment(Element.ALIGN_CENTER);
                 documento.add(tabla);
@@ -1688,6 +1689,12 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         if(asesoradoList.size()!=0)
         {
             this.asesoradoList = asesoradoList;
+            Collections.sort(this.asesoradoList, new Comparator<Asesorado>() {
+                @Override
+                public int compare(Asesorado a1, Asesorado a2) {
+                    return Long.valueOf(a1.getFecha().getTime()).compareTo(a2.getFecha().getTime());
+                }
+            });
         }
     }
 

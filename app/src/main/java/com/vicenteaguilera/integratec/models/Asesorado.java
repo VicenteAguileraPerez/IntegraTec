@@ -1,18 +1,20 @@
 package com.vicenteaguilera.integratec.models;
 
+import java.util.Date;
+
 public class Asesorado {
     private String id;
     private String nombre;
     private String nControl;
     private String carrera;
     private String tema;
-    private String fecha;
+    private Date fecha;
     private String materia;
     private String idAsesor;
 
     public Asesorado(){}
 
-    public Asesorado(String id, String nombre, String nControl, String carrera, String tema, String fecha, String materia, String idAsesor) {
+    public Asesorado(String id, String nombre, String nControl, String carrera, String tema, Date fecha, String materia, String idAsesor) {
         this.id = id;
         this.nombre = nombre;
         this.nControl = nControl;
@@ -71,11 +73,11 @@ public class Asesorado {
         this.tema = tema;
     }
 
-    public String getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
-    public void setFecha(String fecha) {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
 

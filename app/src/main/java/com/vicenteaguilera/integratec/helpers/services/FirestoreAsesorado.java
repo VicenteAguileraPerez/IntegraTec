@@ -156,8 +156,16 @@ public class FirestoreAsesorado {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 final Map<String,Object> asesorado_add =  document.getData();
+
+                                Date date = null;
+                                try {
+                                    date = new SimpleDateFormat("dd/MM/yyyy").parse(asesorado_add.get("fecha").toString());
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+
                                 asesorados[0] = new Asesorado(document.getId(), asesorado_add.get("nombre").toString(), asesorado_add.get("numeroControl").toString(), asesorado_add.get("carrera").toString(),
-                                        asesorado_add.get("tema").toString(), asesorado_add.get("fecha").toString(), asesorado_add.get("materia").toString(), asesorado_add.get("idAsesor").toString());
+                                        asesorado_add.get("tema").toString(), date, asesorado_add.get("materia").toString(), asesorado_add.get("idAsesor").toString());
                                 asesoradosList.add(asesorados[0]);
                             }
                             listaAsesorados.getAsesorados(asesoradosList);
