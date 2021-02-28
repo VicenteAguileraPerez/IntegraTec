@@ -109,7 +109,7 @@ public class ListAdviserActivity extends AppCompatActivity implements ListaAseso
 
         Calendar cldr = Calendar.getInstance();
         int hour = cldr.get(Calendar.HOUR_OF_DAY);
-        if(! (cldr.get(Calendar.DAY_OF_WEEK)>=Calendar.MONDAY && cldr.get(Calendar.DAY_OF_WEEK)<=Calendar.FRIDAY) || (hour>=8 && hour<20)){
+        if(! (cldr.get(Calendar.DAY_OF_WEEK)>=Calendar.MONDAY && cldr.get(Calendar.DAY_OF_WEEK)<=Calendar.FRIDAY) || !(hour>=8 && hour<20)){
             menu.removeItem(R.id.item_ActualizarLista);
         }
 
