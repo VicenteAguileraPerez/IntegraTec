@@ -192,7 +192,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         textInputLayout_numero_control_update.getEditText().setFocusableInTouchMode(false);
         textInputLayout_nombre_update.getEditText().setFocusableInTouchMode(false);
         spinner_carrera_update.getEditText().setEnabled(false);
-
+        spinner_carrera_update.setEndIconVisible(false);
 
         button_borrar_update.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -287,11 +287,11 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
                     ProgressDialog dialog = ProgressDialog.show(AsesoradosActivity.this, "", "Actualizando...", true);
                     firestoreAsesorado.updateDataAsesorado(AsesoradosActivity.this, dialog, AsesoradosActivity.this, alumno.getId(),
                             textInputLayout_numero_control_update.getEditText().getText().toString(),
-                            textInputLayout_nombre_update.getEditText().getText().toString(),
-                            spinner_carrera_update.getEditText().getText().toString(),
-                            spinner_materia_update.getEditText().getText().toString(),
+                            textInputLayout_nombre_update.getEditText().getText().toString().toUpperCase(),
+                            spinner_carrera_update.getEditText().getText().toString().toUpperCase(),
+                            spinner_materia_update.getEditText().getText().toString().toUpperCase(),
                             textInputLayout_tema_update.getEditText().getText().toString(),
-                            textInputEditText_fecha_update_alumno.getText().toString(),
+                            textInputEditText_fecha_update_alumno.getText().toString().toUpperCase(),
                             FirestoreHelper.asesor.getUid());
                     dialogUpdateDelete.dismiss();
                     firestoreAsesorado.readAsesorados(AsesoradosActivity.this, FirestoreHelper.asesor.getUid());
@@ -449,10 +449,10 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
 
                 if(flagNumControl && flagNombreCompleto && flagCarrera && flagMateria && flagTema && flagFecha) {
                     ProgressDialog dialog = ProgressDialog.show(AsesoradosActivity.this, "", "Resgistrando...", true);
-                    firestoreAsesorado.addAsesorado(AsesoradosActivity.this, dialog, AsesoradosActivity.this, numControl, nombreCompleto, carrera, materia, tema, fecha, FirestoreHelper.asesor.getUid());
+                    firestoreAsesorado.addAsesorado(AsesoradosActivity.this, dialog, AsesoradosActivity.this, numControl, nombreCompleto.toUpperCase(), carrera.toUpperCase(), materia.toUpperCase(), tema.toUpperCase(), fecha, FirestoreHelper.asesor.getUid());
                     if(flag==false)
                     {
-                        firestoreAlumno.addDataAlumno(AsesoradosActivity.this, dialog, numControl, nombreCompleto, carrera, AsesoradosActivity.this);
+                        firestoreAlumno.addDataAlumno(AsesoradosActivity.this, dialog, numControl, nombreCompleto.toUpperCase(), carrera.toUpperCase(), AsesoradosActivity.this);
                     }
                     firestoreAsesorado.readAsesorados(AsesoradosActivity.this, FirestoreHelper.asesor.getUid());
                     dialogAdd.dismiss();
@@ -585,6 +585,8 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
             textInputLayout_carrera_add_alumno.getEditText().setText(alumno.getCarrera());
             textInputLayout_nombre_add_alumno.getEditText().setFocusableInTouchMode(false);
             textInputLayout_carrera_add_alumno.getEditText().setEnabled(false);
+            textInputLayout_carrera_add_alumno.setEndIconVisible(false);
+
         }
         else
         {
@@ -594,6 +596,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
             ((AutoCompleteTextView)textInputLayout_carrera_add_alumno.getEditText()).setAdapter(arrayAdapter_carreras);
             textInputLayout_nombre_add_alumno.getEditText().setFocusableInTouchMode(true);
             textInputLayout_carrera_add_alumno.getEditText().setEnabled(true);
+            textInputLayout_carrera_add_alumno.setEndIconVisible(true);
         }
     }
 
