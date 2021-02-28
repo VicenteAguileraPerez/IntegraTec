@@ -181,7 +181,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(wifiReceiver,intentFilter);
 
-        cancelarAsesoriaDespuesDeHora();
+        //cancelarAsesoriaDespuesDeHora();
 
         clear();
         //sharedPreferencesHelper.deletePreferences();
@@ -547,8 +547,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         {
             if(sharedPreferencesHelper.hasData())
             {
-                if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
-                {
+                //if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
+                //{
                     final Calendar cldr = Calendar.getInstance();
                     final int hour = cldr.get(Calendar.HOUR_OF_DAY);
                     int minutes = cldr.get(Calendar.MINUTE);
@@ -601,11 +601,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                         }
                     }
 
-                }
+                /*}
                 else
                 {
                     Toast.makeText(MainAdviserActivityApp.this,"Error no puede continuar hasta que habilite la hora automática en su dispositivo", Toast.LENGTH_SHORT).show();
-                }
+                }*/
             }
             else
             {
@@ -790,8 +790,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 editText_HoraFinalizacion.setError("Seleccionar hora de finalización.");
             }
 
-            if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
-             {
+            //if(internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
+             //{
                     if(((flag_radioButton || flag_otherPlace)) && flag_spinnerMateria && flag_TimeStar && flag_TimeEnd)
                     {
                             if (getRangoValidoHoras()) {
@@ -812,11 +812,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                                 disableEditTextHoras();
                             }
                     }
-            }
+            /*}
             else
             {
                 Toast.makeText(MainAdviserActivityApp.this,"Error no puede continuar hasta que habilite la hora automática en su dispositivo", Toast.LENGTH_SHORT).show();
-            }
+            }*/
     }
 
     private Map<String, Object> returnAsesoria()
