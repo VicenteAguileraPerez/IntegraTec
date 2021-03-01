@@ -4,8 +4,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorAccent"
+    android:id="@+id/activity"
     tools:context=".SplashScreenActivity">
+
+
+  <ImageView
+      android:id="@+id/imageView_splash_screen2"
+      android:layout_width="115dp"
+      android:layout_height="127dp"
+      android:contentDescription="@string/icono_prinicipal"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.075"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.03"
+      app:srcCompat="@drawable/logo_cb">
+
+  </ImageView>
+
+  <ImageView
+      android:id="@+id/imageView_splash_screen3"
+      android:layout_width="134dp"
+      android:layout_height="135dp"
+      android:contentDescription="@string/icono_prinicipal"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.945"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.026"
+      app:srcCompat="@drawable/logo_isc">
+
+  </ImageView>
+
+  <TextView
+      android:id="@+id/textView_datos"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_gravity="center_vertical|end"
+      android:gravity="center|fill"
+      android:justificationMode="inter_word"
+      android:padding="10dp"
+      android:text="FormuTec es una app desarrollada por alumnos de la carrera de ISC del Instituto Tecnológico Superior de Uruapan."
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.099"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="@+id/guideline11"
+      app:layout_constraintVertical_bias="0.117" />
+
+  <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline11"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_percent="0.6949384" />
 
   <androidx.constraintlayout.widget.Guideline
       android:id="@+id/guideline"
@@ -16,14 +70,14 @@
 
   <ImageView
       android:id="@+id/imageView_Splash_Screen"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+      android:layout_width="250dp"
+      android:layout_height="243dp"
       android:contentDescription="@string/imagen"
       app:layout_constraintBottom_toTopOf="@+id/guideline2"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="@+id/guideline"
-      app:srcCompat="@mipmap/cienciasbasicas" />
+      app:srcCompat="@drawable/logo_itus" />
 
   <androidx.constraintlayout.widget.Guideline
       android:id="@+id/guideline2"

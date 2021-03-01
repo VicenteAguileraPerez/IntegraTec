@@ -1,18 +1,25 @@
 package com.vicenteaguilera.integratec;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.text.Layout;
+import android.text.Spannable;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.vicenteaguilera.integratec.controllers.mainapp.MainAppActivity;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
@@ -26,8 +33,9 @@ import java.util.Objects;
 
 public class SplashScreenActivity extends AppCompatActivity  implements Status
 {
-    private TextView textView_IntegraTec;
-    private ImageView imageView_Splash_Screen;
+    private ConstraintLayout constraintLayout;
+    private TextView textView_IntegraTec,textView_datos;
+    private ImageView imageView_splash_screen,imageView_splash_screen_2,imageView_splash_screen_3;
     private final FirestoreHelper firestoreHelper = new FirestoreHelper();
     private final InternetHelper internetHelper = new InternetHelper();
     private WifiReceiver wifiReceiver = new WifiReceiver();
@@ -55,19 +63,24 @@ public class SplashScreenActivity extends AppCompatActivity  implements Status
         Objects.requireNonNull(getSupportActionBar()).hide();
         textView_IntegraTec = findViewById(R.id.textView_IntegraTec);
 
-        imageView_Splash_Screen = findViewById(R.id.imageView_Splash_Screen);
+        imageView_splash_screen = findViewById(R.id.imageView_Splash_Screen);
+        imageView_splash_screen_2 = findViewById(R.id.imageView_splash_screen2);
+        imageView_splash_screen_3 = findViewById(R.id.imageView_splash_screen3);
+        textView_datos = findViewById(R.id.textView_datos);
+        setInfo();
+        constraintLayout = findViewById(R.id.activity);
         Log.e("time", new Time(System.currentTimeMillis()-SystemClock.elapsedRealtime()).toString());
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                textView_IntegraTec.setText(R.string.app_name);
-                imageView_Splash_Screen.setImageResource(R.mipmap.colaboracion);
-            }
-        },timeSplash);
 
         new Handler().postDelayed(new Runnable() {
+            @SuppressLint("UseCompatLoadingForDrawables")
             @Override
             public void run() {
+                imageView_splash_screen.setImageResource(R.drawable.ic_amigos);
+                constraintLayout.setBackground(getDrawable(R.color.colorAccent));
+                textView_IntegraTec.setText(R.string.app_name);
+                textView_datos.setVisibility(View.INVISIBLE);
+                imageView_splash_screen_2.setVisibility(View.INVISIBLE);
+                imageView_splash_screen_3.setVisibility(View.INVISIBLE);
                 Intent intent = null;
                 ProgressDialog dialog = ProgressDialog.show(SplashScreenActivity.this, "",
                         "Ingresando... ", true);
@@ -82,9 +95,11 @@ public class SplashScreenActivity extends AppCompatActivity  implements Status
                     setMain(dialog);
                     Toast.makeText(SplashScreenActivity.this,"Compruebe su conexión de Internet",Toast.LENGTH_SHORT).show();
                 }
-
             }
-        },timeSplash*2);
+        },timeSplash*3);
+
+
+
 
     }
 
@@ -112,5 +127,19 @@ public class SplashScreenActivity extends AppCompatActivity  implements Status
         Intent intent = new Intent(SplashScreenActivity.this, MainAppActivity.class);
         startActivity(intent);
         finish();
+    }
+    public void setInfo()
+    {
+        String titulo ="IntegraTec";
+        String texto =" es una app desarrollada por alumnos y docentes de la carrera de Ingeniería en Sistemas Computacionales y el departamento " +
+                "Ciencias Básicas del Instituto Tecnológico Superior de Uruapan.";
+        textView_datos.setText(titulo +texto, TextView.BufferType.SPANNABLE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            textView_datos.setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);
+        }
+        Spannable s = (Spannable)textView_datos.getText();
+        int start = titulo.length();
+        int end = start + texto.length();
+        s.setSpan(new ForegroundColorSpan(0xFF0047BA), 0, start, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 }

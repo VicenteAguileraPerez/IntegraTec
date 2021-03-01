@@ -1482,7 +1482,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
     private void dibujarPDF(Document documento, FileOutputStream ficheroPdf) {
         try{
-            Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.ciencias_basicas);
+            Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.logo_cb);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             Image imagen = Image.getInstance(stream.toByteArray());
