@@ -131,7 +131,7 @@ public class SplashScreenActivity extends AppCompatActivity  implements Status
     public void setInfo()
     {
         String titulo ="IntegraTec";
-        String texto =" es una app desarrollada por alumnos y docentes de la carrera de Ingeniería en Sistemas Computacionales y el departamento " +
+        String texto =" es una app desarrollada por alumnos y docentes de la carrera de Ingeniería en Sistemas Computacionales para el departamento " +
                 "Ciencias Básicas del Instituto Tecnológico Superior de Uruapan.";
         textView_datos.setText(titulo +texto, TextView.BufferType.SPANNABLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
