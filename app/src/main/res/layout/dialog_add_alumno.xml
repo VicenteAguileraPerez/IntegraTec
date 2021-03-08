@@ -77,7 +77,8 @@
                     android:enabled="true"
                     android:fadeScrollbars="false"
                     android:focusable="false"
-                    android:inputType="textPersonName" />
+                    android:inputType="textCapCharacters"
+                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZÑ "/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout

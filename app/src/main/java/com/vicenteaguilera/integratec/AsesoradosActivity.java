@@ -452,7 +452,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
                     firestoreAsesorado.addAsesorado(AsesoradosActivity.this, dialog, AsesoradosActivity.this, numControl, nombreCompleto.toUpperCase(), carrera.toUpperCase(), materia.toUpperCase(), tema.toUpperCase(), fecha, FirestoreHelper.asesor.getUid());
                     if(flag==false)
                     {
-                        firestoreAlumno.addDataAlumno(AsesoradosActivity.this, dialog, numControl, nombreCompleto.toUpperCase(), carrera.toUpperCase(), AsesoradosActivity.this);
+                        firestoreAlumno.addDataAlumno(AsesoradosActivity.this, dialog, numControl, nombreCompleto, carrera.toUpperCase(), AsesoradosActivity.this);
                     }
                     firestoreAsesorado.readAsesorados(AsesoradosActivity.this, FirestoreHelper.asesor.getUid());
                     dialogAdd.dismiss();
@@ -482,17 +482,6 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         textInputEditText_fecha_add_alumno.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //DatePicker
-                /*MaterialDatePicker.Builder builder_date = MaterialDatePicker.Builder.datePicker();
-                final MaterialDatePicker materialDatePicker = builder_date.build();
-                materialDatePicker.show(getSupportFragmentManager(), "DATE_PICKER");
-                materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
-                    @Override
-                    public void onPositiveButtonClick(Object selection) {
-                        textInputEditText_fecha_add_alumno.setText(materialDatePicker.getHeaderText());
-                    }
-                });*/
-
                 Calendar c = Calendar.getInstance();
                 int month = c.get(Calendar.MONTH);
                 int day = c.get(Calendar.DAY_OF_MONTH);

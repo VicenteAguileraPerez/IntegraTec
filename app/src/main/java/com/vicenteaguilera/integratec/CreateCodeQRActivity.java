@@ -17,7 +17,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -42,6 +47,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CreateCodeQRActivity extends AppCompatActivity implements Status{
 
@@ -253,7 +260,6 @@ public class CreateCodeQRActivity extends AppCompatActivity implements Status{
                 new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
                     }
 
                     @Override
@@ -271,7 +277,6 @@ public class CreateCodeQRActivity extends AppCompatActivity implements Status{
 
                     @Override
                     public void afterTextChanged(Editable editable) {
-
                     }
                 }
         );
