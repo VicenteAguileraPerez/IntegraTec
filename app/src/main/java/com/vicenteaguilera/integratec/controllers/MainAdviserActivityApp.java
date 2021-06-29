@@ -1244,7 +1244,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         }
     }
 
-    private void crearPDFAndroidQPlus()
+    /*private void crearPDFAndroidQPlus()
     {
         File directory;
         File file;
@@ -1284,9 +1284,9 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             }
         }
 
-    }
+    }*/
 
-    /*private void crearPdfAndroidQ() {
+    private void crearPDFAndroidQPlus() {
         manager = new StorageManagerCompat(getApplicationContext());
         Root root = manager.getRoot(StorageManagerCompat.DEF_MAIN_ROOT);
 
@@ -1330,13 +1330,13 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 }
             }
         }
-    }*/
+    }
 
     private void dibujarPDF(Document documento, FileOutputStream ficheroPdf) {
         try {
             Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.logo_cb);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
             Image imagen = Image.getInstance(stream.toByteArray());
 
             PdfWriter writer = PdfWriter.getInstance(documento, ficheroPdf);
