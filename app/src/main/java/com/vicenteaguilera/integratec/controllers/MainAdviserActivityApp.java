@@ -291,7 +291,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     Log.e("EditText H_Fin is: ", editText_HoraFinalizacion.isEnabled() + "");
                     clear();
                 }
-            } else {
+            } else
+                {
                 if (sharedPreferencesHelper.hasData()) {
                     ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "", "Terminando asesoría...", true);
                     dialog.show();
@@ -1438,12 +1439,12 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
             Log.e("Root: ", root.getUri().toString());
             DocumentFile f = root.toRootDirectory(getApplicationContext());
-            DocumentFile subFolder = DocumentFileCompat.getSubFolder(f, NOMBRE_DIRECTORIO);
+            DocumentFile subFolder = DocumentFileCompat.getSubFolder(f, NOMBRE_DIRECTORIO.texto);
             DocumentFile myFile = null;
             if (flagPDFAsesorias) {
                 if (asesoriaList != null) {
                     try {
-                        myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO + "_" + PropiertiesHelper.obtenerFecha() + ".pdf", "");
+                        myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO.texto + "_" + DateHelper.obtenerFecha() + ".pdf", "");
                         Document documento = new Document(PageSize.LETTER.rotate());
                         OutputStream os = getContentResolver().openOutputStream(Objects.requireNonNull(myFile).getUri());
                         dibujarPDF(documento, (FileOutputStream) os);
@@ -1457,7 +1458,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             } else if (flagPDFAsesorados) {
                 if (asesoradoList != null) {
                     try {
-                        myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO2 + "_" + PropiertiesHelper.obtenerFecha() + ".pdf", "");
+                        myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO2.texto + "_" + DateHelper.obtenerFecha() + ".pdf", "");
                         Document documento = new Document(PageSize.LETTER.rotate());
                         OutputStream os = getContentResolver().openOutputStream(Objects.requireNonNull(myFile).getUri());
                         dibujarPDF(documento, (FileOutputStream) os);
