@@ -74,8 +74,10 @@ public class BandejaActivity extends AppCompatActivity implements Status, ListaA
         {
             hayDatos = false;
         }
-
     }
+
+
+
 
     @Override
     protected void onStop() {
