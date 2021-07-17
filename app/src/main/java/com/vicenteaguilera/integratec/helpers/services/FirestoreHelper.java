@@ -28,6 +28,7 @@ import com.google.firebase.firestore.WriteBatch;
 import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
 import com.vicenteaguilera.integratec.controllers.OptionsActivity;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.AlertDialogPersonalized;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.DateHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.InternetHelper;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesores;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesorias;
@@ -347,13 +348,22 @@ public class FirestoreHelper
                         realtimeAsesoriaList.clear();
                         final int size = Objects.requireNonNull(snapshots).getDocuments().size();
                         Log.e("Documets: ", size+"");
+                        boolean colocar=false;
                         for (final DocumentSnapshot dc : snapshots.getDocuments())
                         {
                                     final Map<String,Object> asesoria_add =  dc.getData();
-                                    realtimeAsesoria[0] = new RealtimeAsesoria(dc.getId(),asesoria_add.get("lugar").toString(),
-                                            asesoria_add.get("URL").toString(), asesoria_add.get("materia").toString(), asesoria_add.get("h_inicio").toString(),
-                                            asesoria_add.get("h_final").toString(), asesoria_add.get("informacion").toString(),asesoria_add.get("fecha").toString(), asesoria_add.get("nombre").toString(), asesoria_add.get("image_asesor").toString());
-                                    realtimeAsesoriaList.add(realtimeAsesoria[0]);
+                                    try {
+                                         colocar = DateHelper.expiracionFecha(asesoria_add.get("fecha").toString(), asesoria_add.get("h_final").toString());
+                                    } catch (ParseException parseException) {
+                                        parseException.printStackTrace();
+                                    }
+                                    if(!colocar)
+                                    {
+                                        realtimeAsesoria[0] = new RealtimeAsesoria(dc.getId(),asesoria_add.get("lugar").toString(),
+                                                asesoria_add.get("URL").toString(), asesoria_add.get("materia").toString(), asesoria_add.get("h_inicio").toString(),
+                                                asesoria_add.get("h_final").toString(), asesoria_add.get("informacion").toString(),asesoria_add.get("fecha").toString(), asesoria_add.get("nombre").toString(), asesoria_add.get("image_asesor").toString());
+                                        realtimeAsesoriaList.add(realtimeAsesoria[0]);
+                                    }
                         }
                         listaAsesores.getAsesoresRealtime(realtimeAsesoriaList);
                     }

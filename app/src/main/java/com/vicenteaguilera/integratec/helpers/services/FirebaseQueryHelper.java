@@ -2,15 +2,15 @@ package com.vicenteaguilera.integratec.helpers.services;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.DateHelper;
 import com.vicenteaguilera.integratec.helpers.utility.SenderAsyncTask;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.StaticHelper;
 
 import java.util.Map;
 import java.util.Properties;
@@ -41,7 +41,7 @@ public class FirebaseQueryHelper
                     Map<String,Object> mapData= queryDocumentSnapshots.getDocuments().get(0).getData();
                     String [] datos = {mapData.get("nombre")+" "+mapData.get("apellido"),String.valueOf(mapData.get("password"))};
 
-                    sendEmailWithGmail(PropiertiesHelper.EMAIL,PropiertiesHelper.PASSWORD,String.valueOf(mapData.get("email")),context,datos);
+                    sendEmailWithGmail(StaticHelper.EMAIL, StaticHelper.PASSWORD,String.valueOf(mapData.get("email")),context,datos);
 
                 }
                 else {

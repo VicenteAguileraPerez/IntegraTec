@@ -5,20 +5,18 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
-import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.SenderAsyncTask;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.StaticHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.StringHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
 
@@ -36,8 +34,6 @@ public class ComplaintSuggestionsActivity extends AppCompatActivity implements V
     private TextInputLayout editText_email;
     private TextInputLayout editText_mensaje;
     private TextInputLayout editText_nombre;
-    private ButtonHelper buttonHelper = new ButtonHelper();
-
     private WifiReceiver wifiReceiver = new WifiReceiver();
 
     @Override
@@ -150,7 +146,7 @@ public class ComplaintSuggestionsActivity extends AppCompatActivity implements V
                     datos[2] = topic;
                     datos[3] = editText_mensaje.getEditText().getText().toString();
                     Snackbar.make(view, getResources().getText(R.string.agradecimientos) +" "+ topic, Snackbar.LENGTH_SHORT).show();
-                    sendEmailWithGmail(PropiertiesHelper.EMAIL, PropiertiesHelper.PASSWORD, editText_email.getEditText().getText().toString(), view.getContext(), datos);
+                    sendEmailWithGmail(StaticHelper.EMAIL, StaticHelper.PASSWORD, editText_email.getEditText().getText().toString(), view.getContext(), datos);
                     editText_nombre.getEditText().setText("");
                     editText_mensaje.getEditText().setText("");
                     editText_email.getEditText().setText("");

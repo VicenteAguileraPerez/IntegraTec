@@ -25,13 +25,14 @@ public class SharedPreferencesHelper
         Map<String,Object> saveAsesoria = new HashMap<>();
 
         SharedPreferences sharedPref = ((Activity)context).getPreferences(Context.MODE_PRIVATE);
-        saveAsesoria.put("tipo",sharedPref.getString("tipo", null));
-        saveAsesoria.put("lugar",sharedPref.getString("lugar", null));
-        saveAsesoria.put("materia",sharedPref.getString("materia",null));
-        saveAsesoria.put("url",sharedPref.getString("url", null));
-        saveAsesoria.put("h_inicio",sharedPref.getString("h_inicio", null));
-        saveAsesoria.put("h_fin",sharedPref.getString("h_fin", null));
-        saveAsesoria.put("info",sharedPref.getString("info", null));
+        saveAsesoria.put("tipo",sharedPref.getString("tipo", ""));
+        saveAsesoria.put("lugar",sharedPref.getString("lugar", ""));
+        saveAsesoria.put("materia",sharedPref.getString("materia",""));
+        saveAsesoria.put("url",sharedPref.getString("url", ""));
+        saveAsesoria.put("h_inicio",sharedPref.getString("h_inicio", ""));
+        saveAsesoria.put("h_fin",sharedPref.getString("h_fin", ""));
+        saveAsesoria.put("info",sharedPref.getString("info", ""));
+        saveAsesoria.put("fecha",sharedPref.getString("fecha", ""));
 
 
         return  hasData()?saveAsesoria:null;
@@ -52,6 +53,7 @@ public class SharedPreferencesHelper
         editor.putString("h_inicio",String.valueOf(saveAsesoria.get("h_inicio")));
         editor.putString("h_fin",String.valueOf(saveAsesoria.get("h_fin")));
         editor.putString("info",String.valueOf(saveAsesoria.get("info")));
+        editor.putString("fecha",String.valueOf(saveAsesoria.get("fecha")));
         editor.apply();
     }
     public boolean hasData()

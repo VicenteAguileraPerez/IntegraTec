@@ -37,7 +37,6 @@ public class AsesoriaRealtimeAdapter extends BaseAdapter
     private Context context;
     private int idLayout;
     private List<RealtimeAsesoria> asesorias;
-
     public List<RealtimeAsesoria> getAsesorias()
     {
         return asesorias;
@@ -79,6 +78,7 @@ public class AsesoriaRealtimeAdapter extends BaseAdapter
        AsesoriaRealtimeHolder asesoriaRealtimeHolder = null;
        if(contentView==null)
        {
+
            //no poner el root en el inflate truena el sistema
            contentView = layoutInflater.inflate(idLayout,null);
            asesoriaRealtimeHolder = new AsesoriaRealtimeHolder();

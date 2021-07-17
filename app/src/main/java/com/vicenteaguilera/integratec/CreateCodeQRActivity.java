@@ -1,11 +1,8 @@
 package com.vicenteaguilera.integratec;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -17,12 +14,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
-import android.text.InputFilter;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -34,10 +26,9 @@ import androidx.core.app.ActivityCompat;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
-import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
-import com.vicenteaguilera.integratec.helpers.services.FirestoreAlumno;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
-import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.DateHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.StaticHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
 
@@ -47,8 +38,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class CreateCodeQRActivity extends AppCompatActivity implements Status{
 
@@ -61,7 +50,6 @@ public class CreateCodeQRActivity extends AppCompatActivity implements Status{
     private MaterialButton button_guardarQR;
     private Bitmap bitmap;
     private WifiReceiver wifiReceiver = new WifiReceiver();
-    private ButtonHelper buttonHelper = new ButtonHelper();
     private Status status;
 
     @Override
@@ -90,7 +78,7 @@ public class CreateCodeQRActivity extends AppCompatActivity implements Status{
 
         imageView.setVisibility(View.INVISIBLE);
 
-        ArrayAdapter<String> arrayAdapter_Carreras= new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
+        ArrayAdapter<String> arrayAdapter_Carreras= new ArrayAdapter<>(this, R.layout.custom_spinner_item, StaticHelper.CARRERAS);
 
 
         ((AutoCompleteTextView)spinner_Carrera.getEditText()).setAdapter(arrayAdapter_Carreras);
@@ -109,7 +97,7 @@ public class CreateCodeQRActivity extends AppCompatActivity implements Status{
                 if(bitmap!=null)
                 {
                     if (solicitarPermiso()) {
-                        String nombre = "CodigoQR "+PropiertiesHelper.obtenerFecha();
+                        String nombre = "CodigoQR "+ DateHelper.obtenerFecha();
                         try {
                             saveImage(bitmap, nombre);
                         } catch (IOException e) {

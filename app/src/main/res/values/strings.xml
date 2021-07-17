@@ -106,6 +106,8 @@
     <string name="seleccione_un_lugar">Seleccione un lugar</string>
     <string name="fecha_tex">Fecha</string>
     <string name="icono_prinicipal">icono</string>
+    <string name="publicar_asesoria">Publicar asesoría</string>
+    <string name="mensajer_a_asesores">Mensajería asesores</string>
 
 
 </resources>

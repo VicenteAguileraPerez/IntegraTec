@@ -5,13 +5,10 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -24,7 +21,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -34,11 +30,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,17 +41,18 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.documentfile.provider.DocumentFile;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
-import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.zxing.integration.android.IntentResult;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -71,31 +67,28 @@ import com.lowagie.text.Phrase;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
-
 import harmony.java.awt.Color;
-
 import com.vicenteaguilera.integratec.AsesoradosActivity;
 import com.vicenteaguilera.integratec.CreateCodeQRActivity;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.controllers.mainapp.MainAppActivity;
-import com.vicenteaguilera.integratec.helpers.CaptureActivityPortrait;
 import com.vicenteaguilera.integratec.helpers.flipper.DocumentFileCompat;
 import com.vicenteaguilera.integratec.helpers.flipper.OperationFailedException;
 import com.vicenteaguilera.integratec.helpers.flipper.Root;
 import com.vicenteaguilera.integratec.helpers.flipper.StorageManagerCompat;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseStorageHelper;
-import com.vicenteaguilera.integratec.helpers.services.FirestoreAlumno;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreAsesorado;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
-//import com.vicenteaguilera.integratec.helpers.utility.WaterMark;
+import com.vicenteaguilera.integratec.helpers.services.SendNotification;
 import com.vicenteaguilera.integratec.helpers.utility.WaterMark;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.AlertDialogPersonalized;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
-import com.vicenteaguilera.integratec.helpers.utility.helpers.ImagesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.ImagesCompressHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.InternetHelper;
-import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.DateHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.SharedPreferencesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.StaticHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesorados;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesorias;
@@ -104,7 +97,6 @@ import com.vicenteaguilera.integratec.helpers.utility.helpers.StringHelper;
 import com.vicenteaguilera.integratec.models.Alumno;
 import com.vicenteaguilera.integratec.models.Asesorado;
 import com.vicenteaguilera.integratec.models.Asesoria;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -112,25 +104,26 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-
 import id.zelory.compressor.Compressor;
+
+import static com.vicenteaguilera.integratec.helpers.utility.helpers.NombresDirectorios.ETIQUETA_ERROR;
+import static com.vicenteaguilera.integratec.helpers.utility.helpers.NombresDirectorios.NOMBRE_DIRECTORIO;
+import static com.vicenteaguilera.integratec.helpers.utility.helpers.NombresDirectorios.NOMBRE_DOCUMENTO;
+import static com.vicenteaguilera.integratec.helpers.utility.helpers.NombresDirectorios.NOMBRE_DOCUMENTO2;
 
 
 public class MainAdviserActivityApp extends AppCompatActivity implements View.OnClickListener, Status, ListaAsesorias, ListaAsesorados {
     private final static int GALLERY_INTENT = 1;
-    private final static String NOMBRE_DIRECTORIO = "PDFsIntegraTec";
-    private final static String NOMBRE_DOCUMENTO = "PDF_Asesorias";
-    private final static String NOMBRE_DOCUMENTO2 = "PDF_Asesorados";
-    private final static String ETIQUETA_ERROR = "ERROR";
     private static boolean status = true;
     private final int REQUEST_CODE_ASK_PERMISSION = 111;
     private TextInputLayout editTextText_otroLugar;
@@ -187,7 +180,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 .getExternalStorageState())) {
             ruta = new File(
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                    NOMBRE_DIRECTORIO);
+                    NOMBRE_DIRECTORIO.texto);
 
             if (ruta != null) {
                 if (!ruta.mkdirs()) {
@@ -216,8 +209,9 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         registerReceiver(wifiReceiver, intentFilter);
 
         cancelarAsesoriaDespuesDeHora();
-
+        button_Terminar.performClick();
         clear();
+        agregarGruposMessaging();
         //sharedPreferencesHelper.deletePreferences();
         setData(sharedPreferencesHelper.getPreferences());
         firebaseAuthHelper.setContext(MainAdviserActivityApp.this);
@@ -228,22 +222,64 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         textView_Nombre.setText(FirestoreHelper.asesor.getNombre() + " " + FirestoreHelper.asesor.getApellidos());
     }
 
+    private void agregarGruposMessaging()
+    {
+        FirebaseMessaging.getInstance().subscribeToTopic("asesores").addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                status("Agregado al grupo de asesores");
+                // new SendNotification().sendAllDevices("Vicente ","500 a 600", MainAppActivity.this);
+
+            }
+        });
+        FirebaseMessaging.getInstance().subscribeToTopic(FirestoreHelper.asesor.getUid()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                status("Grupo personal activado");
+                // new SendNotification().sendAllDevices("Vicente ","500 a 600", MainAppActivity.this);
+            }
+        });
+    }
+
     private void cancelarAsesoriaDespuesDeHora() {
         if (internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver())) {
             Calendar cldr = Calendar.getInstance();
-            if (cldr.get(Calendar.DAY_OF_WEEK) >= Calendar.MONDAY && cldr.get(Calendar.DAY_OF_WEEK) <= Calendar.FRIDAY) {
+            if (cldr.get(Calendar.DAY_OF_WEEK) >= Calendar.MONDAY && cldr.get(Calendar.DAY_OF_WEEK) <= Calendar.FRIDAY)
+            {
                 int hour = cldr.get(Calendar.HOUR_OF_DAY);
                 Log.e("Hour: ", hour + "");
-                if (hour >= 8 && hour < 20) {
+                if (hour >= 8 && hour < 20)
+                {
                     enableEditTextHoras();
                     button_Publicar.setEnabled(true);
                 } else {
-                    if (sharedPreferencesHelper.hasData()) {
-                        ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "", "Terminando asesoría...", true);
-                        dialog.show();
-                        firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesoria(), false);
-                        Toast.makeText(MainAdviserActivityApp.this, "Terminamos la asesoría porque ya pasa de las horas hábiles de asesorias.", Toast.LENGTH_SHORT).show();
-                        new AlertDialogPersonalized().alertDialogInformacion("No puede crear asesorías hasta las horas hábiles de 8:00 am a 8:00 pm y terminamos la asesoría publicada.", MainAdviserActivityApp.this);
+                    if (sharedPreferencesHelper.hasData())
+                    {
+                        boolean finalizar=false;
+                        try {
+                            String fecha = sharedPreferencesHelper.getPreferences().get("fecha").toString();
+                            String hora = sharedPreferencesHelper.getPreferences().get("h_fin").toString();
+                            finalizar = DateHelper.expiracionFecha(fecha, hora);
+                            if (finalizar)
+                            {
+                                ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "", "Terminando asesoría...", true);
+                                dialog.show();
+                                firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesoria(), false);
+                                Toast.makeText(MainAdviserActivityApp.this, "Terminamos la asesoría porque ya pasa de las horas hábiles de asesorias.", Toast.LENGTH_SHORT).show();
+                                new AlertDialogPersonalized().alertDialogInformacion("No puede crear asesorías hasta las horas hábiles de 8:00 am a 8:00 pm y terminamos la asesoría publicada.", MainAdviserActivityApp.this);
+                            }
+                        }
+                        catch (ParseException  e)
+                        {
+                            e.printStackTrace();
+                            status("Error");
+                        }
+                        catch (Exception e)
+                        {
+                            e.printStackTrace();
+                            status("Error cancele manualmente después de la hora");
+                        }
+
                     } else {
                         new AlertDialogPersonalized().alertDialogInformacion("No puede crear asesorías hasta las horas hábiles de 8:00 am a 8:00 pm", MainAdviserActivityApp.this);
                     }
@@ -384,8 +420,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
         editTextTextMultiLine.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
 
-        arrayAdapterLugares = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.LUGARES);
-        arrayAdapterMaterias = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.MATERIAS);
+        arrayAdapterLugares = new ArrayAdapter<>(this, R.layout.custom_spinner_item, StaticHelper.LUGARES);
+        arrayAdapterMaterias = new ArrayAdapter<>(this, R.layout.custom_spinner_item, StaticHelper.MATERIAS);
 
         ((AutoCompleteTextView) spinner_lugares.getEditText()).setAdapter(arrayAdapterLugares);
         ((AutoCompleteTextView) spinner_materias.getEditText()).setAdapter(arrayAdapterMaterias);
@@ -476,13 +512,10 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 firebaseAuthHelper.signout(dialog);
                 FirestoreHelper.asesor = null;
                 break;
-
-
             case R.id.item_Crear_QR:
                 intent = new Intent(this, CreateCodeQRActivity.class);
                 startActivity(intent);
                 break;
-
             case R.id.item_Asesorados:
                 intent = new Intent(this, AsesoradosActivity.class);
                 startActivity(intent);
@@ -491,7 +524,6 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             case R.id.item_EditarPerfil:
                 showDialogEditProfile();
                 break;
-
             case R.id.item_Crear_PDF_asesorados:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     flagPDFAsesorados = true;
@@ -514,12 +546,14 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     flagPDFAsesorias = true;
                     crearPdf();
                 }
-                /*intent = new Intent(this, AsesoradosActivity.class);
-                startActivity(intent);*/
                 break;
 
             case R.id.item_nuevo_semestre:
                 showDialogNewSemester();
+                break;
+            case R.id.item_mensajeria_asesores:
+                intent = new Intent(this, BandejaActivity.class);
+                startActivity(intent);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -536,11 +570,48 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             if (status) {
                 publicarAsesoria(view);
             } else {
-                actualizarAsesoría(view);
+                actualizarAsesoria(view);
             }
         } else if (idView == R.id.button_Terminar) {
-            if (sharedPreferencesHelper.hasData()) {
-                if (internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver())) {
+            if (sharedPreferencesHelper.hasData())
+            {
+                if (internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
+                {
+                    boolean finalizar=false;
+                    try
+                    {
+                        String fecha = sharedPreferencesHelper.getPreferences().get("fecha").toString();
+                        String hora = sharedPreferencesHelper.getPreferences().get("h_fin").toString();
+                        finalizar= DateHelper.expiracionFecha(fecha,hora);
+                        if(finalizar)
+                        {
+                            //finaliza
+                            ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "", "Terminando asesoría...", true);
+                            dialog.show();
+                            firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesoria(), false);
+                            clear();
+                            sharedPreferencesHelper.deletePreferences();
+                            button_Publicar.setText(R.string.publicar_asesoria);
+                            enableEditTextHoras();
+                            status = true;
+                        }
+                        else
+                        {
+                            status("Falta tiempo para terminar la asesoría");
+                        }
+                    }
+                    catch (ParseException  e)
+                    {
+                        e.printStackTrace();
+                        status("Error");
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                        status("Error cancele manualmente después de la hora");
+                    }
+
+                    /*
                     final Calendar cldr = Calendar.getInstance();
                     final int hour = cldr.get(Calendar.HOUR_OF_DAY);
                     int minutes = cldr.get(Calendar.MINUTE);
@@ -581,18 +652,20 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                         } else {
                             Toast.makeText(MainAdviserActivityApp.this, "Falta tiempo para terminar la asesoría", Toast.LENGTH_SHORT).show();
                         }
-                    }
+                    }*/
 
                 } else {
                     Toast.makeText(MainAdviserActivityApp.this, "Error no puede continuar hasta que habilite la hora automática en su dispositivo", Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                Snackbar.make(view, "Debes de crear una asesoría antes de eliminarla", Snackbar.LENGTH_SHORT).show();
             }
+            /*else {
+
+                Snackbar.make(view, "Debes de crear una asesoría antes de eliminarla", Snackbar.LENGTH_SHORT).show();
+            }*/
         }
     }
 
-    private void actualizarAsesoría(View view) {
+    private void actualizarAsesoria(View view) {
         boolean flag_radioButton = false;
         boolean flag_spinnerMateria = false;
         boolean flag_otherPlace = false;
@@ -638,10 +711,13 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
                     "Actualizando asesoría...", true);
             dialog.show();
-            firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesoria(), true);
-
             //shared preferences
             sharedPreferencesHelper.addPreferences(dataToSave());
+            firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesoria(), true);
+           // String hora = sharedPreferencesHelper.getPreferences().get("h_inicio").toString() +" a "+ sharedPreferencesHelper.getPreferences().get("h_fin").toString();
+            //new SendNotification().sendAllDevices(FirestoreHelper.asesor.getNombre()+" "+FirestoreHelper.asesor.getApellidos(),hora,MainAdviserActivityApp.this);
+
+
         }
     }
 
@@ -692,8 +768,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
         if (!editText_HoraInicio.getText().toString().isEmpty()) {
             int horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0, 2));
-            String aux = editText_HoraInicio.getText().toString().substring(6, 8);
-            if ((((horaInicio >= 1 && horaInicio < 8) || horaInicio == 12) && aux.equals("pm")) || ((horaInicio >= 8 && horaInicio <= 11) && aux.equals("am"))) {
+            String aux = editText_HoraInicio.getText().toString().substring(6);
+            if ((((horaInicio >= 1 && horaInicio < 8) || horaInicio == 12) && aux.equalsIgnoreCase("pm")) || ((horaInicio >= 8 && horaInicio <= 11) && aux.equalsIgnoreCase("am"))) {
 
                 flag_TimeStar = true;
             } else {
@@ -704,12 +780,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             editText_HoraInicio.setError("Seleccionar hora de inicio.");
         }
 
-
         if (!editText_HoraFinalizacion.getText().toString().isEmpty()) {
             int horaFin = Integer.parseInt(editText_HoraFinalizacion.getText().toString().substring(0, 2));
             String minFin = editText_HoraFinalizacion.getText().toString().substring(3, 5);
-            String aux = editText_HoraFinalizacion.getText().toString().substring(6, 8);
-            if (((((horaFin >= 1 && horaFin < 8) || (horaFin >= 1 && horaFin <= 8 && minFin.equals("00"))) || horaFin == 12) && aux.equals("pm")) || ((horaFin >= 8 && horaFin <= 11) && aux.equals("am"))) {
+            String aux = editText_HoraFinalizacion.getText().toString().substring(6);
+            if (((((horaFin >= 1 && horaFin < 8) || (horaFin >= 1 && horaFin <= 8 && minFin.equals("00"))) || horaFin == 12) && aux.equalsIgnoreCase("pm")) || ((horaFin >= 8 && horaFin <= 11) && aux.equalsIgnoreCase("am"))) {
                 flag_TimeEnd = true;
             } else {
                 editText_HoraFinalizacion.setError("La hora de fin debe estar entre las 8:00am y 8:00pm");
@@ -719,24 +794,34 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             editText_HoraFinalizacion.setError("Seleccionar hora de finalización.");
         }
 
-        if (internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver())) {
-            if (((flag_radioButton || flag_otherPlace)) && flag_spinnerMateria && flag_TimeStar && flag_TimeEnd) {
-                if (getRangoValidoHoras()) {
+        if (internetHelper.timeAutomatically(MainAdviserActivityApp.this.getContentResolver()))
+        {
 
+            if (((flag_radioButton || flag_otherPlace)) && flag_spinnerMateria && flag_TimeStar && flag_TimeEnd)
+            {
+
+                if (getRangoValidoHoras())
+                {
                     //firebase
                     ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
                             "Actualizando asesoría...", true);
                     dialog.show();
-                    firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesoria(), true);
-                    status = false;
                     //shared preferences
                     sharedPreferencesHelper.addPreferences(dataToSave());
+                    firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesoria(), true);
+                    status = false;
 
+                    String hora = sharedPreferencesHelper.getPreferences().get("h_inicio").toString() +" a "+ sharedPreferencesHelper.getPreferences().get("h_fin").toString();
+                    new SendNotification().sendAllDevices(FirestoreHelper.asesor.getNombre()+" "+FirestoreHelper.asesor.getApellidos(),hora,MainAdviserActivityApp.this);
 
                     button_Publicar.setText("Actualizar asesoría");
                     new AlertDialogPersonalized().alertDialogInformacion("Para actualizar su asesoría, se le informa que no podrá cambiar la hora de inicio ni de fin por seguridad y para proporcionar servicios se asesoría reales para los asesorados y evitar datos falso.\n" +
                             "Gracias por su compresión.", MainAdviserActivityApp.this);
                     disableEditTextHoras();
+                }
+                else
+                {
+                    status("EL rango de tiempo entre el inicio y fin de la asesoría es inválido");
                 }
             }
         } else {
@@ -760,14 +845,16 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         }
         asesor.put("nombre", FirestoreHelper.asesor.getNombre() + " " + FirestoreHelper.asesor.getApellidos());
         asesor.put("image_asesor", FirestoreHelper.asesor.getuRI_image());
-        asesor.put("materia", spinner_materias.getEditText().getText().toString());
-        asesor.put("h_inicio", editText_HoraInicio.getText().toString());
-        asesor.put("h_final", editText_HoraFinalizacion.getText().toString());
-        asesor.put("informacion", editTextTextMultiLine.getEditText().getText().toString());
-        String fecha = PropiertiesHelper.obtenerFecha().substring(0, 10);
-        String f[] = fecha.split("-");
-        asesor.put("fecha", f[2] + "-" + f[1] + "-" + f[0]);
-        Log.e("Fecha: ", f[2] + "-" + f[1] + "-" + f[0]);
+        asesor.put("materia", sharedPreferencesHelper.getPreferences().get("materia").toString());
+        asesor.put("h_inicio", sharedPreferencesHelper.getPreferences().get("h_inicio").toString());
+        asesor.put("h_final", sharedPreferencesHelper.getPreferences().get("h_fin").toString());
+        asesor.put("informacion",sharedPreferencesHelper.getPreferences().get("info").toString());
+       // String fecha = PropiertiesHelper.obtenerFecha().substring(0, 10);
+        //String f[] = fecha.split("-");
+        //asesor.put("fecha", f[2] + "-" + f[1] + "-" + f[0]);
+        //Log.e("Fecha: ", f[2] + "-" + f[1] + "-" + f[0]);
+        asesor.put("fecha",sharedPreferencesHelper.getPreferences().get("fecha").toString());
+        Log.e("Fecha: ",sharedPreferencesHelper.getPreferences().get("fecha").toString());
         return asesor;
     }
 
@@ -820,12 +907,9 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
     private void getHora(final EditText editText) {
         final Calendar cldr = Calendar.getInstance();
-        final int hour = cldr.get(Calendar.HOUR_OF_DAY);
-        int minutes = cldr.get(Calendar.MINUTE);
-
         MaterialTimePicker.Builder builder_time = new MaterialTimePicker.Builder();
-        builder_time.setHour(hour);
-        builder_time.setMinute(minutes);
+        builder_time.setHour(cldr.get(Calendar.HOUR_OF_DAY));
+        builder_time.setMinute( cldr.get(Calendar.MINUTE));
         builder_time.setTimeFormat(TimeFormat.CLOCK_12H);
         final MaterialTimePicker materialTimePicker = builder_time.build();
         materialTimePicker.show(getSupportFragmentManager(), "TIME_PICKER");
@@ -834,18 +918,34 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             public void onClick(View view) {
                 int hrs = materialTimePicker.getHour();
                 int min = materialTimePicker.getMinute();
-                String aux = "am";
-                if (hrs > 12) {
+                //hrs=hrs>12?hrs-12:hrs;
+                String aux = (hrs>=12)?"PM":"AM";
+                Log.e("err",hrs+":"+min+" "+aux);
+               /* if (hrs > 12) {
                     hrs = hrs - 12;
-                    aux = "pm";
+                    aux = "PM";
                 } else if (hrs == 12) {
-                    aux = "pm";
-                } else if (hrs == 0) {
+                    aux = "PM";
+                } else if (hrs == 0)
+                {
                     hrs = 12;
+                }*/
+                //String horas = hrs < 10 ? "0" + hrs : hrs + "";
+                //String minutos = min < 10 ? "0" + min : min + "";
+
+                //editText.setText(horas + ":" + minutos + " " + aux);
+                @SuppressLint("SimpleDateFormat")
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm");
+                try {
+                    Date date = simpleDateFormat.parse(hrs+":"+min);
+                    Log.e("err",simpleDateFormat.format(date)+" fecha");
+                    editText.setText(simpleDateFormat.format(date)+" "+aux);
+                } catch (ParseException e)
+                {//4522019170 t p 50
+                    e.printStackTrace();
                 }
-                String horas = hrs < 10 ? "0" + hrs : hrs + "";
-                String minutos = min < 10 ? "0" + min : min + "";
-                editText.setText(horas + ":" + minutos + " " + aux);
+
+
             }
         });
 
@@ -856,20 +956,22 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             }
         });
     }
-
-    private boolean getRangoValidoHoras() {
+//modificar
+    private boolean getRangoValidoHoras()
+    {
         boolean flag_TimeValid = false;
 
         final Calendar cldr = Calendar.getInstance();
         final int hour = cldr.get(Calendar.HOUR_OF_DAY);
         int minutes = cldr.get(Calendar.MINUTE);
 
+        /*
         int horaInicio;
         int horaFin;
         int minutesInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(3, 5));
         int minutesFin = Integer.parseInt(editText_HoraFinalizacion.getText().toString().substring(3, 5));
 
-        if (editText_HoraInicio.getText().toString().substring(6).equals("pm")) {
+        if (editText_HoraInicio.getText().toString().substring(6).equalsIgnoreCase("pm")) {
             if (editText_HoraInicio.getText().toString().substring(0, 2).equals("12")) {
                 horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0, 2));
             } else {
@@ -879,7 +981,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             horaInicio = Integer.parseInt(editText_HoraInicio.getText().toString().substring(0, 2));
         }
 
-        if (editText_HoraFinalizacion.getText().toString().substring(6).equals("pm")) {
+        if (editText_HoraFinalizacion.getText().toString().substring(6).equalsIgnoreCase("pm")) {
             if (editText_HoraFinalizacion.getText().toString().substring(0, 2).equals("12")) {
                 horaFin = Integer.parseInt(editText_HoraFinalizacion.getText().toString().substring(0, 2));
             } else {
@@ -892,7 +994,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         if ((hour == horaInicio && (minutes == minutesInicio || (minutes - minutesInicio <= 5 && minutes - minutesInicio > 0)))
                 || (hour == horaInicio + 1 && (((60 - minutesInicio) + minutes) > 0 && ((60 - minutesInicio) + minutes) <= 5))) {
 
-            if ((editText_HoraInicio.getText().toString().substring(6).equals("am") && editText_HoraFinalizacion.getText().toString().substring(6).equals("am") || (editText_HoraInicio.getText().toString().substring(6).equals("pm") && editText_HoraFinalizacion.getText().toString().substring(6).equals("pm")) || (editText_HoraInicio.getText().toString().substring(6).equals("am") && editText_HoraFinalizacion.getText().toString().substring(6).equals("pm")))) {
+            if ((editText_HoraInicio.getText().toString().substring(6).equalsIgnoreCase("am") && editText_HoraFinalizacion.getText().toString().substring(6).equalsIgnoreCase("am") || (editText_HoraInicio.getText().toString().substring(6).equalsIgnoreCase("pm") && editText_HoraFinalizacion.getText().toString().substring(6).equalsIgnoreCase("pm")) || (editText_HoraInicio.getText().toString().substring(6).equalsIgnoreCase("am") && editText_HoraFinalizacion.getText().toString().substring(6).equalsIgnoreCase("pm")))) {
                 if (horaFin - horaInicio == 1) {
                     //evalua min
                     if ((minutesInicio - minutesFin) <= 0) {
@@ -910,6 +1012,31 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             clearAndShowMessage("La hora de inicio debe ser igual o menor a 5 min a la hora actual.");
         }
         return flag_TimeValid;
+        */
+        try {
+
+            if(DateHelper.expiracionFecha(DateHelper.obtenerFechaActual(), editText_HoraFinalizacion.getText().toString(),editText_HoraInicio.getText().toString()))
+            {
+                long horas[];
+                try {
+                    horas = DateHelper.diferenciaHoras(editText_HoraInicio.getText().toString(), editText_HoraFinalizacion.getText().toString());
+                    return horas[0] > 0 || (horas[1] > 55 && horas[0] == 0);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+
+            return false;
+        }
+
+
     }
 
     private void clearAndShowMessage(String message) {
@@ -926,7 +1053,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         if (requestCode == GALLERY_INTENT) {
             try {
                 Uri uri = Objects.requireNonNull(data).getData();
-                imagen = ImagesHelper.from(getApplicationContext(), uri);
+                imagen = ImagesCompressHelper.from(getApplicationContext(), uri);
                 imagen = new Compressor(getApplicationContext()).compressToFile(imagen);
 
                 setImage(imagen);
@@ -944,12 +1071,12 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             if (f == null)
                 return;
             try {
-                DocumentFile subFolder = DocumentFileCompat.getSubFolder(f, NOMBRE_DIRECTORIO);
+                DocumentFile subFolder = DocumentFileCompat.getSubFolder(f, NOMBRE_DIRECTORIO.texto);
                 DocumentFile myFile = null;
                 if (flagPDFAsesorias) {
                     if (asesoriaList != null) {
                         try {
-                            myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO + "_" + PropiertiesHelper.obtenerFecha() + ".pdf", "");
+                            myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO.texto + "_" + DateHelper.obtenerFecha() + ".pdf", "");
                             Document documento = new Document(PageSize.LETTER.rotate());
                             OutputStream os = getContentResolver().openOutputStream(Objects.requireNonNull(myFile).getUri());
                             dibujarPDF(documento, (FileOutputStream) os);
@@ -964,7 +1091,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
                     if (asesoradoList != null) {
                         try {
-                            myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO2 + "_" + PropiertiesHelper.obtenerFecha() + ".pdf", "");
+                            myFile = DocumentFileCompat.getFile(subFolder, NOMBRE_DOCUMENTO2.texto + "_" + DateHelper.obtenerFecha() + ".pdf", "");
                             Document documento = new Document(PageSize.LETTER.rotate());
                             OutputStream os = getContentResolver().openOutputStream(Objects.requireNonNull(myFile).getUri());
                             dibujarPDF(documento, (FileOutputStream) os);
@@ -1002,7 +1129,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         MaterialButton cardView_ButtonClose = dialogEditProfile.findViewById(R.id.cardView_ButtonClose);
 
 
-        ArrayAdapter<String> arrayAdapterCareer = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
+        ArrayAdapter<String> arrayAdapterCareer = new ArrayAdapter<>(this, R.layout.custom_spinner_item, StaticHelper.CARRERAS);
         ((AutoCompleteTextView) spinner_career.getEditText()).setAdapter(arrayAdapterCareer);
 
         editText_Name.getEditText().setText(FirestoreHelper.asesor.getNombre());
@@ -1183,7 +1310,21 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         data.put("h_inicio", editText_HoraInicio.getText().toString());
         data.put("h_fin", editText_HoraFinalizacion.getText().toString());
         data.put("info", editTextTextMultiLine.getEditText().getText().toString());
-
+        if(!sharedPreferencesHelper.hasData())
+        {
+            data.put("fecha", DateHelper.obtenerFechaActual());
+        }
+        else
+        {
+            if(!sharedPreferencesHelper.getPreferences().get("fecha").equals(""))
+            {
+                data.put("fecha", sharedPreferencesHelper.getPreferences().get("fecha").toString());
+            }
+            else
+            {
+                data.put("fecha", DateHelper.obtenerFechaActual());
+            }
+        }
         return data;
     }
 
@@ -1206,7 +1347,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 File f = null;
                 if (flagPDFAsesorias) {
                     if (asesoriaList != null) {
-                        f = crearFichero(NOMBRE_DOCUMENTO + "_" + PropiertiesHelper.obtenerFecha() + ".pdf");
+                        f = crearFichero(NOMBRE_DOCUMENTO.texto + "_" + DateHelper.obtenerFecha() + ".pdf");
                         FileOutputStream ficheroPdf = new FileOutputStream(Objects.requireNonNull(f).getAbsolutePath());
                         dibujarPDF(documento, ficheroPdf);
                         Toast.makeText(MainAdviserActivityApp.this, "Se creo tu archivo pdf en " + f.getAbsolutePath(), Toast.LENGTH_LONG).show();
@@ -1215,7 +1356,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     }
                 } else if (flagPDFAsesorados) {
                     if (asesoradoList != null) {
-                        f = crearFichero(NOMBRE_DOCUMENTO2 + "_" + PropiertiesHelper.obtenerFecha() + ".pdf");
+                        f = crearFichero(NOMBRE_DOCUMENTO2.texto + "_" + DateHelper.obtenerFecha() + ".pdf");
                         FileOutputStream ficheroPdf = new FileOutputStream(Objects.requireNonNull(f).getAbsolutePath());
                         dibujarPDF(documento, ficheroPdf);
                         Toast.makeText(MainAdviserActivityApp.this, "Se creo tu archivo pdf en " + f.getAbsolutePath(), Toast.LENGTH_LONG).show();
@@ -1233,7 +1374,6 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
     private boolean solicitarPermiso() {
         int permiso = ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
         if (permiso != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_ASK_PERMISSION);
@@ -1248,7 +1388,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     {
         File directory;
         File file;
-        directory = new File(getExternalFilesDir(null) + "/" + NOMBRE_DIRECTORIO);
+        directory = new File(getExternalFilesDir(null) + "/" + NOMBRE_DIRECTORIO.texto);
         if (!directory.exists()) {
             directory.mkdir();
         }
@@ -1257,7 +1397,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             if (asesoriaList != null) {
 
                 try {
-                    file = new File(directory, "/" + NOMBRE_DOCUMENTO + "_" + PropiertiesHelper.obtenerFecha() + ".pdf");
+                    file = new File(directory, "/" + NOMBRE_DOCUMENTO.texto + "_" + DateHelper.obtenerFecha() + ".pdf");
                     Document documento = new Document(PageSize.LETTER.rotate());
                     OutputStream os = getContentResolver().openOutputStream(Uri.fromFile(file));
                     dibujarPDF(documento, (FileOutputStream) os);
@@ -1271,7 +1411,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         } else if (flagPDFAsesorados) {
             if (asesoradoList != null) {
                 try {
-                    file = new File(directory, "/" + NOMBRE_DOCUMENTO2 + "_" + PropiertiesHelper.obtenerFecha() + ".pdf");
+                    file = new File(directory, "/" + NOMBRE_DOCUMENTO2.texto + "_" + DateHelper.obtenerFecha() + ".pdf");
                     Document documento = new Document(PageSize.LETTER.rotate());
                     OutputStream os = getContentResolver().openOutputStream(Uri.fromFile(file));
                     dibujarPDF(documento, (FileOutputStream) os);
@@ -1344,11 +1484,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
             Font fontHeaderFooter = FontFactory.getFont(FontFactory.TIMES_ROMAN, FontFactory.defaultEncoding, FontFactory.defaultEmbedding, 12, Font.BOLD, Color.BLACK);
             Paragraph paragraphHeader = null;
-            if (flagPDFAsesorias == true) {
+            if (flagPDFAsesorias) {
                 paragraphHeader = new Paragraph("TECNOLÓGICO NACIONAL DE MÉXICO\n" +
                         "Instituto Tecnológico Superior de Uruapan\n\n" +
                         "BITÁCORA DE ASESORES PAR\n\n", fontHeaderFooter);
-            } else if (flagPDFAsesorados == true) {
+            } else if (flagPDFAsesorados) {
                 paragraphHeader = new Paragraph("TECNOLÓGICO NACIONAL DE MÉXICO\n" +
                         "Instituto Tecnológico Superior de Uruapan\n" +
                         "Formato de Registro De Asesorías\n\n" +
@@ -1359,7 +1499,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
 
             Phrase phraseFooter = new Phrase("_____________________________________\nFirma del asesor\n", fontHeaderFooter);
 
-            HeaderFooter cabecera = new HeaderFooter(new Phrase(paragraphHeader), false);
+            HeaderFooter cabecera = new HeaderFooter(new Phrase(Objects.requireNonNull(paragraphHeader)), false);
             cabecera.setAlignment(Element.ALIGN_CENTER);
 
             HeaderFooter pie = new HeaderFooter(new Phrase(phraseFooter), false);
@@ -1465,7 +1605,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             }
 
         } catch (DocumentException e) {
-            Log.e(ETIQUETA_ERROR, e.getMessage());
+            Log.e(ETIQUETA_ERROR.texto, Objects.requireNonNull(e.getMessage()));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {

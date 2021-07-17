@@ -6,9 +6,10 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.cardview.widget.CardView;
-
+@Deprecated
 public class ButtonHelper
 {
+    @Deprecated
     @SuppressLint("ClickableViewAccessibility")
     public void actionClickButton(CardView cardView, final int color1, final int color2)
     {

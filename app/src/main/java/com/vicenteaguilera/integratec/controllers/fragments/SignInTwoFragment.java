@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
@@ -15,9 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
@@ -26,7 +23,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
-import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.StaticHelper;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
 
 import java.util.Objects;
@@ -63,7 +60,7 @@ public class SignInTwoFragment extends Fragment implements Status {
         View view = inflater.inflate(R.layout.fragment_sign_in_two, container, false);
 
         spinner_Carrera = view.findViewById(R.id.spinner_carrera);
-        ArrayAdapter<String> arrayAdapter= new ArrayAdapter<>(view.getContext(), R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
+        ArrayAdapter<String> arrayAdapter= new ArrayAdapter<>(view.getContext(), R.layout.custom_spinner_item, StaticHelper.CARRERAS);
         ((AutoCompleteTextView)spinner_Carrera.getEditText()).setAdapter(arrayAdapter);
 
         return  view;

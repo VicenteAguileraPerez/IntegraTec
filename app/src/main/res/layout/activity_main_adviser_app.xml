@@ -59,7 +59,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="end|bottom"
                             app:cardBackgroundColor="@color/background_green"
-                            app:cardCornerRadius="21dp"
+                            app:cardCornerRadius="50dp"
                             app:cardElevation="0dp">
 
                             <ImageButton

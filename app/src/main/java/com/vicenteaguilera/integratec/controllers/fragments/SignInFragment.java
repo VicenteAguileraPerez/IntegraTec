@@ -4,13 +4,11 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.google.android.material.button.MaterialButton;
@@ -18,7 +16,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
-import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.StaticHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.StringHelper;
 
 import static androidx.navigation.Navigation.createNavigateOnClickListener;
@@ -113,12 +111,12 @@ public class SignInFragment extends Fragment  {
                     }
                 }
 
-                if(!codigo.isEmpty() && codigo.equals(PropiertiesHelper.CODIGO_CB)){
+                if(!codigo.isEmpty() && codigo.equals(StaticHelper.CODIGO_CB)){
                     flag_codigo = true;
                 }else {
                     if(codigo.isEmpty()){
                         editText_codigo.setError("Código de ciencias básicas requerido");
-                    }else if(!codigo.equals(PropiertiesHelper.CODIGO_CB)){
+                    }else if(!codigo.equals(StaticHelper.CODIGO_CB)){
                         editText_codigo.setError("Código de ciencias básicas incorrecto");
                     }
                 }

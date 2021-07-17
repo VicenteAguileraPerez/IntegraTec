@@ -14,11 +14,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Objects;
 
-public class ImagesHelper {
+public class ImagesCompressHelper {
         private static final int EOF = -1;
         private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
-        private ImagesHelper() {
+        private ImagesCompressHelper() {
 
         }
 

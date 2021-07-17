@@ -2,7 +2,6 @@ package com.vicenteaguilera.integratec;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.core.view.MenuItemCompat;
 
 import android.app.AlertDialog;
@@ -25,7 +24,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -33,32 +31,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.android.material.timepicker.MaterialTimePicker;
-import com.google.android.material.timepicker.TimeFormat;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
 import com.vicenteaguilera.integratec.helpers.CaptureActivityPortrait;
-import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreAlumno;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreAsesorado;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
-import com.vicenteaguilera.integratec.helpers.utility.helpers.AlertDialogPersonalized;
-import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
-import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.DateHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.StaticHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesorados;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
 import com.vicenteaguilera.integratec.models.Alumno;
-import com.vicenteaguilera.integratec.models.AlumnoAsesorado;
 import com.vicenteaguilera.integratec.models.Asesorado;
 
-import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -141,8 +130,8 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
             }
         });
 
-       arrayAdapter_carreras  = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
-       arrayAdapter_materia  = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.MATERIAS);
+       arrayAdapter_carreras  = new ArrayAdapter<>(this, R.layout.custom_spinner_item, StaticHelper.CARRERAS);
+       arrayAdapter_materia  = new ArrayAdapter<>(this, R.layout.custom_spinner_item, StaticHelper.MATERIAS);
         //createDialogAddAlumno();
 
         floatingActionButton_add_alumno.setOnClickListener(new View.OnClickListener() {
@@ -176,10 +165,10 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         final MaterialButton button_borrar_update = dialogUpdateDelete.findViewById(R.id.button_borrar_update);
         final MaterialButton button_modificar_update = dialogUpdateDelete.findViewById(R.id.button_modificar_update);
 
-        ArrayAdapter<String> arrayAdapterCarrera = new ArrayAdapter<>(this, R.layout.custom_spinner_item, PropiertiesHelper.CARRERAS);
+        ArrayAdapter<String> arrayAdapterCarrera = new ArrayAdapter<>(this, R.layout.custom_spinner_item, StaticHelper.CARRERAS);
         ((AutoCompleteTextView)spinner_carrera_update.getEditText()).setAdapter(arrayAdapterCarrera);
 
-        ArrayAdapter<String> arrayAdapterMateria = new ArrayAdapter<>(this,  R.layout.custom_spinner_item, PropiertiesHelper.MATERIAS);
+        ArrayAdapter<String> arrayAdapterMateria = new ArrayAdapter<>(this,  R.layout.custom_spinner_item, StaticHelper.MATERIAS);
         ((AutoCompleteTextView)spinner_materia_update.getEditText()).setAdapter(arrayAdapterMateria);
 
         textInputLayout_numero_control_update.getEditText().setText(String.valueOf(alumno.getnControl()));

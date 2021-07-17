@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,15 +20,15 @@ import com.vicenteaguilera.integratec.adapters.AsesoriaRealtimeAdapter;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.AlertDialogPersonalized;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.InternetHelper;
-import com.vicenteaguilera.integratec.helpers.utility.helpers.PropiertiesHelper;
+import com.vicenteaguilera.integratec.helpers.utility.helpers.DateHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesores;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
 import com.vicenteaguilera.integratec.models.RealtimeAsesoria;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class ListAdviserActivity extends AppCompatActivity implements ListaAsesores, Status {
 
@@ -58,7 +57,7 @@ public class ListAdviserActivity extends AppCompatActivity implements ListaAseso
             int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
             if(day >= Calendar.MONDAY && day <= Calendar.FRIDAY)
             {
-                int hora = Integer.parseInt(PropiertiesHelper.getHora("HH:mm").substring(0, 2));
+                int hora = Integer.parseInt(DateHelper.obtenerHora24().substring(0, 2));
                 if (hora > 7 && hora < 20) {
                     new FirestoreHelper().listenAsesorias(this);
                 }
@@ -106,6 +105,7 @@ public class ListAdviserActivity extends AppCompatActivity implements ListaAseso
         menu.removeItem(R.id.item_Crear_PDF_asesorados);
         menu.removeItem(R.id.item_nuevo_semestre);
         menu.removeItem(R.id.item_Asesorados);
+        menu.removeItem(R.id.item_mensajeria_asesores);
 
         Calendar cldr = Calendar.getInstance();
         int hour = cldr.get(Calendar.HOUR_OF_DAY);
@@ -179,6 +179,11 @@ public class ListAdviserActivity extends AppCompatActivity implements ListaAseso
             }
 
         }
+    }
+
+    @Override
+    public void getAsesoresAll(Map<String, String> asesores) {
+
     }
 
     @Override

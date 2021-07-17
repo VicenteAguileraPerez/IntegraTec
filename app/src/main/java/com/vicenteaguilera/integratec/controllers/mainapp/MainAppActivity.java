@@ -1,5 +1,6 @@
 package com.vicenteaguilera.integratec.controllers.mainapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
@@ -12,14 +13,20 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingService;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.SplashScreenActivity;
 import com.vicenteaguilera.integratec.controllers.ListAdviserActivity;
+import com.vicenteaguilera.integratec.controllers.MainAdviserActivityApp;
 import com.vicenteaguilera.integratec.controllers.OptionsActivity;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
+import com.vicenteaguilera.integratec.helpers.services.SendNotification;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.ButtonHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.InternetHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
@@ -44,6 +51,14 @@ public class MainAppActivity extends AppCompatActivity implements View.OnClickLi
         button_sesion_asesor = findViewById(R.id.button_sesion_asesores);
         button_sesion_asesor.setOnClickListener(this);
         button_asesores_disponibles.setOnClickListener(this);
+        FirebaseMessaging.getInstance().subscribeToTopic("all").addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                status("Recibirás notificaciones cuando una asesoría sea creada");
+               // new SendNotification().sendAllDevices("Vicente ","500 a 600", MainAppActivity.this);
+
+            }
+        });
         }
     @Override
     protected void onStart() {
