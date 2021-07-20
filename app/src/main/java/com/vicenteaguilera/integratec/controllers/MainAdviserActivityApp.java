@@ -46,7 +46,10 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -70,6 +73,7 @@ import com.lowagie.text.pdf.PdfWriter;
 import harmony.java.awt.Color;
 import com.vicenteaguilera.integratec.AsesoradosActivity;
 import com.vicenteaguilera.integratec.CreateCodeQRActivity;
+import com.vicenteaguilera.integratec.MensajesActivity;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.controllers.mainapp.MainAppActivity;
 import com.vicenteaguilera.integratec.helpers.flipper.DocumentFileCompat;
@@ -77,9 +81,11 @@ import com.vicenteaguilera.integratec.helpers.flipper.OperationFailedException;
 import com.vicenteaguilera.integratec.helpers.flipper.Root;
 import com.vicenteaguilera.integratec.helpers.flipper.StorageManagerCompat;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
+import com.vicenteaguilera.integratec.helpers.services.FirebaseFirestoreAsesorHelper;
+import com.vicenteaguilera.integratec.helpers.services.FirebaseFirestoreMensajesHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseStorageHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreAsesorado;
-import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
+import com.vicenteaguilera.integratec.helpers.services.FirebaseFirestoreAsesoriaPublicaAsesoriaHelper;
 import com.vicenteaguilera.integratec.helpers.services.SendNotification;
 import com.vicenteaguilera.integratec.helpers.utility.WaterMark;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.AlertDialogPersonalized;
@@ -97,6 +103,8 @@ import com.vicenteaguilera.integratec.helpers.utility.helpers.StringHelper;
 import com.vicenteaguilera.integratec.models.Alumno;
 import com.vicenteaguilera.integratec.models.Asesorado;
 import com.vicenteaguilera.integratec.models.Asesoria;
+import com.vicenteaguilera.integratec.models.Mensaje;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -106,6 +114,7 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -139,14 +148,17 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     private MaterialButton button_Publicar;
     private MaterialButton button_Terminar;
     private ImageButton imageButton_edit_image;
+    private BottomNavigationView bottomNavigationView;
     private TextInputLayout editTextTextMultiLine;
     private TextView textView_Nombre;
     private ImageView imageView_perfil;
     private RadioButton radioButton_AOnline;
     private RadioButton radioBAPresencial;
+    private FirebaseFirestoreAsesorHelper firebaseFirestoreAsesorHelper= new FirebaseFirestoreAsesorHelper();
     private FirebaseAuthHelper firebaseAuthHelper = new FirebaseAuthHelper();
-    private FirestoreHelper firestoreHelper = new FirestoreHelper();
+    private FirebaseFirestoreAsesoriaPublicaAsesoriaHelper firestoreHelper = new FirebaseFirestoreAsesoriaPublicaAsesoriaHelper();
     private FirebaseStorageHelper firebaseStorageHelper = new FirebaseStorageHelper();
+    private FirebaseFirestoreMensajesHelper firebaseFirestoreMensajesHelper = new FirebaseFirestoreMensajesHelper();
     private InternetHelper internetHelper = new InternetHelper();
     //private int positionPlace=-1;
     //private int positionSubject=-1;
@@ -218,8 +230,15 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         firebaseAuthHelper.setOnStatusListener(this);
         firebaseStorageHelper.setStatusListener(this);
         firestoreHelper.listenGetAsesoriasData(this);
-        firestoreAsesorado.readAsesorados(this, FirestoreHelper.asesor.getUid());
-        textView_Nombre.setText(FirestoreHelper.asesor.getNombre() + " " + FirestoreHelper.asesor.getApellidos());
+        firestoreAsesorado.readAsesorados(this, FirebaseFirestoreAsesorHelper.asesor.getUid());
+        textView_Nombre.setText(FirebaseFirestoreAsesorHelper.asesor.getNombre() + " " + FirebaseFirestoreAsesorHelper.asesor.getApellidos());
+        firebaseFirestoreMensajesHelper.BuscarTusMensajes(this,this);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     private void agregarGruposMessaging()
@@ -227,15 +246,15 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         FirebaseMessaging.getInstance().subscribeToTopic("asesores").addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                status("Agregado al grupo de asesores");
+               // status("Agregado al grupo de asesores");
                 // new SendNotification().sendAllDevices("Vicente ","500 a 600", MainAppActivity.this);
 
             }
         });
-        FirebaseMessaging.getInstance().subscribeToTopic(FirestoreHelper.asesor.getUid()).addOnCompleteListener(new OnCompleteListener<Void>() {
+        FirebaseMessaging.getInstance().subscribeToTopic(FirebaseFirestoreAsesorHelper.asesor.getUid()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                status("Grupo personal activado");
+                //status("Grupo personal activado");
                 // new SendNotification().sendAllDevices("Vicente ","500 a 600", MainAppActivity.this);
             }
         });
@@ -264,7 +283,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                             {
                                 ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "", "Terminando asesoría...", true);
                                 dialog.show();
-                                firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesoria(), false);
+                                firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirebaseFirestoreAsesorHelper.asesor.getUid(), this, dialog, returnAsesoria(), false);
                                 Toast.makeText(MainAdviserActivityApp.this, "Terminamos la asesoría porque ya pasa de las horas hábiles de asesorias.", Toast.LENGTH_SHORT).show();
                                 new AlertDialogPersonalized().alertDialogInformacion("No puede crear asesorías hasta las horas hábiles de 8:00 am a 8:00 pm y terminamos la asesoría publicada.", MainAdviserActivityApp.this);
                             }
@@ -296,7 +315,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 if (sharedPreferencesHelper.hasData()) {
                     ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "", "Terminando asesoría...", true);
                     dialog.show();
-                    firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesoria(), false);
+                    firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirebaseFirestoreAsesorHelper.asesor.getUid(), this, dialog, returnAsesoria(), false);
                     Toast.makeText(MainAdviserActivityApp.this, "Terminamos la asesoría porque ya pasa de las horas hábiles de asesorias.", Toast.LENGTH_SHORT).show();
                     new AlertDialogPersonalized().alertDialogInformacion("No puede crear asesorías solo de Lunes a Viernes y terminamos la asesoría publicada.", MainAdviserActivityApp.this);
                 } else {
@@ -427,7 +446,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         ((AutoCompleteTextView) spinner_lugares.getEditText()).setAdapter(arrayAdapterLugares);
         ((AutoCompleteTextView) spinner_materias.getEditText()).setAdapter(arrayAdapterMaterias);
 
-
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        BottomNavigationView();
         imageButton_edit_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -448,8 +468,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 alertDialogBuilder.setNegativeButton("Eliminar foto actual", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface alertDialog, int i) {
-                        if (!FirestoreHelper.asesor.getuRI_image().equals("")) {
-                            firebaseStorageHelper.deleteImage(FirestoreHelper.asesor.getUid());
+                        if (!FirebaseFirestoreAsesorHelper.asesor.getuRI_image().equals("")) {
+                            firebaseStorageHelper.deleteImage(FirebaseFirestoreAsesorHelper.asesor.getUid());
                             setImage("");
                         } else {
                             status("No tienes ninguna foto agregada al sistema.");
@@ -460,7 +480,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 alertDialogBuilder.show();
             }
         });
-        setImage(FirestoreHelper.asesor.getuRI_image());
+        setImage(FirebaseFirestoreAsesorHelper.asesor.getuRI_image());
         sharedPreferencesHelper = new SharedPreferencesHelper(MainAdviserActivityApp.this);
 
         ((AutoCompleteTextView) spinner_lugares.getEditText()).setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -504,26 +524,9 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 intent = new Intent(this, ComplaintSuggestionsActivity.class);
                 startActivity(intent);
                 break;
-
-            case R.id.item_CerrarSesion:
-                Toast.makeText(MainAdviserActivityApp.this, getResources().getText(R.string.cerrarSesion) + "...", Toast.LENGTH_SHORT).show();
-                ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
-                        "Nos vemos pronto... " + FirebaseAuthHelper.getCurrentUser(), true);
-                dialog.show();
-                firebaseAuthHelper.signout(dialog);
-                FirestoreHelper.asesor = null;
-                break;
             case R.id.item_Crear_QR:
                 intent = new Intent(this, CreateCodeQRActivity.class);
                 startActivity(intent);
-                break;
-            case R.id.item_Asesorados:
-                intent = new Intent(this, AsesoradosActivity.class);
-                startActivity(intent);
-                break;
-
-            case R.id.item_EditarPerfil:
-                showDialogEditProfile();
                 break;
             case R.id.item_Crear_PDF_asesorados:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -552,10 +555,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             case R.id.item_nuevo_semestre:
                 showDialogNewSemester();
                 break;
-            case R.id.item_mensajeria_asesores:
-                intent = new Intent(this, BandejaActivity.class);
-                startActivity(intent);
-                break;
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -589,7 +589,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                             //finaliza
                             ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "", "Terminando asesoría...", true);
                             dialog.show();
-                            firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesoria(), false);
+                            firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirebaseFirestoreAsesorHelper.asesor.getUid(), this, dialog, returnAsesoria(), false);
                             clear();
                             sharedPreferencesHelper.deletePreferences();
                             button_Publicar.setText(R.string.publicar_asesoria);
@@ -714,7 +714,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             dialog.show();
             //shared preferences
             sharedPreferencesHelper.addPreferences(dataToSave());
-            firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesoria(), true);
+            firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirebaseFirestoreAsesorHelper.asesor.getUid(), this, dialog, returnAsesoria(), true);
            // String hora = sharedPreferencesHelper.getPreferences().get("h_inicio").toString() +" a "+ sharedPreferencesHelper.getPreferences().get("h_fin").toString();
             //new SendNotification().sendAllDevices(FirestoreHelper.asesor.getNombre()+" "+FirestoreHelper.asesor.getApellidos(),hora,MainAdviserActivityApp.this);
 
@@ -809,11 +809,11 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     dialog.show();
                     //shared preferences
                     sharedPreferencesHelper.addPreferences(dataToSave());
-                    firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirestoreHelper.asesor.getUid(), this, dialog, returnAsesoria(), true);
+                    firestoreHelper.registerDataAsesoriaPublicaToFirestore(FirebaseFirestoreAsesorHelper.asesor.getUid(), this, dialog, returnAsesoria(), true);
                     status = false;
 
                     String hora = sharedPreferencesHelper.getPreferences().get("h_inicio").toString() +" a "+ sharedPreferencesHelper.getPreferences().get("h_fin").toString();
-                    new SendNotification().sendAllDevices(FirestoreHelper.asesor.getNombre()+" "+FirestoreHelper.asesor.getApellidos(),hora,MainAdviserActivityApp.this);
+                    new SendNotification().sendAllDevices(FirebaseFirestoreAsesorHelper.asesor.getNombre()+" "+ FirebaseFirestoreAsesorHelper.asesor.getApellidos(),hora,MainAdviserActivityApp.this);
 
                     button_Publicar.setText("Actualizar asesoría");
                     new AlertDialogPersonalized().alertDialogInformacion("Para actualizar su asesoría, se le informa que no podrá cambiar la hora de inicio ni de fin por seguridad y para proporcionar servicios se asesoría reales para los asesorados y evitar datos falso.\n" +
@@ -844,8 +844,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             asesor.put("lugar", "");
 
         }
-        asesor.put("nombre", FirestoreHelper.asesor.getNombre() + " " + FirestoreHelper.asesor.getApellidos());
-        asesor.put("image_asesor", FirestoreHelper.asesor.getuRI_image());
+        asesor.put("nombre", FirebaseFirestoreAsesorHelper.asesor.getNombre() + " " + FirebaseFirestoreAsesorHelper.asesor.getApellidos());
+        asesor.put("image_asesor", FirebaseFirestoreAsesorHelper.asesor.getuRI_image());
         asesor.put("materia", sharedPreferencesHelper.getPreferences().get("materia").toString());
         asesor.put("h_inicio", sharedPreferencesHelper.getPreferences().get("h_inicio").toString());
         asesor.put("h_final", sharedPreferencesHelper.getPreferences().get("h_fin").toString());
@@ -1058,8 +1058,8 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                 imagen = new Compressor(getApplicationContext()).compressToFile(imagen);
 
                 setImage(imagen);
-                firebaseStorageHelper.deleteImage(FirestoreHelper.asesor.getUid());
-                firebaseStorageHelper.addImage(FirestoreHelper.asesor.getUid(), Uri.fromFile(imagen));
+                firebaseStorageHelper.deleteImage(FirebaseFirestoreAsesorHelper.asesor.getUid());
+                firebaseStorageHelper.addImage(FirebaseFirestoreAsesorHelper.asesor.getUid(), Uri.fromFile(imagen));
             } catch (IOException | NullPointerException e) {
                 e.printStackTrace();
             }
@@ -1133,9 +1133,9 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         ArrayAdapter<String> arrayAdapterCareer = new ArrayAdapter<>(this, R.layout.custom_spinner_item, StaticHelper.CARRERAS);
         ((AutoCompleteTextView) spinner_career.getEditText()).setAdapter(arrayAdapterCareer);
 
-        editText_Name.getEditText().setText(FirestoreHelper.asesor.getNombre());
-        editText_LastNames.getEditText().setText(FirestoreHelper.asesor.getApellidos());
-        ((AutoCompleteTextView) spinner_career.getEditText()).setText(FirestoreHelper.asesor.getCarrera(), false);
+        editText_Name.getEditText().setText(FirebaseFirestoreAsesorHelper.asesor.getNombre());
+        editText_LastNames.getEditText().setText(FirebaseFirestoreAsesorHelper.asesor.getApellidos());
+        ((AutoCompleteTextView) spinner_career.getEditText()).setText(FirebaseFirestoreAsesorHelper.asesor.getCarrera(), false);
 
         cardView_ButtonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1166,7 +1166,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
                             "Actualizando..", true);
                     dialog.show();
-                    firestoreHelper.updateDataAsesor(editText_Name.getEditText().getText().toString(), editText_LastNames.getEditText().getText().toString(),
+                    firebaseFirestoreAsesorHelper.updateDataAsesor(editText_Name.getEditText().getText().toString(), editText_LastNames.getEditText().getText().toString(),
                             String.valueOf(spinner_career.getEditText().getText()), dialog, MainAdviserActivityApp.this);
                     dialogEditProfile.dismiss();
                     // Toast.makeText(MainAdviserActivityApp.this, "Actualizando datos...", Toast.LENGTH_SHORT).show();
@@ -1247,7 +1247,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                         public void onClick(DialogInterface dialog, int which) {
                             ProgressDialog dialogE = ProgressDialog.show(MainAdviserActivityApp.this, "", "Eliminando...", true);
                             firestoreHelper.deleteAsesoriasData();
-                            firestoreAsesorado.deleteAsesorados(FirestoreHelper.asesor.getUid(), dialogE);
+                            firestoreAsesorado.deleteAsesorados(FirebaseFirestoreAsesorHelper.asesor.getUid(), dialogE);
                             flagDeleteData1 = false;
                             flagDeleteData2 = false;
                             dialogNewSemester.dismiss();
@@ -1287,7 +1287,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     @Override
     public void status(String message) {
         if (message.equals("Datos actualizados")) {
-            textView_Nombre.setText(FirestoreHelper.asesor.getNombre() + " " + FirestoreHelper.asesor.getApellidos());
+            textView_Nombre.setText(FirebaseFirestoreAsesorHelper.asesor.getNombre() + " " + FirebaseFirestoreAsesorHelper.asesor.getApellidos());
         }
         Toast.makeText(MainAdviserActivityApp.this, message, Toast.LENGTH_SHORT).show();
     }
@@ -1630,6 +1630,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
         }
     }
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -1641,7 +1642,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
             Bitmap placeholder = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.user);
             RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), placeholder);
             circularBitmapDrawable.setCircular(true);
-            rm.load(FirestoreHelper.asesor.getuRI_image())
+            rm.load(FirebaseFirestoreAsesorHelper.asesor.getuRI_image())
                     .placeholder(circularBitmapDrawable)
                     .fitCenter()
                     .centerCrop()
@@ -1649,7 +1650,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
                     //.apply(RequestOptions.bitmapTransform(new RoundedCorners(16)))
                     .into(imageView_perfil);
         } else {
-            rm.load(FirestoreHelper.asesor.getuRI_image())
+            rm.load(FirebaseFirestoreAsesorHelper.asesor.getuRI_image())
                     .fitCenter()
                     .centerCrop()
                     .apply(RequestOptions.circleCropTransform())
@@ -1685,5 +1686,62 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     public void getAlumno(Alumno alumno) {
 
     }
+    BadgeDrawable bd;
+    ArrayList<Mensaje> mensajes = new ArrayList<>();
+    @Override
+    public void getMensajes(List<Mensaje> mensajeList)
+    {
+
+        mensajes.clear();
+        mensajes.addAll(mensajeList);
+        bd = bottomNavigationView.getOrCreateBadge(R.id.item_mensajeria_asesores);
+        if(mensajes.size()>0)
+        {
+            bd.setVisible(true);
+            bd.setNumber(mensajes.size());
+        }
+        else
+        {
+            bd.setVisible(false);
+            bd.setNumber(0);
+        }
+
+    }
+    //BottomNavigationView
+    private void BottomNavigationView()
+    {
+       bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item)
+            {
+                Intent intent;
+                switch (item.getItemId())
+                {
+                    case R.id.item_CerrarSesion:
+                        Toast.makeText(MainAdviserActivityApp.this, getResources().getText(R.string.cerrarSesion) + "...", Toast.LENGTH_SHORT).show();
+                        ProgressDialog dialog = ProgressDialog.show(MainAdviserActivityApp.this, "",
+                                "Nos vemos pronto... " + FirebaseAuthHelper.getCurrentUser(), true);
+                        dialog.show();
+                        firebaseAuthHelper.signout(dialog);
+                        FirebaseFirestoreAsesorHelper.asesor = null;
+                        return true;
+                    case R.id.item_EditarPerfil:
+                        showDialogEditProfile();
+                        return true;
+                    case R.id.item_mensajeria_asesores:
+                             intent = new Intent(MainAdviserActivityApp.this, BandejaActivity.class);
+                             intent.putExtra("mensajes", mensajes);
+                             startActivity(intent);
+                        return true;
+                    case R.id.item_Asesorados:
+                         intent = new Intent(MainAdviserActivityApp.this, AsesoradosActivity.class);
+                        startActivity(intent);
+                        break;
+                }
+                return false;
+            }
+        });
+    }
+
 }
 

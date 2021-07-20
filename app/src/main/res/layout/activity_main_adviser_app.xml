@@ -1,362 +1,398 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".controllers.MainAdviserActivityApp">
 
-
-    <ScrollView
+    <FrameLayout
+        android:id="@+id/flFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/guideline7"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="UselessParent">
 
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView_Principal"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:elevation="20dp"
-                app:cardBackgroundColor="@color/colorPrimaryDark"
-                app:cardCornerRadius="0dp">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView_Principal"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:elevation="20dp"
+                    app:cardBackgroundColor="@color/colorPrimaryDark"
+                    app:cardCornerRadius="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:layout_margin="20dp"
+                        android:orientation="horizontal"
+                        android:weightSum="1">
+
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/imageView_perfil"
+                                android:layout_width="120dp"
+                                android:layout_height="120dp"
+                                android:layout_gravity="center_horizontal"
+                                android:contentDescription="@string/imageViewAsesor"
+                                app:layout_constraintBottom_toTopOf="@+id/guideline6"
+                                app:layout_constraintEnd_toStartOf="@+id/guideline3"
+                                app:layout_constraintTop_toTopOf="@+id/guideline5"
+                                app:layout_constraintVertical_bias="1.0" />
+
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/cardView_imageView_perfil"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end|bottom"
+                                app:cardBackgroundColor="@color/background_green"
+                                app:cardCornerRadius="50dp"
+                                app:cardElevation="0dp">
+
+                                <ImageButton
+                                    android:id="@+id/imageButton_edit_image"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@color/background_green"
+                                    android:contentDescription="@string/editar"
+                                    android:padding="8dp"
+                                    android:src="@drawable/ic_baseline_edit_24" />
+                            </androidx.cardview.widget.CardView>
+                        </FrameLayout>
+
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cardView_Nombre"
+                            android:layout_width="0dp"
+                            android:layout_height="100dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_weight="0.80"
+                            app:cardBackgroundColor="@android:color/transparent"
+                            app:cardCornerRadius="0dp"
+                            app:cardElevation="0dp"
+                            app:layout_constraintBottom_toBottomOf="@id/guideline6"
+                            app:layout_constraintTop_toTopOf="@id/guideline5">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/textView_Nombre"
+                                    android:layout_width="0dp"
+                                    android:layout_height="0dp"
+                                    android:ellipsize="end"
+                                    android:gravity="center"
+                                    android:maxLines="1"
+                                    android:text="@string/nombre"
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        </androidx.cardview.widget.CardView>
+
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+
+                <RadioGroup
+                    android:id="@+id/radioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radioButton_APresencial"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="0.5"
+                        android:buttonTint="@color/colorPrimaryDark"
+                        android:text="@string/asesoriaPresencial"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/radioButton_AOnline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:buttonTint="@color/colorPrimaryDark"
+                        android:checked="true"
+                        android:text="@string/asesoriaOnline"
+                        android:textSize="18sp" />
+                </RadioGroup>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:layout_margin="20dp"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
 
-                    <FrameLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:orientation="vertical">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-                        <ImageView
-                            android:id="@+id/imageView_perfil"
-                            android:layout_width="120dp"
-                            android:layout_height="120dp"
-                            android:layout_gravity="center_horizontal"
-                            android:contentDescription="@string/imageViewAsesor"
-                            app:layout_constraintBottom_toTopOf="@+id/guideline6"
-                            app:layout_constraintEnd_toStartOf="@+id/guideline3"
-                            app:layout_constraintTop_toTopOf="@+id/guideline5"
-                            app:layout_constraintVertical_bias="1.0" />
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/cardView_imageView_perfil"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="end|bottom"
-                            app:cardBackgroundColor="@color/background_green"
-                            app:cardCornerRadius="50dp"
-                            app:cardElevation="0dp">
-
-                            <ImageButton
-                                android:id="@+id/imageButton_edit_image"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@color/background_green"
-                                android:contentDescription="@string/editar"
-                                android:padding="8dp"
-                                android:src="@drawable/ic_baseline_edit_24" />
-                        </androidx.cardview.widget.CardView>
-                    </FrameLayout>
-
-
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/cardView_Nombre"
-                        android:layout_width="0dp"
-                        android:layout_height="100dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_weight="0.80"
-                        app:cardBackgroundColor="@android:color/transparent"
-                        app:cardCornerRadius="0dp"
-                        app:cardElevation="0dp"
-                        app:layout_constraintBottom_toBottomOf="@id/guideline6"
-                        app:layout_constraintTop_toTopOf="@id/guideline5">
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/spinner_Lugar"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:backgroundTint="@color/colorPrimaryDark"
+                            android:hint="@string/seleccione_un_lugar"
+                            android:visibility="invisible"
+                            app:errorEnabled="true"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
 
-                            <TextView
-                                android:id="@+id/textView_Nombre"
-                                android:layout_width="0dp"
-                                android:layout_height="0dp"
-                                android:ellipsize="end"
-                                android:gravity="center"
-                                android:maxLines="1"
-                                android:text="@string/nombre"
-                                android:textColor="@color/white"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
+                            <AutoCompleteTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none" />
 
-                    </androidx.cardview.widget.CardView>
+                        </com.google.android.material.textfield.TextInputLayout>
 
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/editView_URL"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:backgroundTint="@color/colorPrimaryDark"
+                            android:gravity="center_vertical"
+                            android:hint="@string/URL"
+                            android:visibility="visible"
+                            app:errorEnabled="true"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
 
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textUri|text" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
-
-
-            <RadioGroup
-                android:id="@+id/radioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/radioButton_APresencial"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_weight="0.5"
-                    android:buttonTint="@color/colorPrimaryDark"
-                    android:text="@string/asesoriaPresencial"
-                    android:textSize="18sp" />
-
-                <RadioButton
-                    android:id="@+id/radioButton_AOnline"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:buttonTint="@color/colorPrimaryDark"
-                    android:checked="true"
-                    android:text="@string/asesoriaOnline"
-                    android:textSize="18sp" />
-            </RadioGroup>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/spinner_Lugar"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:backgroundTint="@color/colorPrimaryDark"
-                        android:hint="@string/seleccione_un_lugar"
-                        android:visibility="invisible"
-                        app:errorEnabled="true"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <AutoCompleteTextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="none" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/editView_URL"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:backgroundTint="@color/colorPrimaryDark"
-                        android:gravity="center_vertical"
-                        android:hint="@string/URL"
-                        android:visibility="visible"
-                        app:errorEnabled="true"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textUri|text" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </LinearLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/editTextText_otroLugar"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:backgroundTint="@color/colorPrimaryDark"
-                android:hint="@string/indique_el_lugar"
-                android:visibility="gone"
-                app:errorEnabled="true">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textCapSentences" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/spinner_Materia"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:backgroundTint="@color/colorPrimaryDark"
-                android:hint="@string/seleccione_una_materia"
-                android:visibility="visible"
-                app:errorEnabled="true">
-
-                <AutoCompleteTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="none" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/editTextText_otroLugar"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_weight="0.5"
                     android:backgroundTint="@color/colorPrimaryDark"
-                    android:hint="@string/hora_inicio"
-                    app:errorEnabled="true"
-                    tools:ignore="NestedWeights">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editText_HoraInicio"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="time" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_weight="0.5"
-                    android:backgroundTint="@color/colorPrimaryDark"
-                    android:hint="@string/hora_fin"
-
+                    android:hint="@string/indique_el_lugar"
+                    android:visibility="gone"
                     app:errorEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editText_HoraFin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="time" />
+                        android:inputType="textCapSentences" />
 
                 </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/spinner_Materia"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:backgroundTint="@color/colorPrimaryDark"
+                    android:hint="@string/seleccione_una_materia"
+                    android:visibility="visible"
+                    app:errorEnabled="true">
 
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fillViewport="true">
+                    <AutoCompleteTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/editTextTextMultiLine"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="100dp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:layout_marginTop="0dp"
                         android:layout_marginEnd="10dp"
-                        android:layout_marginBottom="20dp"
+                        android:layout_weight="0.5"
                         android:backgroundTint="@color/colorPrimaryDark"
-                        android:gravity="start|top"
-                        android:hint="@string/infoExtra"
-                        app:errorEnabled="true">
+                        android:hint="@string/hora_inicio"
+                        app:errorEnabled="true"
+                        tools:ignore="NestedWeights">
 
                         <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editText_HoraInicio"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:inputType="textMultiLine|text" />
+                            android:layout_height="wrap_content"
+                            android:inputType="time" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="0.5"
+                        android:backgroundTint="@color/colorPrimaryDark"
+                        android:hint="@string/hora_fin"
+
+                        app:errorEnabled="true">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editText_HoraFin"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="time" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
-            </androidx.core.widget.NestedScrollView>
 
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_Publicar"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="355dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="20dp"
-                android:gravity="center"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:text="@string/publicar"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                app:cornerRadius="20dp" />
+                <androidx.core.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_Terminar"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="355dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="20dp"
-                android:gravity="center"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:text="@string/terminar"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                app:cornerRadius="20dp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-        </LinearLayout>
 
-    </ScrollView>
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/editTextTextMultiLine"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:backgroundTint="@color/colorPrimaryDark"
+                            android:gravity="start|top"
+                            android:hint="@string/infoExtra"
+                            app:errorEnabled="true">
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textMultiLine"
+                                android:scrollbars="vertical" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+                </androidx.core.widget.NestedScrollView>
+
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_Publicar"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="355dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="@string/publicar"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    app:cornerRadius="10dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_Terminar"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="355dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="20dp"
+                    android:gravity="center"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="@string/terminar"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    app:cornerRadius="10dp" />
+
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </FrameLayout>
+
+
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:backgroundTint="@color/colorAccent"
+        app:backgroundTint="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/menu_asesor" />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

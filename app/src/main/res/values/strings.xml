@@ -12,7 +12,7 @@
     <!-- MainAdviser -->
     <string name="acercaDe">Acerca de</string>
     <string name="quejasSugerencias">Quejas y sugerencias</string>
-    <string name="cerrarSesion">Cerrar sesión</string>
+    <string name="cerrarSesion">Cerrar Sesión</string>
     <string name="crearQR">Crear código QR</string>
     <string name="leerQR">Leer código QR</string>
     <string name="asesoriaPresencial">Asesoria Presencial</string>
@@ -69,7 +69,7 @@
     <string name="iconoregreso">iconoRegreso</string>
     <string name="confirmar_password">Confirmar Contraseña</string>
     <string name="olvidaste_password">¿Olvidaste tú contraseña?</string>
-    <string name="editar_perfil">Editar perfil</string>
+    <string name="editar_perfil">Editar Perfil</string>
     <string name="cancelar">Cancelar</string>
     <string name="actualizar">Actualizar</string>
     <string name="lugarAsesoria">Lugar de asesoría:</string>
@@ -108,6 +108,7 @@
     <string name="icono_prinicipal">icono</string>
     <string name="publicar_asesoria">Publicar asesoría</string>
     <string name="mensajer_a_asesores">Mensajería asesores</string>
+    <string name="notificaciones">Notificaciones</string>
 
 
 </resources>

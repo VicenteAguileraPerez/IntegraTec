@@ -6,6 +6,7 @@ public class Asesor extends User
     String uRI_image;
     boolean activo;
 
+    //id-from-mensaje-fecha
     public Asesor(String uid,String nombre,String apellidos,String email,String password,String carrera, String URI_image,boolean activo) {
         super(uid, nombre, apellidos, email, password);
         this.carrera = carrera;

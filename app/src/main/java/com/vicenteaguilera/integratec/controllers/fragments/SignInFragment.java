@@ -28,7 +28,7 @@ public class SignInFragment extends Fragment  {
     private ImageButton imageButton;
     private TextInputLayout editText_email,editText_password,editText_password_confirm,editText_codigo;
     private StringHelper stringHelper = new StringHelper();
-    private ButtonHelper buttonHelper = new ButtonHelper();
+
 
     @Override
     public void onCreate(Bundle savedInstanceState)

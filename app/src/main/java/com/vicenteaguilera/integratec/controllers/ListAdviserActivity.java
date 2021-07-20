@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.vicenteaguilera.integratec.CreateCodeQRActivity;
 import com.vicenteaguilera.integratec.R;
 import com.vicenteaguilera.integratec.adapters.AsesoriaRealtimeAdapter;
-import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
+import com.vicenteaguilera.integratec.helpers.services.FirebaseFirestoreAsesoriaPublicaAsesoriaHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.AlertDialogPersonalized;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.InternetHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.DateHelper;
@@ -59,7 +59,7 @@ public class ListAdviserActivity extends AppCompatActivity implements ListaAseso
             {
                 int hora = Integer.parseInt(DateHelper.obtenerHora24().substring(0, 2));
                 if (hora > 7 && hora < 20) {
-                    new FirestoreHelper().listenAsesorias(this);
+                    new FirebaseFirestoreAsesoriaPublicaAsesoriaHelper().listenAsesorias(this);
                 }
                 else {
                     progressBar.setVisibility(View.INVISIBLE);
@@ -99,13 +99,9 @@ public class ListAdviserActivity extends AppCompatActivity implements ListaAseso
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.overflow, menu);
-        menu.removeItem(R.id.item_CerrarSesion);
-        menu.removeItem(R.id.item_EditarPerfil);
         menu.removeItem(R.id.item_Crear_PDF_asesorias);
         menu.removeItem(R.id.item_Crear_PDF_asesorados);
         menu.removeItem(R.id.item_nuevo_semestre);
-        menu.removeItem(R.id.item_Asesorados);
-        menu.removeItem(R.id.item_mensajeria_asesores);
 
         Calendar cldr = Calendar.getInstance();
         int hour = cldr.get(Calendar.HOUR_OF_DAY);
@@ -139,7 +135,7 @@ public class ListAdviserActivity extends AppCompatActivity implements ListaAseso
             case R.id.item_ActualizarLista:
                 listView_asesores.setVisibility(View.INVISIBLE);
                 progressBar.setVisibility(View.VISIBLE);
-                new FirestoreHelper().listenAsesorias(this);
+                new FirebaseFirestoreAsesoriaPublicaAsesoriaHelper().listenAsesorias(this);
                 break;
 
             case R.id.item_Crear_QR:

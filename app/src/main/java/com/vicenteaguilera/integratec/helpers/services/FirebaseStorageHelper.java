@@ -14,7 +14,7 @@ import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
 
 public class FirebaseStorageHelper
 {
-   private FirestoreHelper firestoreHelper = new FirestoreHelper();
+   private FirebaseFirestoreAsesorHelper firebaseFirestoreAsesorHelper = new FirebaseFirestoreAsesorHelper();
    private FirebaseStorage mStorage = FirebaseStorage.getInstance();
    private StorageReference asesoresFiles = mStorage.getReference().child("asesores");
 
@@ -36,7 +36,7 @@ public class FirebaseStorageHelper
             asesoresFiles.child(uid).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                @Override
                public void onSuccess(Uri uri) {
-                  firestoreHelper.updateImageAsesor(uri.toString(),status);
+                  firebaseFirestoreAsesorHelper.updateImageAsesor(uri.toString(),status);
                }
             });
 
@@ -51,7 +51,7 @@ public class FirebaseStorageHelper
             @Override
             public void onSuccess(Void aVoid) {
                status.status("Imagen Actualizada");
-               firestoreHelper.updateImageAsesor("",status);
+               firebaseFirestoreAsesorHelper.updateImageAsesor("",status);
 
             }
          }).addOnFailureListener(new OnFailureListener() {

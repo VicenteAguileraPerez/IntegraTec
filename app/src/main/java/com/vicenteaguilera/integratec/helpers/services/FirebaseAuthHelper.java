@@ -24,7 +24,7 @@ public class FirebaseAuthHelper
     private Status status;
     private Context context;
     private final StringHelper stringHelper = new StringHelper();
-    private final FirestoreHelper firestoreHelper = new FirestoreHelper();
+    private final FirebaseFirestoreAsesorHelper firebaseFirestoreAsesorHelper = new FirebaseFirestoreAsesorHelper();
     public void setContext(Context context)
     {
         this.context=context;
@@ -53,7 +53,7 @@ public class FirebaseAuthHelper
 
                                 //llamar a la creacion del usuario
                                 //createUser(user,password, args);
-                                firestoreHelper.addData(status,dialog, context, user.getUid(),email,password,args);
+                                firebaseFirestoreAsesorHelper.addData(status,dialog, context, user.getUid(),email,password,args);
 
                             }
                             else
@@ -97,7 +97,7 @@ public class FirebaseAuthHelper
                             if (task.isSuccessful()) {
 
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                firestoreHelper.getData(Objects.requireNonNull(user).getUid(),dialog,status,context);
+                                firebaseFirestoreAsesorHelper.getData(Objects.requireNonNull(user).getUid(),dialog,status,context);
                             }
                             else
                             {
@@ -133,7 +133,7 @@ public class FirebaseAuthHelper
     public  void signout(final ProgressDialog dialog)
     {
         mAuth.signOut();
-        FirestoreHelper.asesor=null;
+        FirebaseFirestoreAsesorHelper.asesor=null;
         Log.e("er",mAuth.getCurrentUser()+"");
         dialog.dismiss();
         Intent intent = new Intent(context, MainAppActivity.class);

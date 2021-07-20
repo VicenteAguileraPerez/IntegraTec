@@ -115,7 +115,7 @@ public class LoginFragment extends Fragment  implements Status{
         });
         textWacher();
 
-       buttonHelper.actionClickButton(cardView_OlvidastePass, getResources().getColor(R.color.gray), getResources().getColor(R.color.white));
+      // buttonHelper.actionClickButton(cardView_OlvidastePass, getResources().getColor(R.color.gray), getResources().getColor(R.color.white));
     }
 
     private void showDialogRecoverPass() {

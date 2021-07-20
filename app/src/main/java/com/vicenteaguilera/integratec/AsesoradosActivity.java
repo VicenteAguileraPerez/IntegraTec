@@ -37,10 +37,10 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.vicenteaguilera.integratec.helpers.CaptureActivityPortrait;
+import com.vicenteaguilera.integratec.helpers.services.FirebaseFirestoreAsesorHelper;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreAlumno;
 import com.vicenteaguilera.integratec.helpers.services.FirestoreAsesorado;
-import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
-import com.vicenteaguilera.integratec.helpers.utility.helpers.DateHelper;
+import com.vicenteaguilera.integratec.helpers.services.FirebaseFirestoreAsesoriaPublicaAsesoriaHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.StaticHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.ListaAsesorados;
@@ -66,7 +66,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
     private WifiReceiver wifiReceiver = new WifiReceiver();
     private FirestoreAlumno firestoreAlumno = new FirestoreAlumno();
     private FirestoreAsesorado firestoreAsesorado = new FirestoreAsesorado();
-    private FirestoreHelper firestoreHelper = new FirestoreHelper();
+    private FirebaseFirestoreAsesoriaPublicaAsesoriaHelper firestoreHelper = new FirebaseFirestoreAsesoriaPublicaAsesoriaHelper();
     private IntentResult result = null;
     private TextInputLayout textInputLayout_nombre_add_alumno;
     private TextInputLayout textInputLayout_carrera_add_alumno;
@@ -87,7 +87,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
         super.onStart();
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(wifiReceiver,intentFilter);
-        firestoreAsesorado.readAsesorados(AsesoradosActivity.this, FirestoreHelper.asesor.getUid());
+        firestoreAsesorado.readAsesorados(AsesoradosActivity.this, FirebaseFirestoreAsesorHelper.asesor.getUid());
     }
 
     @Override
@@ -197,7 +197,7 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
                         ProgressDialog dialogD = ProgressDialog.show(AsesoradosActivity.this, "", "Eliminando...", true);
                         firestoreAsesorado.deleteDataAsesorado(AsesoradosActivity.this, dialogD, AsesoradosActivity.this, alumno.getId());
                         dialogUpdateDelete.dismiss();
-                        firestoreAsesorado.readAsesorados(AsesoradosActivity.this, FirestoreHelper.asesor.getUid());
+                        firestoreAsesorado.readAsesorados(AsesoradosActivity.this, FirebaseFirestoreAsesorHelper.asesor.getUid());
                     }
                 });
                 dialogConfirm.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -281,9 +281,9 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
                             spinner_materia_update.getEditText().getText().toString().toUpperCase(),
                             textInputLayout_tema_update.getEditText().getText().toString(),
                             textInputEditText_fecha_update_alumno.getText().toString().toUpperCase(),
-                            FirestoreHelper.asesor.getUid());
+                            FirebaseFirestoreAsesorHelper.asesor.getUid());
                     dialogUpdateDelete.dismiss();
-                    firestoreAsesorado.readAsesorados(AsesoradosActivity.this, FirestoreHelper.asesor.getUid());
+                    firestoreAsesorado.readAsesorados(AsesoradosActivity.this, FirebaseFirestoreAsesorHelper.asesor.getUid());
                 }else {
                     Toast.makeText(AsesoradosActivity.this, "Algunos de los datos ingresados son inválidos", Toast.LENGTH_LONG).show();
                 }
@@ -438,12 +438,12 @@ public class AsesoradosActivity extends AppCompatActivity implements Status, Lis
 
                 if(flagNumControl && flagNombreCompleto && flagCarrera && flagMateria && flagTema && flagFecha) {
                     ProgressDialog dialog = ProgressDialog.show(AsesoradosActivity.this, "", "Resgistrando...", true);
-                    firestoreAsesorado.addAsesorado(AsesoradosActivity.this, dialog, AsesoradosActivity.this, numControl, nombreCompleto.toUpperCase(), carrera.toUpperCase(), materia.toUpperCase(), tema.toUpperCase(), fecha, FirestoreHelper.asesor.getUid());
+                    firestoreAsesorado.addAsesorado(AsesoradosActivity.this, dialog, AsesoradosActivity.this, numControl, nombreCompleto.toUpperCase(), carrera.toUpperCase(), materia.toUpperCase(), tema.toUpperCase(), fecha, FirebaseFirestoreAsesorHelper.asesor.getUid());
                     if(flag==false)
                     {
                         firestoreAlumno.addDataAlumno(AsesoradosActivity.this, dialog, numControl, nombreCompleto, carrera.toUpperCase(), AsesoradosActivity.this);
                     }
-                    firestoreAsesorado.readAsesorados(AsesoradosActivity.this, FirestoreHelper.asesor.getUid());
+                    firestoreAsesorado.readAsesorados(AsesoradosActivity.this, FirebaseFirestoreAsesorHelper.asesor.getUid());
                     dialogAdd.dismiss();
                     flag = false;
                 } else {

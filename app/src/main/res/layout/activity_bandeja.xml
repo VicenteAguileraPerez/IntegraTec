@@ -150,6 +150,20 @@
                 android:textColor="#FFFFFF"
                 android:textSize="14sp"
                 app:cornerRadius="15dp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/cardView_ButtonMensajes"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:text="Ver mensajes"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                app:cornerRadius="15dp" />
 
         </LinearLayout>
     </ScrollView>

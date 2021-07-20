@@ -38,7 +38,6 @@ public class SignInTwoFragment extends Fragment implements Status {
     private TextInputLayout editText_nombre,editText_apellidos,spinner_Carrera;
     private  String email, password;
     private FirebaseAuthHelper firebaseAuthHelper = new FirebaseAuthHelper();
-    private ButtonHelper buttonHelper = new ButtonHelper();
 
     @Override
     public void onCreate(Bundle savedInstanceState)

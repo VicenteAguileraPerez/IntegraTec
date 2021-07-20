@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/item_CerrarSesion"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_login_24"
+        android:title="@string/cerrarSesion"/>
+    <item
+        android:id="@+id/item_EditarPerfil"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_edit_24_2"
+        android:title="@string/editar_perfil"/>
+    <item
+        android:id="@+id/item_Asesorados"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_person_add_24"
+        android:title="@string/mis_asesorados" />
+    <item
+        android:id="@+id/item_mensajeria_asesores"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_mail_outline_24"
+        android:title="@string/notificaciones"/>
+
+
+
+</menu>

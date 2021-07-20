@@ -23,7 +23,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.vicenteaguilera.integratec.controllers.mainapp.MainAppActivity;
 import com.vicenteaguilera.integratec.helpers.services.FirebaseAuthHelper;
-import com.vicenteaguilera.integratec.helpers.services.FirestoreHelper;
+import com.vicenteaguilera.integratec.helpers.services.FirebaseFirestoreAsesorHelper;
+import com.vicenteaguilera.integratec.helpers.services.FirebaseFirestoreAsesoriaPublicaAsesoriaHelper;
+import com.vicenteaguilera.integratec.helpers.services.FirebaseFirestoreMensajesHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.InternetHelper;
 import com.vicenteaguilera.integratec.helpers.utility.helpers.WifiReceiver;
 import com.vicenteaguilera.integratec.helpers.utility.interfaces.Status;
@@ -36,7 +38,7 @@ public class SplashScreenActivity extends AppCompatActivity  implements Status
     private ConstraintLayout constraintLayout;
     private TextView textView_IntegraTec,textView_datos;
     private ImageView imageView_splash_screen,imageView_splash_screen_2,imageView_splash_screen_3;
-    private final FirestoreHelper firestoreHelper = new FirestoreHelper();
+    private final FirebaseFirestoreAsesorHelper firestoreHelper = new FirebaseFirestoreAsesorHelper();
     private final InternetHelper internetHelper = new InternetHelper();
     private WifiReceiver wifiReceiver = new WifiReceiver();
 
