@@ -21,7 +21,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".controllers.BandejaActivity"></activity>
+        <activity android:name=".controllers.BandejaActivity"
+            android:launchMode="singleTask"
+            android:taskAffinity=""
+            android:excludeFromRecents="true"/>
         <activity
             android:name=".controllers.HorarioActivity"
             android:screenOrientation="portrait" />

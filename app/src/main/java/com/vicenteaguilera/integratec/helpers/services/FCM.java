@@ -149,7 +149,7 @@ public class FCM extends FirebaseMessagingService
         parmetros.putString("titulo",from);
         parmetros.putString("mensaje",texto);
         nf.putExtras(parmetros);
-        nf.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        nf.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         return PendingIntent.getActivity(
                 getApplicationContext(),
