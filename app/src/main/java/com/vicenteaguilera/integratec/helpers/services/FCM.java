@@ -139,7 +139,7 @@ public class FCM extends FirebaseMessagingService
     public PendingIntent clickNotification()
     {
         Intent nf = new Intent(getApplicationContext(), ListAdviserActivity.class);
-        nf.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        nf.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
         return PendingIntent.getActivity(this,0,nf,0);
     }
     public PendingIntent clickNotificationAsesor(String from,String texto)
