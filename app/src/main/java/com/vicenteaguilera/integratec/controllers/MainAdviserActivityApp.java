@@ -501,6 +501,7 @@ public class MainAdviserActivityApp extends AppCompatActivity implements View.On
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.overflow, menu);
         menu.removeItem(R.id.item_ActualizarLista);
+        menu.removeItem(R.id.item_manual);
         return true;
     }
 

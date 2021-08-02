@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -142,6 +143,9 @@ public class ListAdviserActivity extends AppCompatActivity implements ListaAseso
                 intent = new Intent(this, CreateCodeQRActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.item_manual:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://firebasestorage.googleapis.com/v0/b/integratec-itsu.appspot.com/o/Manual%20de%20usuario%20IntegraTec%20(Estudiantes).pdf?alt=media&token=07945625-ecee-446b-ab76-77800895d15c"));
+                startActivity(browserIntent);
         }
         return super.onOptionsItemSelected(item);
     }
