@@ -13,8 +13,8 @@ android {
         applicationId "com.vicenteaguilera.integratec"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 4
-        versionName "3.0.1"
+        versionCode 5
+        versionName "3.0.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

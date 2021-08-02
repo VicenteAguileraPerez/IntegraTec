@@ -32,6 +32,7 @@ public class AboutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_about);
         setTitle(R.string.acerca_de);
         WebView webView = findViewById(R.id.webView);
+        webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl("file:///android_asset/about.html");
         webView.setWebViewClient( new WebViewClient());
     }
